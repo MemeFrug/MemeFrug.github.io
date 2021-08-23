@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Level Maker For my game</title>
+    <script src="../Javascript/arrowkeys.js"></script>
+    <script src="../Javascript/the Cube Creator.js"></script>
+    <style>
+
+        body {
+            background-color: rgb(27, 27, 27);
+            color: black;
+        }
+
+    :root {
+        --grid-cols: 1;
+        --grid-rows: 1;
+    }
+
+    #container {
+        
+        display: grid;
+        grid-gap: 1em;
+        grid-template-rows: repeat(var(--grid-rows), 1fr);
+        grid-template-columns: repeat(var(--grid-cols), 1fr);
+    }
+
+    .grid-item {
+        padding: 1em;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    .grid-item:hover {
+        background-color: rgb(66, 66, 66);
+        cursor:pointer;
+    }
+    .output {
+        padding-top: 20px;
+    }
+    #output {
+        width: 500px;
+        height: 500px;
+
+    }
+    #Canvas {
+        float: left;
+    border: 1px solid white;
+    width: 300px;
+    height: 800px;
+    }
+    </style>
+</head>
+<body>
+    <div id="container">
+
+    </div>
+    <div class="output">
+        <textarea name="output" id="output" cols="30" rows="10" style="background-color: rgba(71, 71, 71, 0.932); color: white;" readonly></textarea>
+        <button id="Preview" style="width: 100px; height: 50px; float: left;">Preview</button><canvas id="Canvas"></canvas>
+        <button style="width: 100px; height: 50px;" id="Generate">Generate</button>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

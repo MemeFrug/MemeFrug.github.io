@@ -1,0 +1,457 @@
+<p>
+12/07/2021<br>
+Today, I added some functionallity to the new ui elements from yesterday, such as reloading, you now have a ammo counter that actually displays the amount of ammo that
+you have and also made a working inventory system so yeah.
+<br><br>
+Updates:
+<br>
+-You can now view the max ammo and the current ammount of ammo at the bottom left.
+<br>
+-There is now a working inventory, that you can view above the ammo counter
+<br>
+-You have the ability to reload by pressing 'r'
+<br>
+-You can switch between weponds by pressing 1, 2 and 3. If you dont have any weponds in those slots it wont select them. (Might Remove if want)
+<br><br>
+Known Bugs:
+<br>
+-When the client's restarts the amount of players connected to the room is wrong.
+<br>
+-The enemys movements is a bit not smooth when chasing.
+<br>
+-Sometimes you can randomly shoot yourself! While switching between weponds in your inventory.
+<br><br>
+TODO:
+<br>
+-Update the room maker e.g Size of the world, amount of enemys ect.
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add inventory system/ammo and ammo counter
+<br>
+-There is no timout between each shot (last on my list)
+<br><br>
+</p>
+
+<p>
+11/07/2021<br>
+Today, I removed the feature to hold down ctrl + mouse wheel to zoom in and out and also removed ctrl + "+" and ctrl + - but if u really wanted to zoom in and out
+u still can open up the menu on the left and simply zoom in and out using the buttons and i added some loading animations. And i also fix a bug with last times. Aaaaand
+I added some ui elements that do nothing right now such as an inventory veiwer and ammo counter.
+bugfix.
+<br><br>
+Updates:
+<br>
+-There is new ui elements such as: inventory viewer, ammo counter.
+<br>
+-You can press 1 - 3 to toggle between inventorys
+<br>
+-U can no longer zoom in and out using methods like ctrl + "+" or ctrl + "-" or ctrl + mouse wheel
+<br>
+-In the login screen if you are disconnected from the server or are reconnecting you will now see a loading circle that is animated pog!
+<br>
+-Last time i fixed a bug where someone leaves and the server crashes, i fixed this bug last time but i found out it only fixed the crashing side of it... So now the 
+players index gets properly updated when someone leaves so now you can properly damage one another including enemys!
+<br>
+-Fixed when you die by the enemy the enemy continues trying to kill you.
+<br>
+-When u die by an enemy you have 1.5 seconds of no damage time (it just resets your health and x, y pos to where u were teleported after u died)
+<br>
+-The enemy loses intress after an amount of time! (rn its 1000 seconds or milliseconds idk what it is but its a 1000 so yeah....)
+<br><br>
+Known Bugs:
+<br>
+-When the client's restarts the amount of players connected to the room is wrong.
+<br>
+-The enemys movements is a bit not smooth when chasing.
+<br><br>
+TODO:
+<br>
+-Update the room maker e.g Size of the world, amount of enemys ect.
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add inventory system/ammo and ammo counter
+<br>
+-There is no timout between each shot (last on my list)
+<br><br>
+</p>
+
+<p>
+8/07/2021<br>
+Today, I Fixed the bug where a player leaves it crashes the server! Whew that was a big bug but it was pretty simple to fix. I also fixed another pretty big bug where
+there were a random "Dummy" That appears when 2 or more players are in the lobby! So today was pretty good as I fixed some really anoying bugs!
+<br><br>
+Updates:
+<br>
+-Fixed when someone leaves it just breaks the server and it crashes...
+<br>
+-Fixed When joining there is an random 'dummy' that joins.
+<br><br>
+Known Bugs:
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-When the client's restarts the amount of players connected count is wrong (to the specified room).
+Update:This most of the time happens if im using local live thingy and it resets the clients at the same time, this breaks it badly
+<br><br>
+TODO:
+<br>
+-Update the room maker e.g Size of the world, amount of enemys, maxplayers ect.
+Update: I just did the Max Players
+<br>
+-add a server viewer, prestige etc.
+Update: Created a server viewer
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br>
+-FIX THE FRIGEN BUGS
+<br><br>
+</p>
+
+<p>
+7/07/2021<br>
+Today, I Think i fixed a big bug where there is a random 'dummy' that joins, but i havent tested if I have so idk. Anyway I also updated the room creator so 
+now there is a max play limit that you can change 
+<br><br>
+Updates:
+<br>
+-If your the last person in that room and you leave it deletes the room!
+<br>
+-When u join a room it detects if its full or not and if so it kicks you out
+<br>
+-You can now set the max player limit in the room creator
+<br>
+-Fixed a bug when u join in and other people health bars werent displaying correctly.
+<br><br>
+Known Bugs:
+<br>
+-When joining there is an random 'dummy' that joins.
+Update: I Think i fixed this when i was trying  to fix a different bug but i havent tested it.
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-When the server restarts the amount of players connected count is wrong.
+Update:This most of the time happens if im using local live thingy and it resets the clients at the same time, this breaks it badly
+<br>
+-Sometimes when someone leaves it just breaks the server and it crashes...
+Update:It only happens if the person who created the lobby leaves.
+Update:Actually only happends to the person who last joined you or before that.
+<br><br>
+TODO:
+<br>
+-Update the room maker e.g Size of the world, amount of enemys, maxplayers ect.
+Update: I just did the Max Players
+<br>
+-add a server viewer, prestige etc.
+Update: Created a server viewer
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br><br>
+</p>
+
+<p>
+6/07/2021<br>
+So, Today i countinued on the brand new main menu, ive added the server browser and the logic to it, so you can create a new room with the room maker 
+and join it with other people and stuff.
+<br><br>
+Updates:
+<br>
+-added a room maker, its kinda simple right now.
+<br>
+-Created a server Browser, Which u can refresh and it displays the amount of players connected and the name of server and join it.
+<br>
+-removed the play button
+<br>
+-Fixed the infinite world bug by just updating the design of the server and how it handles rooms.
+<br><br>
+Known Bugs: 
+<br>
+-When joining there is an random 'dummy' that joins. BIG BUG
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-Sometimes when someone leaves it just breaks the server and it crashes.... BIG BUG
+<br>
+-When the server restarts the amount of players connected count is wrong
+<br>
+-When you try and join the server and are connected to a world
+if there is more that two worlds the server start infinitly
+create new worlds
+<br><br>
+TODO:
+<br>
+-Update the room maker e.g Size of the world, amount of enemys, maxplayers ect.
+<br>
+-add a server viewer, prestige etc.
+Update: Created a server viewer
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br>
+-When u leave a world and you are the last person it deletes the world (not for the default world)
+<br><br>
+</p>
+
+<p>
+5/07/2021<br>
+So, Today i worked on a couple of bugs that i found while messing around with the game!, ive decided that im gonna make a server viewer 
+(still gonna be one server maybe, so like a 'room viewer') So i have Redone most of the Start of the game (like when you click login/create account)
+<br><br>
+Updates:
+<br>
+-Created a mainmenu
+<br>
+-Created a Play, Logout and a identifier for what acc your logged into and a version identifier (currently does nothing just displays v0.0)
+<br><br>
+
+Known Bugs:
+<br>
+-When joining there is an random 'dummy' that joins. BIG BUG
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-Sometimes when someone leaves it just breaks the server and it crashes.... BIG BUG
+<br>
+-When the server restarts the amount of players connected count is wrong
+<br>
+-When you try and join the server and are connected to a world
+if there is more that two worlds the server start infinitly
+create new worlds
+<br><br>
+
+TODO:
+<br>
+-add a server viewer, prestige etc.
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br>
+-When u leave a world and you are the last person it deletes the world (not for the default world)
+<br><br>
+</p>
+
+<p>
+3/07/2021<br>
+So, Today i worked a bit on the login site, and made it so you can see if the server is online or offline. I also Squashed some enmey ai bugs
+
+<br><br>
+Updates:
+<br>
+-Login/signuo buttons stay disabled entill connected to server.
+<br>
+-Theres is a text box below the Login/Signup buttons letting you know when you are connecting or server is offline.
+<br>
+-Fixed When you kill an enemy it use to stay like a corpse (not meant to be)
+<br>
+-Fixed When you zoom out and kill a enemy the game lags.
+<br>
+-Fixed when you alert the enemy it goes for the person who 'lastly joined' when a bullet goes into their detection radius.
+<br><br>
+
+Known Bugs:
+<br>
+-When joining there is an random 'dummy' that joins. BIG BUG
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-SomeTimes when someone leaves it just breaks the server and it crashes.... BIG BUG
+<br>
+-when the server restarts the amount of players connected count is wrong
+<br><br>
+
+TODO:
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br><br>
+</p>
+
+<p>
+1/07/2021<br>
+Today, I did alot of testing by myself. I tried to fix up the enemy from last time and i did pretty well, so now you can have lots and lots of enemys on
+one map and it should be fine. But fixing stuff made 2x more bugs than last time so i will have to fix those next time. Time for me to have a break (:<br>
+Bye!
+<br><br>
+
+Updates:
+<br>
+-You can now damage the enemys when their is more than one
+<br>
+-Enemies now collide with eachother (lookes pretty cool when their is alot of them, they swarm)
+<br>
+-Enemies get deleted when they die (rn i add another to the world as soon as one dies)
+<br><br>
+Known Bugs:
+
+<br>
+-When joining there is an random 'dummy' that joins.
+<br>
+-Server Gets really slow when shooting alot
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-When you kill an enemy it stays there like a corpse (not meant to be)
+<br>
+-Client gets really laggy when there is alot of enemys (especially if you zoom out and kill one)
+<br>
+-For Some Reason when you alert the enemy it goes for the person who lastly joined???
+Update: It goes for the person who lastly joined when a bullet goes into their detection radius
+<br>
+-SomeTimes when someone leaves it just breaks the server and it crashes....
+<br><br>
+
+TODO:
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemys lose intress after an amount of time.
+<br><br>
+</p>
+
+<p>
+29/06/2021<br>
+Today i started working on the enemys ai, going towards and attacking the player and trying to implement a better one than the move game man sam! and
+added an indicator of what your ping is.
+<br><br>
+Updates:
+<br>
+-You know can see what your ping is at the top left (subject to change)
+<br>
+-When the enemy dies it goes into a random position.
+<br>
+-The Enemy now goes towards the player as soon as you into its detection zone or your bullet goes into it (the red).
+<br>
+-The enemy does damage to the player every 'x' amount of milliseconds.
+<br><br>
+Known Bugs:
+<br>
+-When joining there is an random 'dummy' that joins.
+<br>
+-Server Gets really slow when shooting alot
+<br>
+-When you die by the enemy the enemy continues trying to kill you.
+<br>
+-Cant damage the enemys when their is more than one (can buts its weird)
+<br><br>
+TODO:
+<br>
+-Make sure the enemys dont overlap eachother
+<br>
+-Add pathfinding/go around objects to kill player
+<br>
+-Add ui, inventory system/ammo and ammo counter)
+<br>
+-There is no timout between each shot (last on my list)
+<br>
+-Make the enemy actually get deleted instead of just getting reseted.
+<br><br>
+</p>
+
+<p>
+28/06/21<br>
+So, Instead of doing updates im changed to dates then inside those ill say an update...
+<br><br>
+Updates:
+<br>
+-there is also now shooting, that is towards your mouse. 
+<br>
+-Wayyyy better collision to objects than my other projects.
+<br>
+-A bit more stable Server side.
+<br>
+-Fixed Bullet Speed Being faster on clients.
+<br>
+-Fixed Enemys only moving when a bullet exists
+<br>
+-updated the server main update function to be the same as the client
+<br>
+-You can now shoot players if they have their tab minimised, they'll take damage and die.
+<br><br>
+Known Bugs:
+<br>
+-When joining there is an random 'dummy' that joins.
+<br>
+-Server Gets really slow when shooting alot
+<br>
+-There is no timout between each shot (last on my list)
+<br><br>
+<p>
+
+<p>
+Update 0.199<br>
+Soooo, ive restarted again. But i am planning and have a better mind of what im doing. So, I have created a login
+and Create Account system (when the server is online) then when you log in you just have a mouse. Basically nothing
+right now but yeah..
+<br>
+</p>
+
+<p>
+Update 0.195<br>
+Hey, So basically i reworked all of the Network Components (But im bad so its worse) But Hey
+deal with it
+<br>
+</p>
+
+<p>
+Update 0.185<br>
+Added Color to other players when they choose in the select menu
+<br>
+</p>
+
+<p>
+Update 0.18<br>
+Added ability to shoot upwards and downwards and abillity to shoot by clicking, have also made it so other players can see your bullets
+and can take damage from them, To show damage/health you are at you will now see a health bar above your player. This update also improves 
+Bug Fixes with the server when someone leaves please DM !!MemeFrug#8720 on Discord for Bugs
+<br>
+</p>
+
+<p>
+Update 0.17 <br>
+Added a gun with ability to shoot by pressing space (others can not see)
+<br>
+</p>
+
+<p>
+Update 0.161 <br>
+Fixed a Few Bugs with Server being not online... (hopefully)
+<br>
+</p>
+
+<p>
+Update 0.16 <br>
+Added a 'Updates' column to show new updates to the game!
+<br>
+</p>

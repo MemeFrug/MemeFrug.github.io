@@ -1,0 +1,23 @@
+﻿body {
+    background-color: white;
+    color: black;
+    font-family: Arial,
+}
+
+.circle {
+    height: 100px;
+    width: 100px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#gamescreen {
+    border: 1px solid black;
+}
+
+.dark-mode {
+    background-color: rgb(59, 59, 59);
+    color: rgba(255, 255, 255, 0.808);
+
+}

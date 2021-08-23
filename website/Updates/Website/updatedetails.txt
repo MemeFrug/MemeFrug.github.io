@@ -1,0 +1,19 @@
+<p> Welcome to My website In the updates column you will find everything that i have updated recently. <br> <br>
+If you want specific game updates then go into that specific game and find a 'Updates' column <br>
+
+<p>
+3/07/2021<br>
+I updated the <a style="color: blue;" href="Games/Move game man sam/index.html">Move Game man Sam </a> So now their is better
+collision on the walls (you dont stick) and the enemie ai actually go towards you and are not restricted to up down left or right
+and fixed the character controller where there was a bug where if you move side to side it just stops the character<br><br>
+I have also updated the Rpg game a bunch the past few days you will find more info on that Update Column
+<br><br>
+</p>
+
+<p>
+28/06/21
+<br>
+-I have added the 'Update' Tab in the main hub.
+<br>
+-I have also added a new folder will all the updates manually <a style="color: blue;" href="./Updates">here </a>
+</p>

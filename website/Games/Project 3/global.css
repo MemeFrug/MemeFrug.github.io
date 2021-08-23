@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    height: 900px;
+    width: 1000px;
+    font-size: 30px;
+    background-color: #252624;
+    color: white;
+}
+
+.noselect { /*makes it so you cant highlight it*/
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Chrome, Edge, Opera and Firefox */
+}
+
+.Shop1{
+    height: 600px;
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+
+.Shop2{
+    height: 600px;
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.ShopBack {
+    transition-delay: 0.05s;
+    transition-duration: 0.5s;
+    width: 530px;
+}
+.ShopBack:hover {
+    font-size: 50px;
+}
+
+.MenuButton {
+    transition-delay: 0.05s;
+    transition-duration: 0.5s;
+    width: 400px;
+    border: 2px solid gray;
+}
+
+.InfomationButton {
+    transition-delay: 0.05s;
+    transition-duration: 0.5s;
+    width: 200px;
+    text-align: center;
+    border: 1px solid gray;
+    padding-top: 0px;
+}
+
+.InfomationButton:hover {
+    width: 350px;
+    font-size: 35px;
+}
+
+.MenuButton:hover {
+    font-size: 40px;
+    width: 420px;
+}
+
+.Infomation{
+    float: left;
+    text-align: center;
+    width: 540px;
+    height: 900px;
+    border: 1px solid gray;
+}
+
+.Canvas{
+    width: 40%;
+    float: left;
+}
+
+.v-scrollbar {
+    overflow-y: scroll;
+    height: 300px;
+}
+
+.v-scrollbar div {
+    height: 200px;
+    display:block;
+}
+
+/* Tooltip container (I COPIED THIS)*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+   
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+.copyright {
+  text-align: left;
+  padding-left: 20px;
+  font-size:15px;
+  color:#aaa;
+  margin-bottom:0;
+}

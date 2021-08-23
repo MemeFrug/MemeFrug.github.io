@@ -1,0 +1,79 @@
+﻿body {
+    padding: 0;
+    font-family: Arial, cursive;
+    background-color: white;
+    color: black;
+    /*
+        font-family: "Anton", cursive;
+        font-family: "Open Sans", sans-serif;
+        font-family: Arial:
+
+        Text colour : #333
+        Black : #000000
+        Dark-Mode : #242424
+        Dark-Mode-Text-Coulor: #eaeaea
+
+        Deptcolour: #ff0000
+    */
+    transition: background 0.4s;
+}
+
+.dark-mode {
+    background-color: #242424;
+    color: #eaeaea;
+
+}
+
+#DEBT {
+    color: #ff0000;
+    
+}
+
+#DEBT2 {
+    color: #ff0000;
+}
+
+.column {
+    float: left;
+    width: 30%;
+    height: 10%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+.projectButton {
+    border-radius: 0px;
+    display: block;
+    height: 60px;
+    width: 275px;
+    background: #c8c8c8;
+    border: 1px solid rgba(0, 0, 0, 1);
+    outline: none;
+    margin-bottom: 6px;
+}
+
+.projectButton:hover {
+   display: block;
+   height: 60px;
+   width: 275px;
+   background: #c8c8c8;
+   border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.projectButton:active {
+    display: block;
+    height: 60px;
+    width: 275px;
+    background: #d1d1d1;
+    border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.projectButton:disabled {
+    border: none;
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title id="title">Loading..</title>
+
+	<script src="Js/socket.min.io.js"></script>
+
+	<script src="Js/dev.js"></script>
+
+	<script>
+		const username = localStorage.getItem("usernameRPG");
+		const password = localStorage.getItem("passwordRPG");
+		const color = localStorage.getItem("colorRPG");
+
+		
+		const issingleplayer = localStorage.getItem("isSinglePlayerRPG")
+
+		if (username == undefined) {
+			window.location.replace("./Login.html");
+		} else {
+			document.getElementById('title').innerText = `Welcome ${username}`;
+		}
+	</script>
+
+	<script onload="Login()" src="Js/App.js/Login.js"></script>
+
+
+	<link rel="stylesheet" href="app.css">
+
+	<!--Classes-->
+	<script src="Js/App.js/Classes/Character.js"></script>
+	<script src="Js/App.js/Classes/InputHandler.js"></script>
+	<script src="Js/App.js/Classes/Cube Creator.js"></script>
+	<script src="Js/App.js/Classes/Circle Creator.js"></script>
+	<script src="Js/App.js/Classes/EnemyAi.js"></script>
+	<script src="Js/App.js/Classes/Bullet.js"></script>
+	<!--Gun Classes -->
+	<script src="Js/App.js/Classes/Guns/Gun.js"></script>
+	<script src="Js/App.js/Classes/Guns/Pistol.js"></script>
+	<script src="Js/App.js/Classes/Guns/Assault Rifle.js"></script>
+	<script src="Js/App.js/Classes/Guns/Shotgun.js"></script>
+</head>
+
+<!--This is for Server is down but right now it should automaticically kick the user when server gets disconnected -->
+<!-- <div id="ServerDown" style="display: none;">
+	<p style="font-size: 50px;">SERVER IS DOWN SORRY.</p>
+	<button onclick="dev(1)">Logout</button>
+</div> -->
+
+<body>
+	<!--Main Menu-->
+	<div class="main-menu" id="mainmenu">
+		<p class="loggedin">Logged in as: <span id="user">Loading...</span></p>
+		<h2 style="padding-bottom: 10px;">Main Menu <span id="version" style="font-size: small;">v0.0</span></h2>
+		<div class="server-list-container" id="serverlistcontainer">
+			<h2 id="serverlisttitle">Room List</h2>
+			<div class="create-room" id="createroom">
+				<form action="javascript:void(0)" onsubmit="CreateRoom()">
+					<label for="NameofRoom">Name of Room: </label><input type="text" name="NameofRoom" id="NameofRoom" required placeholder="Put Name of Room Here" minlength="3" maxlength="24">
+					<br>
+					<label for="IdofRoom">Code/Id of Room</label><input type="text" name="IdofRoom" id="IdofRoom" pattern="[A-Z, a-z, 0-9]*" required placeholder="4 Digit Id Here" minlength="4" maxlength="4">
+					<br>
+					<label for="MaxPlayers">Max Players of Room</label><input style="width: 40px;" id="MaxofRoom" type="number" value="5" required min="2" max="7">
+					<br><br>
+					<button type="submit" id="SubmitCreateRoom">Submit</button>
+					<div class="create-room-padding"><div class="create-room-button" onclick="ShowCreateRoom()">Cancel</div></div>
+				</form>
+			</div>
+			<div id="serverbrowser">
+				<div id="serverlist">
+					<div class="server-column">
+						Loading...
+					</div>
+				</div>
+				
+				<div class="reload-padding"><div class="reload-button" onclick="requestServerList()">Reload</div></div>
+				<div class="create-room-padding"><div class="create-room-button" onclick="ShowCreateRoom()">Create Room</div></div>
+			</div>
+		</div>
+
+		<div class="settings-container" id="settingscontainer">
+			<h1>Settings Bitch</h1>
+		</div>
+		<div class="button-padding"><div class="button" onclick="RoomList()" id="RoomList">RoomList</div></div>
+		<div class="button-padding"><div class="button" onclick="Settings()" id="Settings">Settings</div></div>
+		<div class="button-padding"><div class="button" onclick="dev(1)">Logout</div></div>
+		<script src="Js/App.js/MainMenu.js"></script>
+	</div>
+
+	<!--Canvas and ui elements-->
+	<div class="canvas-container" id="canvascontainer">
+		<canvas id="canvas"></canvas>
+
+		<div class="ui" id="ui">
+			<!--TODO: Put ammo counter and inventory system here at bottom right or left-->
+			<div style="color: red; font-size:large;">Your Ping is: <span id="ping">0</span></div>
+
+			<div class="inventory">
+				<div id="inventorycolumn1" class="inventory-column" style="color: grey;"><div id="inventoryitem1" class="inventoryitem"></div> .1</div>
+				<div id="inventorycolumn2" class="inventory-column"><div id="inventoryitem2" class="inventoryitem"></div> .2</div>
+				<div id="inventorycolumn3" class="inventory-column"><div id="inventoryitem3" class="inventoryitem"></div> .3</div>
+			</div>
+
+			<div class="ammo-counter" id="ammocounter"><span id="ammoamount"></span>/<span id="maxammoammount"></span></div>
+		</div>
+	</div>
+
+	<script src="Js/App.js/main.js"></script>
+	<script src="Js/App.js/onload.js"></script>
+	<script src="Js/App.js/ui.js"></script>
+	
+	<!--Connecting to game server-->
+	<script src="Js/App.js/ConnecttoGameserv.js"></script>
+</body>
+
+</html>

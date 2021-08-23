@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 03 By Max</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.2">
+    <link rel="stylesheet" href="global.css">
+    <script src="JS/Classes/Bush.js"></script>
+    <script src="JS/Classes/Character.js"></script>
+    <script src="JS/Classes/InputHandler.js"></script>
+</head>
+<body>
+    <div id="GameScreen" style="display: none;" class="noselect">
+        Logged in as: <span id="loggedinas">null</span>
+        <div class="Infomation" id="Shop" style="display: none;">
+            <h5>Shop</h5>
+            <div class="Shop1">
+                <h6>Shops:</h6>
+                <div class="v-scrollbar">
+                    <div style="font-size: 20px;">
+                        <p>Normal Shop: <span>0</span> amt</p>
+                        <button style="font-size: 21px;" disabled>Buy</button>
+                        <div style="opacity: 50%; background-color: grey;"> <!--This is all of the disables stuff (When you first start)-->
+                            <p>Big Shop: <span>0</span> amt</p>
+                            <button style="font-size: 21px;" disabled>Buy</button>
+                            
+                            <p>SuperMarket: <span>0</span> amt</p>
+                            <button style="font-size: 21px;" disabled>Buy</button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Shop2">
+                <h6>Business:</h6>
+                <div class="v-scrollbar">
+                    <div>
+                        (PlaceHolder)
+                    </div>
+                </div>
+            </div>
+            <p class="ShopBack" id="ShopBack">Back</p> 
+        </div>
+        <div class="Infomation" id="Infomationid">
+            <h5>Infomation</h5>
+                <p>Amount of money: $<span id="Amount of Money">0.00</span></p>
+                <p>Popularity: <span id="popularity">0</span>%</p>
+            <p><b style="font-size: 22px; padding-bottom: 10px;">Buttons</b></p>
+            <div>
+                
+            <p class="InfomationButton" id="ChangeToShop">Shop</p>
+            </div>
+                <p class="InfomationButton" id="SaveSession">AutoSave: <span id="Autosaveon">Off</span></p>
+        </div>
+        <div class="Canvas"><canvas height="1000" width="1000" id="gameScreen" style="border: 1px solid gray;"></canvas></div>
+    </div>
+    <div id="Tutorial" style="display: none;">
+        <h4>Welcome To Project 03</h4>
+    </div>
+    <div id="MainMenu" class="noselect" class="MainMenu">
+        <h1>Project 03 <span style="font-size: 15px;">ver 0.0.1</span></h1>
+        <div id="ListOfOptions">
+            <ul>
+                <p class="MenuButton" id="PlayButton">Play</p>
+                <p class="MenuButton" id="SettingsButton">Settings</p>
+                <p class="MenuButton" id="HowToPlay">How To Play</p>
+            </ul>
+        </div>
+        <div id="Settings" style="display: none">
+            <h5 style="padding-left: 30px;">Settings</h5>
+            <ul>
+                <p class="MenuButton" id="LogOut" style="opacity: 50%;">Logout/Reset</p>
+                <p class="MenuButton" id="BackSettings">Back</p>
+            </ul>
+        </div>
+        <div id="HowToPlaydiv" style="display: none;">
+            <h5 style="padding-left: 30px;">How To Play</h5>
+            <ul style="padding-left: 50px;">
+                <li>Make Money</li>
+                <li>GROW YOUR BUSINESS</li>
+                
+            </ul>
+            <ul><p class="MenuButton" id="BackHTP">Back</p></ul>
+        </div>
+    </div>
+    <script src="JS/main.js"></script>
+    <script src="JS/MainMenu Tutorial.js"></script>
+    <script src="JS/globalVariables.js"></script>
+</body>
+<footer id="footer">
+    <p class="copyright">Max Knight &copy; 2021</p>
+</footer>
+</html>
