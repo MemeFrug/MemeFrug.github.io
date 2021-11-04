@@ -1,0 +1,97 @@
+body,html  {
+  width:  100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+div.LoginMenu {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    width:  30%;
+    height: 30%;
+    text-align: center;
+  }
+
+div.LoginMenu div {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+canvas {
+  display: none;
+}
+
+.playButton {
+  border: 1px solid black;
+  background-color: rgb(37, 37, 37);
+  width: 100%;
+  height: 20%;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transition: 0.5s;
+}
+
+input {
+  text-align: center;
+}
+
+.playButton:hover {
+  background-color: rgb(56, 56, 56);
+}
+
+.playButton {
+  color: white;
+  font-size: larger;
+  margin: 0;
+}
+
+div.LoginMenuTitle {
+  margin: 0;
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+
+div.Leaderboard {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  width:  20%;
+  height: 50%;
+  text-align: center;
+  overflow-y: auto;
+}
+
+.Leaderboard_List {
+  overflow-y: auto;
+}
+
+.Leaderboard_Title {
+  margin: 0;
+  border: 1px solid black;
+}
+
+.Loading {
+  display: none;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
