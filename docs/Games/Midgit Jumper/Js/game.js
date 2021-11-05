@@ -163,7 +163,7 @@ function _AddEventListeners() {
 }
 
 function _Update(deltaTime) {
-	character._Update(deltaTime)
+	character._Update(deltaTime, inputhandler)
 
 	const WorldInRn = Worlds[WorldIn]
 	// let IsStandingOnSomething = false
@@ -278,7 +278,7 @@ function _Draw(deltaTime) {
 	ctx.setTransform(1, 0, 0, 1, 0, 0); //reset the transform matrix as it is cumulative
 
 	//Clamp the camera position to the world bounds while centering the camera around the player
-	camX = clamp(-character.x + canvas.width / 2, -Worlds[WorldIn].Size.x + newwidth - 100, 10);
+	camX = clamp(-character.x + canvas.width / 3, -Worlds[WorldIn].Size.x + newwidth - 100, 10);
 	camY = clamp(-character.y + canvas.height / 2, -Worlds[WorldIn].Size.y + newheight - 500, 10);
 
 	ctx.clearRect(0,0, newwidth, newheight)

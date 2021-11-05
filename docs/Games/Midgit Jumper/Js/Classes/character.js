@@ -72,52 +72,45 @@ class Character {
         this.animations = {
 
         }
+
+        this.amount = this.animationsgif.length
+        this.count = 0
+
+        this.leftkeydown = false
+        
     }
     //Some Spare Funcs
 
     LoadAnims() {
         return new Promise((resolve,reject)=>{
-            let count2 = 0
 
             for (let i = 0; i < this.animationsgif.length; i++) {
                 const element = this.animationsgif[i];
-                this.animations[element.Name] = element.gif
 
-                this.animations[element.Name].playOnLoad = false;
-                this.animations[element.Name].onerror = function(e){
+                element.gif.playOnLoad = false;
+                element.gif.onerror = function(e){
                     console.log("Gif loading error " + e.type);
                 }
-                this.animations[element.Name].load(element.gifLink)
-                count2++
+                element.gif.load(element.gifLink)
+
+                this.waittilltrue(resolve, element)
             }
-
-            const amount = this.animationsgif.length
-            let count = 0
-
-            function waittilltrue(resolve, element) {
-                if (count == amount) {
-                    resolve()
-                }else {
-                    if (!element.gif.loading) {
-                        count++
-                        waittilltrue(resolve, element)
-                    }
-                }
-            }
-
-            for (let i = 0; i < this.animations.length; i++) {
-                const element = this.animations[i];
-                console.log('yes');
-                if (element.loading) {
-                    setTimeout(()=>{
-                        console.log("yessit");
-                        waittilltrue(resolve, element)
-                    },200)
-                }else {
-                    count++
-                }
-            };
         })
+    }
+
+    waittilltrue(resolve, element) {
+        if (!element.gif.loading) {
+            this.animations[element.Name] = element.gif
+            this.count++
+        }else {
+            setTimeout(()=>{
+                this.waittilltrue(resolve, element)
+            },200)
+        }
+
+        if (this.count == this.amount) {
+            resolve()
+        }
     }
     
     _Respawn(object, deathsquare) {
@@ -220,7 +213,7 @@ class Character {
 
 
     //Functions
-    _Draw(ctx/* Gets context to reference the screen and draw on it */) {
+    _Draw(ctx/* Gets context to reference the screen and draw on it */, inputhandler) {
         // //Draws the character into the window frame
         // const originalCtxStyle = ctx.fillStyle
 
@@ -232,40 +225,57 @@ class Character {
         
         //Test
         if (this.vup < 0) {
-            if (this.animations.Jump) {
-                if (!this.animations.Jump.loading) {
+            if (this.leftkeydown) {
+                if (this.animations.JumpLeft) {
+                    this.animations.JumpLeft.play()
+                    ctx.drawImage(this.animations.JumpLeft.image, this.x - 46, this.y - 24, 140, 140);
+
+                }
+            }else {
+                if (this.animations.Jump) {
                     this.animations.Jump.play()
                     ctx.drawImage(this.animations.Jump.image, this.x - 46, this.y - 24, 140, 140);
+
                 }
             }
         }
         else if (this.vup > 0) {
-            if (this.animations.Falling) {
-                if (!this.animations.Falling.loading) {
-                    this.animations.Falling.play()
-                    ctx.drawImage(this.animations.Falling.image, this.x - 46, this.y - 24, 140, 140);
-                }
+            if (this.leftkeydown) {
+                this.animations.FallingLeft.play()
+                ctx.drawImage(this.animations.FallingLeft.image, this.x - 46, this.y - 24, 140, 140);    
+            }else {
+                this.animations.Falling.play()
+                ctx.drawImage(this.animations.Falling.image, this.x - 46, this.y - 24, 140, 140);  
+            }
+
+
+        }
+        else if (this.vright > 0 && this.vleft == 0) {
+            if (this.leftkeydown) {
+                this.animations.RunLeft.play()
+                ctx.drawImage(this.animations.RunLeft.image, this.x - 46, this.y - 24, 140, 140);
+            }else {
+                this.animations.Run.play()
+                ctx.drawImage(this.animations.Run.image, this.x - 46, this.y - 24, 140, 140);
             }
         }
-        else if(this.vright > 0 && this.vleft == 0) {
-            if (this.animations.Run) {
-                if (!this.animations.Run.loading) {
-                    ctx.drawImage(this.animations.Run.image, this.x - 46, this.y - 24, 170, 140);
-                }
-            }
-        }
-        else if(this.vleft < 0 && this.vright == 0) {
-            if (this.animations.RunLeft) {
-                if (!this.animations.RunLeft.loading) {
-                    ctx.drawImage(this.animations.RunLeft.image, this.x - 46, this.y - 24, 140, 140);     
-                }
+        else if (this.vleft < 0 && this.vright == 0) {
+            if (this.leftkeydown) {
+                this.animations.RunLeft.play()
+                ctx.drawImage(this.animations.RunLeft.image, this.x - 46, this.y - 24, 140, 140);
+            }else {
+                this.animations.RunLeft.play()
+                ctx.drawImage(this.animations.RunLeft.image, this.x - 46, this.y - 24, 140, 140);
             }
         }
         else if (this.animations.Idle) { // If gif object defined
-            if (!this.animations.Idle.loading) {  // if loaded
+            if (this.leftkeydown) {
+                this.animations.IdleLeft.play()
+                ctx.drawImage(this.animations.IdleLeft.image, this.x - 46, this.y - 28, 140, 140);
+            }else {
                 // draw random access to gif frames
-                ctx.drawImage(this.animations.Idle.image, this.x - 46, this.y - 24, 140, 140);
-                this.Jumpgif.pause()
+                this.animations.Idle.play()
+                ctx.drawImage(this.animations.Idle.image, this.x - 46, this.y - 28, 140, 140);
             }
         }
     }
@@ -283,7 +293,7 @@ class Character {
         ctx.fillStyle = originalCtxStyle
     }
 
-    _Update(deltaTime) {
+    _Update(deltaTime, inputhandler) {
         if (!deltaTime) return;
 
         this.x += this.vleft;
@@ -319,6 +329,12 @@ class Character {
         if (character.x <= 0) {
             character.x = 0
         }
+
+        //Get lastinput
+        if (inputhandler.keysdown.a) 
+            this.leftkeydown = true;
+        else if (inputhandler.keysdown.d) 
+            this.leftkeydown = false;
     }
 
     _Move(movement) {
@@ -329,7 +345,7 @@ class Character {
         else if (movement == "w" && this.isOnGround) {
             //Jump
             this.vup = this.jumppower
-            this.Jumpgif.seekFrame(0)
+            this.animations.Jump.seekFrame(0)
             // this.gravity = 0
             this.isJumping = true
         }
