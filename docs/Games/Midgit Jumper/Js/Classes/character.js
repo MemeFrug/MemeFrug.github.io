@@ -27,66 +27,96 @@ class Character {
         //Animations
         this.Idlegif;
         
-        this.gifIdle = "./Assets/sprites/steve idle.gif"; 
-        this.gifRun = "./Assets/sprites/mc run.gif"
-        this.gifRunleft = "./Assets/sprites/steve run reverted.gif"
-        this.gifJump = "./Assets/sprites/steve jump.gif"
-        this.gifFalling = "./Assets/sprites/falling.gif"
+        this.animationsgif = [
+            {//Idle
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve idle.gif",
+                Name: "Idle",
+            },
+            {//Idle reverted
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve idle reverted.gif",
+                Name: "IdleLeft",
+            },
+            {//Run
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve run.gif",
+                Name: "Run",
+            },
+            {//Run Left
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve run reverted.gif",
+                Name: "RunLeft",
+            },
+            {//Jump
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve jump.gif",
+                Name: "Jump",
+            },
+            {//Jump reverted
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve jump reverted.gif",
+                Name: "JumpLeft",
+            },
+            {//Falling
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve falling.gif",
+                Name: "Falling",
+            },
+            {//Falling reverted
+                gif: GIF(),
+                gifLink: "./Assets/sprites/steve falling reverted.gif",
+                Name: "FallingLeft",
+            }
+        ]
+        this.animations = {
 
-        //Make anims
-        
-        this.Idlegif = GIF();
-
-        this.Rungif = GIF();
-
-        this.Rungifleft = GIF()
-
-        this.Jumpgif = GIF();
-
-        this.Fallinggif = GIF();
+        }
     }
     //Some Spare Funcs
 
     LoadAnims() {
         return new Promise((resolve,reject)=>{
-            //Make anims    
-            this.Idlegif.onerror = function(e){
-                console.log("Gif loading error " + e.type);
-            }
-            this.Idlegif.load(this.gifIdle); 
+            let count2 = 0
 
-            this.Rungif.onerror = function(e) {
-                console.log("Gif loading error " + e.type)
-            }
-            this.Rungif.load(this.gifRun);
+            for (let i = 0; i < this.animationsgif.length; i++) {
+                const element = this.animationsgif[i];
+                this.animations[element.Name] = element.gif
 
-            this.Rungifleft.onerror = function(e) {
-                console.log("Gif loading error " + e.type)
+                this.animations[element.Name].playOnLoad = false;
+                this.animations[element.Name].onerror = function(e){
+                    console.log("Gif loading error " + e.type);
+                }
+                this.animations[element.Name].load(element.gifLink)
+                count2++
             }
-            this.Rungifleft.load(this.gifRunleft);
 
-            this.Jumpgif.playOnLoad = false;
-            this.Jumpgif.onerror = function(e) {
-                console.log("Gif loading error " + e.type)
-            }
-            this.Jumpgif.load(this.gifJump);
+            const amount = this.animationsgif.length
+            let count = 0
 
-            this.Fallinggif.playOnLoad = false;
-            this.Fallinggif.onerror = function(e) {
-                console.log("Gif loading error " + e.type)
-            }
-            this.Fallinggif.load(this.gifFalling);
-
-            function waittilltrue(Idlegif, Rungif, Rungifleft, Jumpgif, Fallinggif, resolve) {
-                if (!Idlegif.loading && !Rungif.loading && !Rungifleft.loading && !Jumpgif.loading && !Fallinggif.loading) {
+            function waittilltrue(resolve, element) {
+                if (count == amount) {
                     resolve()
                 }else {
-                    setTimeout(() => {
-                        waittilltrue(Idlegif, Rungif, Rungifleft, Jumpgif, Fallinggif, resolve)
-                    }, 500);
+                    if (!element.gif.loading) {
+                        count++
+                        waittilltrue(resolve, element)
+                    }
                 }
             }
-            waittilltrue(this.Idlegif, this.Rungif, this.Rungifleft, this.Jumpgif, this.Fallinggif, resolve)
+
+            for (let i = 0; i < this.animations.length; i++) {
+                const element = this.animations[i];
+                console.log('yes');
+                if (element.loading) {
+                    setTimeout(()=>{
+                        console.log("yessit");
+                        waittilltrue(resolve, element)
+                    },200)
+                }else {
+                    count++
+                }
+            };
         })
     }
     
@@ -202,39 +232,39 @@ class Character {
         
         //Test
         if (this.vup < 0) {
-            if (this.Jumpgif) {
-                if (!this.Jumpgif.loading) {
-                    this.Jumpgif.play()
-                    ctx.drawImage(this.Jumpgif.image, this.x - 46, this.y - 24, 140, 140);
+            if (this.animations.Jump) {
+                if (!this.animations.Jump.loading) {
+                    this.animations.Jump.play()
+                    ctx.drawImage(this.animations.Jump.image, this.x - 46, this.y - 24, 140, 140);
                 }
             }
         }
         else if (this.vup > 0) {
-            if (this.Fallinggif) {
-                if (!this.Fallinggif.loading) {
-                    this.Fallinggif.play()
-                    ctx.drawImage(this.Fallinggif.image, this.x - 46, this.y - 24, 140, 140);
+            if (this.animations.Falling) {
+                if (!this.animations.Falling.loading) {
+                    this.animations.Falling.play()
+                    ctx.drawImage(this.animations.Falling.image, this.x - 46, this.y - 24, 140, 140);
                 }
             }
         }
         else if(this.vright > 0 && this.vleft == 0) {
-            if (this.Rungif) {
-                if (!this.Rungif.loading) {
-                    ctx.drawImage(this.Rungif.image, this.x - 46, this.y - 24, 170, 140);
+            if (this.animations.Run) {
+                if (!this.animations.Run.loading) {
+                    ctx.drawImage(this.animations.Run.image, this.x - 46, this.y - 24, 170, 140);
                 }
             }
         }
         else if(this.vleft < 0 && this.vright == 0) {
-            if (this.Rungifleft) {
-                if (!this.Rungifleft.loading) {
-                    ctx.drawImage(this.Rungifleft.image, this.x - 46, this.y - 24, 140, 140);     
+            if (this.animations.RunLeft) {
+                if (!this.animations.RunLeft.loading) {
+                    ctx.drawImage(this.animations.RunLeft.image, this.x - 46, this.y - 24, 140, 140);     
                 }
             }
         }
-        else if (this.Idlegif) { // If gif object defined
-            if (!this.Idlegif.loading) {  // if loaded
+        else if (this.animations.Idle) { // If gif object defined
+            if (!this.animations.Idle.loading) {  // if loaded
                 // draw random access to gif frames
-                ctx.drawImage(this.Idlegif.image, this.x - 46, this.y - 24, 140, 140);
+                ctx.drawImage(this.animations.Idle.image, this.x - 46, this.y - 24, 140, 140);
                 this.Jumpgif.pause()
             }
         }
