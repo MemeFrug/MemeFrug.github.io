@@ -3,13 +3,13 @@ class Character {
         //Variables
         this.x = x;
         this.y = y
-        this.w = 65
+        this.w = 50
         this.h = 90
         this.isOnGround = false
 
         //Unchangeable
-        this.speedmax = 9
-        this.gravityMax = 25
+        this.speedmax = 10
+        this.gravityMax = 30
         this.gravity = 0.8
         this.jumppower = -15
         this.gravityTweenFloat = 0.1
@@ -346,6 +346,7 @@ class Character {
             //Jump
             this.vup = this.jumppower
             this.animations.Jump.seekFrame(0)
+            this.animations.JumpLeft.seekFrame(0)
             // this.gravity = 0
             this.isJumping = true
         }
