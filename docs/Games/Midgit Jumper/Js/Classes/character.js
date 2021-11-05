@@ -27,11 +27,11 @@ class Character {
         //Animations
         this.Idlegif;
         
-        this.gifIdle = "../Assets/sprites/steve idle.gif"; 
-        this.gifRun = "../Assets/sprites/mc run.gif"
-        this.gifRunleft = "../Assets/sprites/steve run reverted.gif"
-        this.gifJump = "../Assets/sprites/steve jump.gif"
-        this.gifFalling = "../Assets/sprites/falling.gif"
+        this.gifIdle = "./Assets/sprites/steve idle.gif"; 
+        this.gifRun = "./Assets/sprites/mc run.gif"
+        this.gifRunleft = "./Assets/sprites/steve run reverted.gif"
+        this.gifJump = "./Assets/sprites/steve jump.gif"
+        this.gifFalling = "./Assets/sprites/falling.gif"
 
         //Make anims
         

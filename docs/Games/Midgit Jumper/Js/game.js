@@ -130,8 +130,8 @@ function _GenerateWorld() {
 				}
 			}	
 			//Random the ammount of enemys
-			const maxAmountofEnemys = 1000
-			const minAmountofEnemys = 500
+			const maxAmountofEnemys = 10
+			const minAmountofEnemys = 5
 			
 			const AmountofEnemys = Math.floor(Math.random() * (maxAmountofEnemys - minAmountofEnemys + 1) + minAmountofEnemys);
 			for (let i = 0; i < AmountofEnemys; i++) {
