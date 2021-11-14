@@ -13,8 +13,7 @@ class Character {
         this.gravity = 0.8
         this.jumppower = -15
         this.gravityTweenFloat = 0.1
-
-        this.coyoteTime = 400 //Milliseconds
+        this.coyoteTime = 0.5
 
         //Velocities
         this.vleft = 0
@@ -25,9 +24,6 @@ class Character {
         //Player
         this.health = 100;
         this.isDead = false
-
-        this.coyoteTimeout = null
-        this.HasDoneCoyote = false
 
         //Animations
         this.Idlegif;
@@ -118,11 +114,14 @@ class Character {
         }
     }
     
-    _Respawn(object) {
+    _Respawn(object, deathsquare) {
         this.y = object.y - 50
         this.x = object.x + 5
         
         this.health = 100
+
+        deathsquare.opacity = 0
+        
     }
 
     iscolliding(object) {
@@ -155,15 +154,6 @@ class Character {
             const istrue = this.narrowPhase(obj);
             // console.log(this.isOnGround);
             if (istrue) return true
-    }
-
-    coyotetime() {
-        if (this.HasDoneCoyote) return
-        this.HasDoneCoyote = true
-        this.coyoteTimeout = setTimeout(() => {
-            this.isOnGround = false
-            this.HasDoneCoyote = false
-        }, this.coyoteTime);
     }
 
     narrowPhase(obj) {
@@ -224,7 +214,7 @@ class Character {
 
 
     //Functions
-    _Draw(ctx/* Gets context to reference the screen and draw on it */) {
+    _Draw(ctx/* Gets context to reference the screen and draw on it */, inputhandler) {
         // //Draws the character into the window frame
         // const originalCtxStyle = ctx.fillStyle
 

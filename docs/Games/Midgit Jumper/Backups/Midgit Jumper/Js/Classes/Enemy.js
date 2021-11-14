@@ -1,5 +1,5 @@
 class Enemy {
-    constructor(x, y, w, h, health, type = "enemy") {
+    constructor(x, y, w, h, health) {
         //Variables
         this.x = x;
         this.y = y
@@ -8,12 +8,11 @@ class Enemy {
         this.isOnGround = false
 
         //Unchangeable
-        this.speedmax = 5
+        this.speedmax = 9
         this.gravityMax = 25
         this.gravity = 0.8
         this.jumppower = -15
         this.gravityTweenFloat = 0.1
-        this.type = type
 
         //Velocities
         this.vleft = 0
@@ -27,15 +26,9 @@ class Enemy {
 
         //Ai
         this.MovingInt;
-        this.IsMoving = false
-
-        setTimeout(() => {
-            this._Move("right")
-        }, 500);
     }
-    _TakeHealth(amt) {
-        if (this.health <= 0) return
-        this.health -= amt
+    _Die() {
+        this.health = 0
     }
 
     iscolliding(object) {
@@ -80,8 +73,7 @@ class Enemy {
             this.x = obj.x + obj.w;
             this.vright = 0; 
             this.vleft = 0;
-            this._Move("right")
-            // if (this.MovingInt) this._Move("jump")
+            if (this.MovingInt) this._Move("jump")
             // console.log("detecting from the left")
             // return false
         }
@@ -96,9 +88,8 @@ class Enemy {
             this.x = obj.x - this.w;
             this.vright = 0;
             this.vleft = 0;
-            this._Move("left")
 
-            // if (this.MovingInt) this._Move("jump")
+            if (this.MovingInt) this._Move("jump")
 
             // return false
         } else {//dont know what i have done but it kinda works (come back and tidie up when smartws)
@@ -150,45 +141,48 @@ class Enemy {
         ctx.fillStyle = originalCtxStyle
     }
 
-    _Moveto(object, _CallBack) {
-        // if (this.MovingInt) {
-        //     clearInterval(this.MovingInt)
-        //     this.MovingInt = null
+    _Moveto(object) {
+        if (this.MovingInt) {
+            clearInterval(this.MovingInt)
+            this.MovingInt = null
 
-        //     this.MovingInt = setInterval((object) => {
-        //         if (object.x < this.x) {
-        //             this._Move("left")
-        //         }
+            this.MovingInt = setInterval((object) => {
+                console.log("In this one");
+                if (object.x < this.x) {
+                    console.log("trying to move left");
+                    this._Move("left")
+                }
         
-        //         else if (object.x > this.xkj){
-        //             this._Move("right")
-        //         } else {
+                else if (object.x > this.x){
+                    console.log("trying to move right");
+                    this._Move("right")
+                } else {
 
-        //             this._stopMoving()
-        //             clearInterval(this.MovingInt)
-        //             _CallBack()
-        //         }
-        //     }, 1, object);
-        // }else {
-        //     this.MovingInt = setInterval((object) => {
-        //         this._stopMoving()
-
-        //         if (object.x < this.x) {
-        //             this._Move("left")
-        //         }
+                    this._stopMoving()
+                    clearInterval(this.MovingInt)
+                }
+            }, 1, object);
+        }else {
+            this.MovingInt = setInterval((object) => {
+                if (object.x < this.x) {
+                    console.log("trying to move left");
+                    this._Move("left")
+                }
         
-        //         else if (object.x > this.x){
-        //             this._Move("right")
-        //         } else {
-        //             // this._stopMoving()
-        //             clearInterval(this.MovingInt)
-        //             this.MovingInt = null
-        //             _CallBack()
-        //         }
+                else if (object.x > this.x){
+                    console.log("trying to move right");
+                    this._Move("right")
+                } else {
+
+                    // this._stopMoving()
+                    clearInterval(this.MovingInt)
+                    this.MovingInt = null
+                    console.log("Trying to clear it");
+                }
 
 
-        //     }, 1, object);
-        // }
+            }, 1, object);
+        }
     }
 
     
@@ -215,10 +209,4 @@ class Enemy {
         this.vdown = 0;
         this.vright = 0;
     }
-}
-
-class Boss extends Enemy{
-    // _Update(deltaTime) {
-    //     // console.log("Boss is working")
-    // }
 }

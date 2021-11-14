@@ -11,26 +11,22 @@ class InputHandler {
 
         document.addEventListener('keydown', (event) => {
             switch (event.key) {
-                //left arrow
-                case "ArrowLeft":
-                    character._Move('a')
-                    this.keysdown.a = true
-                    break;
-                //right arrow
-                case 'ArrowRight':
-                    character._Move('d')
-                    this.keysdown.d = true
-                    break;
-                //move up arrow
-                case 'ArrowUp':
-                    character._Move('w')
-                    this.keysdown.w = true
-                    break;
-                //move down arrpw
-                case 'ArrowDown':
-                    character._Move('s')
-                    this.keysdown.s = true
-                    break;
+                // //left arrow
+                // case 37:
+                    
+                //     break;
+                // //right arrow
+                // case 39:
+
+                //     break;
+                // //move up arrow
+                // case 38:
+                    
+                //     break;
+                // //move down arrpw
+                // case 40:
+                    
+                //     break;
                 //move up key
                 case 'w':
                     character._Move('w')
@@ -51,35 +47,27 @@ class InputHandler {
                     character._Move('d')
                     this.keysdown.d = true
                     break;
-                case " ":
-                    character._Move('w')
-                    this.keysdown.w = true
                 default:
-                    console.log(event.key, "WAT");
             }
         })
         document.addEventListener('keyup', (event) => {
             switch (event.key) {
-                //left arrow
-                case 'ArrowLeft':
-                    character._stopMoving('a')
-                    this.keysdown.a = false
-                    break;
-                //right arrow
-                case 'ArrowRight':
-                    character._stopMoving('d')
-                    this.keysdown.d = false
-                    break;
-                //move up arrow
-                case 'ArrowUp':
-                    character._stopMoving('w')
-                    this.keysdown.w = false
-                    break;
-                //move down arrow
-                case 'ArrowDown':
-                    character._stopMoving('s')
-                    this.keysdown.s = false
-                    break;
+                // //left arrow
+                // case 37:
+
+                //     break;
+                // //right arrow
+                // case 39:
+
+                //     break;
+                // //move up arrow
+                // case 38:
+
+                //     break;
+                // //move down arrow
+                // case 40:
+                    
+                //     break;
 
                 //move up key
                 case 'w':
@@ -101,11 +89,6 @@ class InputHandler {
                     character._stopMoving('d')
                     this.keysdown.d = false
                     break;
-                    
-                case " ":
-                    character._stopMoving('w')
-                    this.keysdown.w = false
-
                 default:
             }
         })

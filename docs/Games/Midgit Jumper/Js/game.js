@@ -10,6 +10,8 @@ let newwidth;
 let newheight;
 
 let DeathSquare = new blockCreator(0, 0, 0, 0, "black", 0)
+let NextWorldSquare = new blockCreator(0, 0, 0, 0, "black", 0)
+let NextWorldSquareText = new Text(0, 0, "Next World", "white", 0)
 
 function windowResize() {
 
@@ -18,6 +20,10 @@ function windowResize() {
 	
 	DeathSquare.w = newwidth
 	DeathSquare.h = newheight
+	NextWorldSquare.w = newwidth
+	NextWorldSquare.h = newheight
+	NextWorldSquareText.x = newwidth / 2
+	NextWorldSquareText.y = newheight / 2
 
 	canvas.width = newwidth;
 	canvas.height = newheight;
@@ -44,8 +50,10 @@ const Worlds = [
 			// new blockCreator(0, 1000, 100,  Worlds[WorldIn].Size.x - 1000), The starting block is in the function _GenerateWorld()
 		],
 		Enemys: [
-			new Enemy(0, 5000 - 2100, 50, 50, 100)
-		]
+			// new Enemy(0, 5000 - 2100, 50, 50, 100)
+		],
+		WorldDone: false,
+		FinishedWorld: false
 	}
 ]
 
@@ -62,11 +70,19 @@ function _GenerateWorld() {
     return new Promise((resolve,reject)=>{
 
 		//SomeValuestochangeworldgen
-		const maxWorldSizeX = 20000
-		const minWorldSizeX = 9000
+		const maxWorldSizeX = 9000
+		const minWorldSizeX = 5000
 
 		const maxAmtWorlds = 7
 		const minAmtWorlds = 2
+
+		//Random the ammount of enemys
+		const maxAmountofEnemys = 10
+		const minAmountofEnemys = 5
+
+		//Random Boss health
+		const maxBossHealth = 1000
+		const minBossHealth = 250
 
 		//Get the ammount of worlds to create
 		const AmountOfWorlds = Math.floor(Math.random() * (maxAmtWorlds - minAmtWorlds + 1) + minAmtWorlds);
@@ -88,7 +104,8 @@ function _GenerateWorld() {
 					Enemys: [
 
 					],
-					WorldDone: false
+					WorldDone: false,
+					FinishedWorld: false
 				})
 			}
 
@@ -103,15 +120,21 @@ function _GenerateWorld() {
 		
 			for (let i = 0; i < Infinity; i++) {
 				const element = Worlds[index].Objects;
+				const Enemy = Worlds[index].Enemys;
 				const lastblock = element[Worlds[index].Objects.length-1]
 
 				// console.log(lastblock);
 		
 				const upordown = Math.floor(Math.random() * 5);
 		
-				if (lastblock.x + lastblock.w > Worlds[index].Size.x - 1000) {
+				if (lastblock.x + lastblock.w > Worlds[index].Size.x - 2000) {
+					//Get Bosses Health
+					const BossHealth = Math.floor(Math.random() * (maxBossHealth - minBossHealth + 1) + minBossHealth);
 					//Spawn in the boss level
 					element.push(new blockCreator(lastblock.x + lastblock.w + 250, lastblock.y + 200, 1000, Worlds[index].Size.y - lastblock.y + 550))
+					Enemy.push(new Boss(lastblock.x + lastblock.w + 550, lastblock.y + 100, 100, 150, BossHealth, "boss"))
+					element.push(new blockCreator(lastblock.x + lastblock.w + 200, lastblock.y - 50, 50, Worlds[index].Size.y - lastblock.y + 550))
+					element.push(new blockCreator(lastblock.x + lastblock.w + 1250, lastblock.y + 100, 1000, Worlds[index].Size.y - lastblock.y + 550))
 					break
 				}else if (upordown == 0) {// 0 is same level
 					element[Worlds[index].Objects.length-1].w += 50
@@ -124,14 +147,13 @@ function _GenerateWorld() {
 				}else if (upordown == 3) {// 3 is down
 					element.push(new blockCreator(lastblock.x + lastblock.w, lastblock.y - 50, 50, Worlds[index].Size.y - lastblock.y + 550))
 				}else if (upordown == 4) { // Create a jump
-					element.push(new blockCreator(lastblock.x + lastblock.w + 200, lastblock.y - 50, 200, Worlds[index].Size.y - lastblock.y + 550))
+					element.push(new blockCreator(lastblock.x + lastblock.w, lastblock.y - 50, 50, Worlds[index].Size.y - lastblock.y + 550))
+					element.push(new blockCreator(lastblock.x + lastblock.w + 250, lastblock.y - 100, 50, Worlds[index].Size.y - lastblock.y + 550))
+					element.push(new blockCreator(lastblock.x + lastblock.w + 300, lastblock.y - 50, 200, Worlds[index].Size.y - lastblock.y + 550))
 				}else {
 					console.log("added nothing");
 				}
-			}	
-			//Random the ammount of enemys
-			const maxAmountofEnemys = 10
-			const minAmountofEnemys = 5
+			}
 			
 			const AmountofEnemys = Math.floor(Math.random() * (maxAmountofEnemys - minAmountofEnemys + 1) + minAmountofEnemys);
 			for (let i = 0; i < AmountofEnemys; i++) {
@@ -143,7 +165,8 @@ function _GenerateWorld() {
 				// if (!RandomElement.enemyhasspawned) {
 					// console.log(RandomElement.x);
 					// RandomElement.enemyhasspawned = true
-					Worlds[index].Enemys.push(new Enemy(RandomElement.x, RandomElement.y - 150, 50, 50, 100))	
+					Worlds[index].Enemys.push(new Enemy(RandomElement.x, RandomElement.y - 150, 50, 100, 50))	
+					// Worlds[index].Enemys.push(new Enemy(RandomElement.x, RandomElement.y - 150, 50, 100, 100))	
 				// }
 				// else {
 					// i--;
@@ -176,7 +199,13 @@ function _Update(deltaTime) {
 			character.isOnGround = true
 			// break;
 		}else if (i == WorldInRn.Objects.length - 1) {
-			character.isOnGround = false
+			// console.log(character.coyoteTimeout)
+
+			console.log(character.isOnGround)
+			if (character.isJumping) character.isOnGround = false
+			else {
+				if (!character.HasDoneCoyote) character.coyotetime()
+			}
 			// console.log("True");
 		}
 	}
@@ -192,8 +221,15 @@ function _Update(deltaTime) {
 		if (istrue) {
 			IsStandingOnSomething = true
 			character.isOnGround = true
-			WorldInRn.Enemys.splice(i, 1)
+			element._TakeHealth(50);
 			character._Move("w")
+
+			if (element.health <= 0) {
+				if (element.type == "boss") {
+					WorldInRn.WorldDone = true
+				}
+				WorldInRn.Enemys.splice(i, 1)
+			}
 			break;
 		}
 		//check for collisions with other enemys
@@ -211,11 +247,10 @@ function _Update(deltaTime) {
 				element.isOnGround = false
 			}
 		});
-	}
 
-	if (WorldInRn.WorldDone) {
-		console.log("Completed The World");
-		NextWorld()
+		if (element.y > WorldInRn.Size.y) {
+			WorldInRn.Enemys.splice(i, 1)
+		}
 	}
 
 	if (character.y > Worlds[WorldIn].Size.y) {
@@ -224,6 +259,12 @@ function _Update(deltaTime) {
 			console.log("Working")
 			AnimateDeath()
 		}
+	}
+
+	if (WorldInRn.WorldDone && !WorldInRn.FinishedWorld) {
+		WorldInRn.FinishedWorld = true
+		console.log("Completed The World");
+		AnimateNextWorld()
 	}
 }
 
@@ -251,7 +292,8 @@ async function AnimateDeath() {
 		if (DeathSquare.opacity >= 1) {
 			linger += 1
 			if (linger > lingertime) {
-				character._Respawn(Worlds[WorldIn].Objects[0], DeathSquare)
+				character._Respawn(Worlds[WorldIn].Objects[0])
+				DeathSquare.opacity = 0
 				
 				stopwatch.start()
 				break;
@@ -262,7 +304,42 @@ async function AnimateDeath() {
 }
 
 async function AnimateNextWorld(){
+	stopwatch.stop()
+	const incrementby = 0.02
+	const timetoincrementby = 1 //Milliseconds
+	let linger = 0
+	const lingertime = 450
+	for (let index = 0; index < Infinity; index++) {
+		NextWorldSquare.opacity += incrementby
+		NextWorldSquareText.opacity += incrementby
+		if (NextWorldSquare.opacity >= 1) {
+			linger += 1
+			if (linger > lingertime) {
+				NextWorld()
+				
+				AnimateAfterNextWorld()
+				break;
+			}
+		}
+		await sleep(timetoincrementby)
+	}
+}
 
+async function AnimateAfterNextWorld(){
+	const incrementby = 0.02
+	const timetoincrementby = 1 //Milliseconds
+	for (let index = 0; index < Infinity; index++) {
+		NextWorldSquare.opacity -= incrementby
+		NextWorldSquareText.opacity -= incrementby
+		if (NextWorldSquare.opacity <= 0) {
+			NextWorldSquare.opacity = 0
+			NextWorldSquareText.opacity = 0
+			
+			stopwatch.start()
+			break;
+		}
+		await sleep(timetoincrementby)
+	}
 }
 
 //Function for clampling the players camera
@@ -278,7 +355,7 @@ function _Draw(deltaTime) {
 	ctx.setTransform(1, 0, 0, 1, 0, 0); //reset the transform matrix as it is cumulative
 
 	//Clamp the camera position to the world bounds while centering the camera around the player
-	camX = clamp(-character.x + canvas.width / 3, -Worlds[WorldIn].Size.x + newwidth - 100, 10);
+	camX = clamp(-character.x + canvas.width / 3, -Worlds[WorldIn].Size.x + newwidth, 0);
 	camY = clamp(-character.y + canvas.height / 2, -Worlds[WorldIn].Size.y + newheight - 500, 10);
 
 	ctx.clearRect(0,0, newwidth, newheight)
@@ -288,6 +365,10 @@ function _Draw(deltaTime) {
 	
 	//Draw the death animation square
 	DeathSquare._Draw(ctx)
+	
+	//Draw the next world animation square
+	NextWorldSquare._Draw(ctx)
+	NextWorldSquareText._Draw(ctx)
 
 	//Draw the timer
 	Drawtimer(ctx)
@@ -309,6 +390,12 @@ function _Draw(deltaTime) {
 	//Update World
     requestAnimationFrame(_Update)
 
+	if (NextWorldSquare.opacity > 0) { //If the next world animation is playing
+		requestAnimationFrame(_Draw);
+		return;
+	}
+
+	//Draw World
 	character._Draw(ctx)
 
 	const WorldInRn = Worlds[WorldIn]
