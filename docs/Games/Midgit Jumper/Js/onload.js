@@ -4,7 +4,6 @@ console.log("Loaded Onload");
 const canvascontainer = document.getElementById("canvascontainer");
 const canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-let username = "";
 
 function cleanUsername(input) {
     var output = "";
@@ -21,9 +20,9 @@ function cleanUsername(input) {
 function MainMenuPlay() {
     //Check the input element
     let usernameInputElement = document.getElementById("NameOfPlayer");
-    username = usernameInputElement.value;
     //Check if username is valid
-    username = cleanUsername(username);
+    username = cleanUsername(usernameInputElement.value);
+    console.log(username);
     _Init();
 }
 
@@ -56,3 +55,14 @@ async function _Init() {
     _Draw();
     stopwatch.start()
 }
+
+function Onload() {
+    const LeaderBoard = document.getElementById("LeaderBoard_Content");
+    const Data = JSON.parse(JSON.stringify(LoadData()));
+    for (let i = 0; i < Data.length; i++) {
+        const element = Data[i];
+        element.username 
+    }
+}
+
+window.onload = Onload;

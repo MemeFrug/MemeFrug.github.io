@@ -15,6 +15,10 @@ class Enemy {
         this.gravityTweenFloat = 0.1
         this.type = type
 
+        this.damagecooldown = 1000 //Milliseconds
+        this.damagecooldownBool = true //When false it cant attack for the peroid of time
+        this.startCooldown = false
+
         //Velocities
         this.vleft = 0
         this.vright = 0
@@ -33,9 +37,21 @@ class Enemy {
             this._Move("right")
         }, 500);
     }
+    _AttackCooldown() {
+        this.startCooldown = false
+        this.damagecooldownBool = false
+        setTimeout(() => {
+            this.damagecooldownBool = true
+        }, this.damagecooldown);
+    }
+
     _TakeHealth(amt) {
         if (this.health <= 0) return
+        console.log(amt)
+        console.log(this.health)
         this.health -= amt
+        console.log(amt)
+        console.log(this.health)
     }
 
     iscolliding(object) {
@@ -50,7 +66,7 @@ class Enemy {
     }
 
     //Collision
-    collisionDetection(obj) {
+    collisionDetection(obj, AnimateHurt) {
         if (this.x + this.w < obj.x ||
             this.x > obj.x + obj.w ||
             this.y + this.h < obj.y ||
@@ -58,12 +74,12 @@ class Enemy {
                 return false
             }
             // this.isOnGround = true
-            const istrue = this.narrowPhase(obj);
+            const istrue = this.narrowPhase(obj, AnimateHurt);
             // console.log(this.isOnGround);
             if (istrue) return true
     }
 
-    narrowPhase(obj) {
+    narrowPhase(obj, AnimateHurt) {
         let playerTop_ObjBottom = Math.abs(this.y - (obj.y + obj.h));
         let playerRight_ObjLeft = Math.abs((this.x + this.w) - obj.x);
         let playerLeft_ObjRight = Math.abs(this.x - (obj.x + obj.w));
@@ -80,6 +96,11 @@ class Enemy {
             this.x = obj.x + obj.w;
             this.vright = 0; 
             this.vleft = 0;
+            if (obj.HasDoneCoyote != null && this.damagecooldownBool){
+                 obj.health -= 20
+                 this.startCooldown = true
+                 AnimateHurt()
+            }
             this._Move("right")
             // if (this.MovingInt) this._Move("jump")
             // console.log("detecting from the left")
@@ -96,6 +117,11 @@ class Enemy {
             this.x = obj.x - this.w;
             this.vright = 0;
             this.vleft = 0;
+            if (obj.HasDoneCoyote != null && this.damagecooldownBool){
+                 obj.health -= 20
+                 this.startCooldown = true
+                 AnimateHurt()
+            }
             this._Move("left")
 
             // if (this.MovingInt) this._Move("jump")
@@ -136,6 +162,10 @@ class Enemy {
 
         if (character.x <= 0) {
             character.x = 0
+        }
+
+        if (this.startCooldown) {
+            this._AttackCooldown();
         }
     }
 

@@ -72,6 +72,7 @@ class Stopwatch {
     
     print() {
         Time = this.format(this.times);
+        return Time;
     }
     
     format(times) {
