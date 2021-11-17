@@ -1,5 +1,9 @@
 console.log("Loaded Onload");
 
+//AUDIO
+const background1 = new Audio('./Assets/audio/background1.wav');
+background1.loop = true
+
 //Variables
 const canvascontainer = document.getElementById("canvascontainer");
 const canvas = document.getElementById("canvas");
@@ -54,14 +58,23 @@ async function _Init() {
     _AddEventListeners();
     _Draw();
     stopwatch.start()
+
+    //Play Sound
+    background1.play()
 }
 
 function Onload() {
     const LeaderBoard = document.getElementById("LeaderBoard_Content");
-    const Data = JSON.parse(JSON.stringify(LoadData()));
-    for (let i = 0; i < Data.length; i++) {
-        const element = Data[i];
-        element.username 
+    const Data = JSON.parse(LoadData());
+    if (Data == null) LeaderBoard.innerHTML = ""
+    else { 
+        for (let i = 0; i < Data.length; i++) {
+            const element = Data[i];
+            const li = document.createElement('li')
+            const text = document.createTextNode(`${element.username} ${element.time}`)
+            li.appendChild(text)
+            LeaderBoard.appendChild(li)
+        }
     }
 }
 

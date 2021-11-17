@@ -24,10 +24,6 @@ function Save(time) {
     }
 
     localStorage.setItem("MidgitJumperTimes", JSON.stringify(NewData));
-
-    console.log(username);
-    console.log(PastData);
-    console.log(NewData);
 }
 
 function LoadData() {

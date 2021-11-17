@@ -8,7 +8,7 @@ class Character {
         this.isOnGround = false
 
         //Unchangeable
-        this.speedmax = 10
+        this.speedmax = 12.5
         this.gravityMax = 30
         this.gravity = 0.8
         this.jumppower = -15

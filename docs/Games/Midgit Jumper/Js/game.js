@@ -86,7 +86,7 @@ function _GenerateWorld() {
 		const maxWorldSizeX = 9000
 		const minWorldSizeX = 5000
 
-		const maxAmtWorlds = 7
+		const maxAmtWorlds = 4
 		const minAmtWorlds = 2
 
 		//Random the ammount of enemys
@@ -416,17 +416,18 @@ async function AnimateWin() {
 	const incrementby = 0.02
 	const timetoincrementby = 1 //Milliseconds
 	let linger = 0
-	const lingertime = 200
+	const lingertime = 400
 
 	//Set Winning Time To stopwatch result
 	WinSquareText.text = `You Win With The Time: ${stopwatch.print()}`
+	Save(stopwatch.print())
 	for (let index = 0; index < Infinity; index++) {
 		WinSquare.opacity += incrementby
 		WinSquareText.opacity += incrementby
 		if (WinSquare.opacity >= 1) {
 			linger += 1
 			if (linger > lingertime) {
-				Save(stopwatch.print())
+				location.reload();
 				break;
 			}
 		}
@@ -442,7 +443,14 @@ function clamp(value, min, max) {
 }
 //--------------
 
+//Map Background
+// const BackgroundImage1 = new Image()
+// BackgroundImage1.src = "./Assets/Background/map.png"
+
 function _Draw(deltaTime) {
+	//Some Vars
+	const WorldInRn = Worlds[WorldIn]
+
 	//Camera
 	ctx.setTransform(1, 0, 0, 1, 0, 0); //reset the transform matrix as it is cumulative
 
@@ -487,10 +495,14 @@ function _Draw(deltaTime) {
 		return;
 	}
 
+	//Draw the background
+	// const BackgroundImage1 = new blockCreator(0, 0, WorldInRn.Size.x, WorldInRn.Size.y, "#87CEEB", 1)
+	// BackgroundImage1._Draw(ctx)
+	// ctx.drawImage(BackgroundImage1, 0, 7000, 5000, 2000);
+
 	//Draw World
 	character._Draw(ctx)
 
-	const WorldInRn = Worlds[WorldIn]
 	for (let i = 0; i < WorldInRn.Objects.length; i++) {
 		const element = WorldInRn.Objects[i];
 		element._Draw(ctx)
