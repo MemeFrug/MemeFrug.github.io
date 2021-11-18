@@ -1,13 +1,10 @@
 console.log("Loaded Onload");
 
-//AUDIO
-const background1 = new Audio('./Assets/Audio/background1.wav');
-background1.loop = true
-
 //Variables
 const canvascontainer = document.getElementById("canvascontainer");
 const canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+let username = "";
 
 function cleanUsername(input) {
     var output = "";
@@ -24,9 +21,9 @@ function cleanUsername(input) {
 function MainMenuPlay() {
     //Check the input element
     let usernameInputElement = document.getElementById("NameOfPlayer");
+    username = usernameInputElement.value;
     //Check if username is valid
-    username = cleanUsername(usernameInputElement.value);
-    console.log(username);
+    username = cleanUsername(username);
     _Init();
 }
 
@@ -58,24 +55,4 @@ async function _Init() {
     _AddEventListeners();
     _Draw();
     stopwatch.start()
-
-    //Play Sound
-    background1.play()
 }
-
-function Onload() {
-    const LeaderBoard = document.getElementById("LeaderBoard_Content");
-    const Data = JSON.parse(LoadData());
-    if (Data == null) LeaderBoard.innerHTML = ""
-    else { 
-        for (let i = 0; i < Data.length; i++) {
-            const element = Data[i];
-            const li = document.createElement('li')
-            const text = document.createTextNode(`${element.username} ${element.time}`)
-            li.appendChild(text)
-            LeaderBoard.appendChild(li)
-        }
-    }
-}
-
-window.onload = Onload;
