@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "docs/Games/AimTrainer"
+		},
+		{
+			"path": "docs/Games/Midgit Jumper"
+		},
+		{
+			"path": "./"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "AimTrainer"
+	}
+}
