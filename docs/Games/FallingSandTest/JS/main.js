@@ -1,5 +1,3 @@
-console.log("yes");
-
 //Get Context
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
@@ -35,12 +33,26 @@ canvas.addEventListener('mousemove', event => {
     }
 });
 
+let DrawingWhat = 0
+
 let Drawing = false
 
 function Draw() {
-    
-    Points[mouseHighlight.i][mouseHighlight.j].Occupied = elements.sand
-    Points[mouseHighlight.i][mouseHighlight.j +1].Occupied = elements.sand
+    if (DrawingWhat == 0) {
+        Points[mouseHighlight.i][mouseHighlight.j].Occupied = elements.sand
+        Points[mouseHighlight.i + 1][mouseHighlight.j].Occupied = elements.sand
+        Points[mouseHighlight.i][mouseHighlight.j + 1].Occupied = elements.sand
+        Points[mouseHighlight.i + 1][mouseHighlight.j + 1].Occupied = elements.sand
+        Points[mouseHighlight.i + 2][mouseHighlight.j].Occupied = elements.sand
+        Points[mouseHighlight.i + 3][mouseHighlight.j].Occupied = elements.sand
+        Points[mouseHighlight.i][mouseHighlight.j + 3].Occupied = elements.sand
+        Points[mouseHighlight.i + 4][mouseHighlight.j + 1].Occupied = elements.sand
+    }else if (DrawingWhat == 1) {
+        Points[mouseHighlight.i][mouseHighlight.j].Occupied = elements.water
+        Points[mouseHighlight.i + 1][mouseHighlight.j].Occupied = elements.water
+        Points[mouseHighlight.i][mouseHighlight.j + 1].Occupied = elements.water
+        Points[mouseHighlight.i + 1][mouseHighlight.j + 1].Occupied = elements.water
+    }
 }
 
 canvas.addEventListener('mousedown', event => {
@@ -74,43 +86,94 @@ function _Update(timeStamp) {
                 ctx.fillRect(x, y, 5, 5);
             }
 
-            if (Points[i][j].Occupied.id == 0) continue;
-
-            //Check Below
-            // console.log(Points[i][j]);
-            if (!Points[i][j+1]){} 
-            else if (Points[i][j + 1].Occupied.id == elements.void.id) {
-                Change.push(() => {
-                    let CurrentOccupied = Points[i][j].Occupied
-                    let CurrentOccupied2 = Points[i][j + 1].Occupied
-
-                    Points[i][j].Occupied = CurrentOccupied2
-                    Points[i][j + 1].Occupied = CurrentOccupied
-                })
-            } 
-            else if (!Points[i-1]){}
-            else if (Points[i - 1][j + 1].Occupied.id == elements.void.id) {
-                Change.push(() => {
-                    let CurrentOccupied = Points[i][j].Occupied
-                    let CurrentOccupied2 = Points[i - 1][j + 1].Occupied
-
-                    Points[i][j].Occupied = CurrentOccupied2
-                    Points[i - 1][j + 1].Occupied = CurrentOccupied
-                })
-            } 
-            else if (!Points[i+1]) {}
-            else if (Points[i + 1][j + 1].Occupied.id == elements.void.id) {
-                Change.push(() => {
-                    let CurrentOccupied = Points[i][j].Occupied
-                    let CurrentOccupied2 = Points[i + 1][j + 1].Occupied
-
-                    Points[i][j].Occupied = CurrentOccupied2
-                    Points[i + 1][j + 1].Occupied = CurrentOccupied
-                })
+            if (!Points[i][j].Occupied.id == 0) {
+                if (Points[i][j].Occupied.id == 2){
+                    if (!Points[i][j+1]){} 
+                    else if (Points[i][j + 1].Occupied.id == elements.void.id || Points[i][j + 1].Occupied.id == elements.water.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i][j + 1].Occupied = CurrentOccupied
+                        })
+                    } 
+                    else if (!Points[i-1]){}
+                    else if (Points[i - 1][j + 1].Occupied.id == elements.void.id || Points[i - 1][j + 1].Occupied.id == elements.water.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i - 1][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i - 1][j + 1].Occupied = CurrentOccupied
+                        })
+                    } 
+                    else if (!Points[i+1]) {}
+                    else if (Points[i + 1][j + 1].Occupied.id == elements.void.id || Points[i + 1][j + 1].Occupied.id == elements.water.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i + 1][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i + 1][j + 1].Occupied = CurrentOccupied
+                        })
+                    }
+                }
+                if (Points[i][j].Occupied.id == 4){
+                    if (!Points[i][j+1]){} 
+                    else if (Points[i][j + 1].Occupied.id == elements.void.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i][j + 1].Occupied = CurrentOccupied
+                        })
+                    } 
+                    else if (!Points[i-1]){}
+                    else if (Points[i - 1][j + 1].Occupied.id == elements.void.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i - 1][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i - 1][j + 1].Occupied = CurrentOccupied
+                        })
+                    } 
+                    else if (!Points[i+1]) {}
+                    else if (Points[i + 1][j + 1].Occupied.id == elements.void.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i + 1][j + 1].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i + 1][j + 1].Occupied = CurrentOccupied
+                        })
+                    }
+                    else if (!Points[i-1]) {}
+                    else if (Points[i - 1][j].Occupied.id == elements.void.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i - 1][j].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i - 1][j].Occupied = CurrentOccupied
+                        })
+                    }
+                    else if (!Points[i+1]) {}
+                    else if (Points[i + 1][j].Occupied.id == elements.void.id) {
+                        Change.push(() => {
+                            let CurrentOccupied = Points[i][j].Occupied
+                            let CurrentOccupied2 = Points[i + 1][j].Occupied
+        
+                            Points[i][j].Occupied = CurrentOccupied2
+                            Points[i + 1][j].Occupied = CurrentOccupied
+                        })
+                    }
+                }
+                ctx.fillStyle = Points[i][j].c
+                ctx.fillRect(x, y, 5, 5)
             }
-
-            ctx.fillStyle = Points[i][j].c
-            ctx.fillRect(x, y, 5, 5)
         }
     }
 
