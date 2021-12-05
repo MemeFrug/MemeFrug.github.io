@@ -3,7 +3,7 @@ const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
 //World
-const cols = 195
+const cols = 200
 const rows = 200
 const Points = []
 
@@ -67,7 +67,7 @@ function _Update(timeStamp) {
             Points[i][j].UpdateCell()
 
             //Draw Mouse Pos
-            if (x == mouseHighlight.i && y == mouseHighlight){
+            if (x == mouseHighlight.i && y == mouseHighlight.j){
                 ctx.fillRect(x, y, 5, 5);
             }
 
