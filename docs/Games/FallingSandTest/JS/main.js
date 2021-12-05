@@ -38,6 +38,7 @@ let Drawing = false
 function Draw() {
     
     Points[mouseHighlight.i][mouseHighlight.j].Occupied = elements.sand
+    Points[mouseHighlight.i][mouseHighlight.j +1].Occupied = elements.sand
 }
 
 canvas.addEventListener('mousedown', event => {
@@ -67,7 +68,7 @@ function _Update(timeStamp) {
             Points[i][j].UpdateCell()
 
             //Draw Mouse Pos
-            if (x == mouseHighlight.i && y == mouseHighlight.j){
+            if (i == mouseHighlight.i && j == mouseHighlight.j){
                 ctx.fillRect(x, y, 5, 5);
             }
 
@@ -75,8 +76,8 @@ function _Update(timeStamp) {
 
             //Check Below
             // console.log(Points[i][j]);
-            if (!Points[i][j+1]){
-            } else if (Points[i][j + 1].Occupied.id == elements.void.id) {
+            if (!Points[i][j+1]){} 
+            else if (Points[i][j + 1].Occupied.id == elements.void.id) {
                 Change.push(() => {
                     let CurrentOccupied = Points[i][j].Occupied
                     let CurrentOccupied2 = Points[i][j + 1].Occupied
@@ -84,8 +85,9 @@ function _Update(timeStamp) {
                     Points[i][j].Occupied = CurrentOccupied2
                     Points[i][j + 1].Occupied = CurrentOccupied
                 })
-            } else if (!Points[i-1]){
-            }else if (Points[i - 1][j + 1].Occupied.id == elements.void.id) {
+            } 
+            else if (!Points[i-1]){}
+            else if (Points[i - 1][j + 1].Occupied.id == elements.void.id) {
                 Change.push(() => {
                     let CurrentOccupied = Points[i][j].Occupied
                     let CurrentOccupied2 = Points[i - 1][j + 1].Occupied
@@ -93,8 +95,9 @@ function _Update(timeStamp) {
                     Points[i][j].Occupied = CurrentOccupied2
                     Points[i - 1][j + 1].Occupied = CurrentOccupied
                 })
-            } else if (!Points[i+1]) {
-            }else if (Points[i + 1][j + 1].Occupied.id == elements.void.id) {
+            } 
+            else if (!Points[i+1]) {}
+            else if (Points[i + 1][j + 1].Occupied.id == elements.void.id) {
                 Change.push(() => {
                     let CurrentOccupied = Points[i][j].Occupied
                     let CurrentOccupied2 = Points[i + 1][j + 1].Occupied
