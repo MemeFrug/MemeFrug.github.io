@@ -22,9 +22,9 @@ function _Update(timeStamp) {
 
             if (Points[i][j].Element == elementType.VOID) continue;
             
-            Change = Points[i][j].Update(deltaTime, Change)
+            Change = Points[i][j].Update(deltaTime, Change, {i: i, j: j})
 
-            ctx.fillStyle = "yellow"
+            ctx.fillStyle = Points[i][j].c
             ctx.fillRect(x, y, cellsize, cellsize)
         }
     }
@@ -48,8 +48,9 @@ function _Init() {
 }
 
 //debug
-function CreateSand() {
+function StartTest() {
     Points[10][1] = new Sand(10, 1)
+    Points[10][2] = new Sand(10, 5)
 }
 
 // Start Game

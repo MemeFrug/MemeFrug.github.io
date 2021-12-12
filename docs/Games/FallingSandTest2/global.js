@@ -14,6 +14,8 @@ let mouseHighlight = { i: 0, j: 0 }
 
 let Drawing = false
 
+let DrawingWhat = 0
+
 canvas.addEventListener('mousemove', event => {
     let bound = canvas.getBoundingClientRect();
 
@@ -35,7 +37,11 @@ canvas.addEventListener('mousemove', event => {
 });
 
 function PlaceElements() {
-    Points[mouseHighlight.i][mouseHighlight.j] = new Sand(mouseHighlight.i, mouseHighlight.j)
+    if (DrawingWhat == 0) {
+        Points[mouseHighlight.i][mouseHighlight.j] = new Sand(mouseHighlight.i, mouseHighlight.j)
+    }else if (DrawingWhat == 1) {
+        Points[mouseHighlight.i][mouseHighlight.j] = new Water(mouseHighlight.i, mouseHighlight.j)
+    }
 }
 
 canvas.addEventListener('mousedown', event => {

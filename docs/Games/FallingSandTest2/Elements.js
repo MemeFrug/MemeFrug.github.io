@@ -11,6 +11,10 @@ const elementType = {
 class Water extends Liquid {
     // Class For Water Extends Liquid Class
     constructor(i, j) {
+        super(i, j);
+
+        this.c = "blue";
+
         this.i = i; 
         this.j = j;
 
@@ -32,8 +36,9 @@ class Sand extends MovableSolid {
         super(i, j);
 
         this.i = i;
-
         this.j = j;
+        
+        this.c = "yellow";
 
         this.Element = elementType.SAND;
 

@@ -199,6 +199,7 @@ function _Init() {
 //debug
 function CreateSand() {
     Points[10][1].Occupied = elements.sand
+    Points[10][2].Occupied = elements.sand
 }
 
 // Start Game
