@@ -40,10 +40,16 @@ class Element {
 
 // Abstract Classes for cells
 class Liquid extends Element {
+    constructor(i, j, ElementId) {
+        super(i, j, ElementId);
+
+        this.dispersionRate = 5
+    }
+
     //Abstract Class for liquids
 
-    Update(deltaTime, Change, params = {i: this.i, j: this.j}) {
-        const TargetCell = Points[this.i][this.j + 1];
+    Update(deltaTime, Change, params = { i: this.i, j: this.j }) {
+        let TargetCell = Points[this.i][this.j + 1];
 
         this.i = params.i;
         this.j = params.j;
@@ -64,86 +70,86 @@ class Liquid extends Element {
                 this.j = this.j + 1;
             })
         }
-        
         else if (TargetCell instanceof Solid || TargetCell instanceof Liquid) {
+            const RandomLeftRight = Math.floor(Math.random() * 2)
+            // 0 == Left
+            // 1 == Right
+            if (RandomLeftRight == 0) {
+                for (let i = 0; i < this.dispersionRate; i++) {
+                    if (Points[this.i - i]) {
+                        TargetCell = Points[this.i - i][this.j];
 
-            // Change = this.checkDiagonally(Change);
+                        if (TargetCell instanceof Void) {
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i][this.j]
+                                let CurrentOccupied2 = Points[this.i - i][this.j]
 
-            let TargetCell;
+                                Points[this.i][this.j] = CurrentOccupied2
+                                Points[this.i - i][this.j] = CurrentOccupied
 
-            if (Points[this.i - 1]) {
-                // console.log("went into here 2");
-                TargetCell = Points[this.i - 1][this.j];
+                                Points[this.i][this.j].i = this.i;
 
-                if (TargetCell instanceof Void) {
-                    Change.push(() => {
-                        //Switch with it
-                        //Make a function
-                        //but at the moment just do it
-                        let CurrentOccupied = Points[this.i][this.j]
-                        let CurrentOccupied2 = Points[this.i - 1][this.j]
+                                this.i = this.i - i;
+                            })
+                        }
+                        else if (TargetCell instanceof Solid || TargetCell instanceof Liquid && Points[this.i - (i - 1)]) {
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i + 1][this.j]
+                                let CurrentOccupied2 = Points[this.i - (i - 1)][this.j]
 
-                        Points[this.i][this.j] = CurrentOccupied2
-                        Points[this.i - 1][this.j] = CurrentOccupied
+                                Points[this.i + 1][this.j] = CurrentOccupied2
+                                Points[this.i - (i - 1)][this.j] = CurrentOccupied
 
-                        Points[this.i][this.j].i = this.i;
+                                Points[this.i + 1][this.j].i = this.i;
 
-                        this.i = this.i - 1;
-                    })
+                                this.i = this.i - (i - 1);
+                            })
+                            break;
+                        }
+                    }
                 }
-                // else if (TargetCell instanceof Solid || TargetCell instanceof Liquid) {
-                //     if (Points[this.i + 1]) {
-                //         TargetCell = Points[this.i + 1][this.j];
-                        
-                //         // console.log(TargetCell.constructor);
-        
-                //         if (TargetCell instanceof Void) {
-                //             Change.push(() => {
-                //                 //Switch with it
-                //                 //Make a function
-                //                 //but at the moment just do it
-                //                 let CurrentOccupied = Points[this.i][this.j]
-                //                 let CurrentOccupied2 = Points[this.i + 1][this.j]
-        
-                //                 Points[this.i][this.j] = CurrentOccupied2
-                //                 Points[this.i + 1][this.j] = CurrentOccupied
-
-                                
-                //                 Points[this.i][this.j].i = this.i;
-        
-                //                 this.i = this.i + 1;
-                //             })
-                //         }
-                //     }   
-                // }
             }
-            else if (Points[this.i + 1]) {
-                TargetCell = Points[this.i + 1][this.j];
-                
-                // console.log(TargetCell.constructor);
+            else if (RandomLeftRight == 1) {
+                for (let i = 0; i < this.dispersionRate; i++) {
+                    if (Points[this.i + i]) {
+                        TargetCell = Points[this.i + i][this.j];
 
-                if (TargetCell instanceof Void) {
-                    Change.push(() => {
-                        //Switch with it
-                        //Make a function
-                        //but at the moment just do it
-                        let CurrentOccupied = Points[this.i][this.j]
-                        let CurrentOccupied2 = Points[this.i + 1][this.j]
+                        if (TargetCell instanceof Void) {
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i][this.j]
+                                let CurrentOccupied2 = Points[this.i + i][this.j]
 
-                        Points[this.i][this.j] = CurrentOccupied2
-                        Points[this.i + 1][this.j] = CurrentOccupied
+                                Points[this.i][this.j] = CurrentOccupied2
+                                Points[this.i + i][this.j] = CurrentOccupied
 
-                        
-                        Points[this.i][this.j].i = this.i;
+                                Points[this.i][this.j].i = this.i;
 
-                        this.i = this.i + 1;
-                    })
+                                this.i = this.i + i;
+                            })
+                        }
+                        else if (TargetCell instanceof Solid || TargetCell instanceof Liquid && Points[this.i + (i - 1)]) {
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i - 1][this.j]
+                                let CurrentOccupied2 = Points[this.i + (i - 1)][this.j]
+
+                                Points[this.i - 1][this.j] = CurrentOccupied2
+                                Points[this.i + (i - 1)][this.j] = CurrentOccupied
+
+                                Points[this.i - 1][this.j].i = this.i;
+
+                                this.i = this.i + (i - 1);
+                            })
+                            break;
+                        }
+                    }
                 }
-            }   
+            }
         }
         return Change;
     }
 }
+
+
 
 class Solid extends Element {
     //Abstract Class for solids
@@ -234,31 +240,17 @@ class ImmovableSolid extends Solid {
 
 class MovableSolid extends Solid {
     //Abstract Class for movable solids
-    Update(deltaTime, Change, params = {i: this.i, j: this.j}) {
+    Update(deltaTime, Change, params = { i: this.i, j: this.j }) {
         const TargetCell = Points[this.i][this.j + 1];
 
         this.i = params.i;
         this.j = params.j;
 
-        if (TargetCell instanceof Void) {
+        if (TargetCell instanceof Void || TargetCell instanceof Liquid) {
             Change.push(() => {
                 //Switch with it
                 //Make a function
                 //but at the moment just do it
-                let CurrentOccupied = Points[this.i][this.j]
-                let CurrentOccupied2 = Points[this.i][this.j + 1]
-
-                Points[this.i][this.j] = CurrentOccupied2
-                Points[this.i][this.j + 1] = CurrentOccupied
-
-                Points[this.i][this.j].j = this.j;
-
-                this.j = this.j + 1;
-            })
-        }
-
-        else if (TargetCell instanceof Liquid) {
-            Change.push(() => {
                 let CurrentOccupied = Points[this.i][this.j]
                 let CurrentOccupied2 = Points[this.i][this.j + 1]
 
@@ -280,7 +272,7 @@ class MovableSolid extends Solid {
                 // console.log("went into here 2");
                 TargetCell = Points[this.i - 1][this.j + 1];
 
-                if (TargetCell instanceof Void) {
+                if (TargetCell instanceof Void || TargetCell instanceof Liquid) {
                     Change.push(() => {
                         //Switch with it
                         //Make a function
@@ -298,65 +290,33 @@ class MovableSolid extends Solid {
                         this.j = this.j + 1;
                     })
                 }
-                else if (TargetCell instanceof Liquid) {
-                    Change.push(() => {
-                        let CurrentOccupied = Points[this.i][this.j]
-                        let CurrentOccupied2 = Points[this.i - 1][this.j + 1]
-
-                        Points[this.i][this.j] = CurrentOccupied2
-                        Points[this.i - 1][this.j + 1] = CurrentOccupied
-
-                        
-                        Points[this.i][this.j].i = this.i;
-                        Points[this.i][this.j].j = this.j;
-
-                        this.i = this.i - 1;
-                        this.j = this.j + 1;
-                    })
-                }
 
                 else if (TargetCell instanceof Solid) {
                     if (Points[this.i + 1]) {
                         TargetCell = Points[this.i + 1][this.j + 1];
-                        
+
                         // console.log(TargetCell.constructor);
-        
-                        if (TargetCell instanceof Void) {
+
+                        if (TargetCell instanceof Void || TargetCell instanceof Liquid) {
                             Change.push(() => {
                                 //Switch with it
                                 //Make a function
                                 //but at the moment just do it
                                 let CurrentOccupied = Points[this.i][this.j]
                                 let CurrentOccupied2 = Points[this.i + 1][this.j + 1]
-        
+
                                 Points[this.i][this.j] = CurrentOccupied2
                                 Points[this.i + 1][this.j + 1] = CurrentOccupied
 
-                                
+
                                 Points[this.i][this.j].i = this.i;
                                 Points[this.i][this.j].j = this.j;
-        
+
                                 this.i = this.i + 1;
                                 this.j = this.j + 1;
                             })
                         }
-                        else if (TargetCell instanceof Liquid) {
-                            Change.push(() => {
-                                let CurrentOccupied = Points[this.i][this.j]
-                                let CurrentOccupied2 = Points[this.i + 1][this.j + 1]
-        
-                                Points[this.i][this.j] = CurrentOccupied2
-                                Points[this.i + 1][this.j + 1] = CurrentOccupied
-
-                                
-                                Points[this.i][this.j].i = this.i;
-                                Points[this.i][this.j].j = this.j;
-        
-                                this.i = this.i + 1;
-                                this.j = this.j + 1;
-                            })
-                        }
-                    }   
+                    }
                 }
             }
         }

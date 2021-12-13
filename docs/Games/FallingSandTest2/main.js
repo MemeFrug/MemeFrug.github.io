@@ -15,14 +15,14 @@ function _Update(timeStamp) {
             var y = j * cellsize
 
             //Draw Mouse Pos
-            if (i == mouseHighlight.i && j == mouseHighlight.j){
+            if (i == mouseHighlight.i && j == mouseHighlight.j) {
                 ctx.fillStyle = "black"
-                ctx.fillRect(x, y, 5, 5);
+                ctx.fillRect(x, y, cellsize, cellsize);
             }
 
             if (Points[i][j].Element == elementType.VOID) continue;
-            
-            Change = Points[i][j].Update(deltaTime, Change, {i: i, j: j})
+
+            Change = Points[i][j].Update(deltaTime, Change, { i: i, j: j })
 
             ctx.fillStyle = Points[i][j].c
             ctx.fillRect(x, y, cellsize, cellsize)
@@ -49,8 +49,8 @@ function _Init() {
 
 //debug
 function StartTest() {
-    Points[10][1] = new Sand(10, 1)
-    Points[10][2] = new Sand(10, 5)
+    Points[10][1] = new Water(10, 1)
+    Points[10][2] = new Water(10, 5)
 }
 
 // Start Game

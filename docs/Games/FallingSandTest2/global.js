@@ -12,9 +12,10 @@ const Points = []
 let mousePos = { x: 0, y: 0 };
 let mouseHighlight = { i: 0, j: 0 }
 
+//Drawing
 let Drawing = false
-
 let DrawingWhat = 0
+let DrawingSize = 2
 
 canvas.addEventListener('mousemove', event => {
     let bound = canvas.getBoundingClientRect();
@@ -37,10 +38,14 @@ canvas.addEventListener('mousemove', event => {
 });
 
 function PlaceElements() {
-    if (DrawingWhat == 0) {
-        Points[mouseHighlight.i][mouseHighlight.j] = new Sand(mouseHighlight.i, mouseHighlight.j)
-    }else if (DrawingWhat == 1) {
-        Points[mouseHighlight.i][mouseHighlight.j] = new Water(mouseHighlight.i, mouseHighlight.j)
+    for (let i = 0; i < DrawingSize; i++) {
+        if (DrawingWhat == 0) {
+            Points[mouseHighlight.i + i][mouseHighlight.j] = new Sand(mouseHighlight.i + i, mouseHighlight.j)
+        }else if (DrawingWhat == 1) {
+            Points[mouseHighlight.i + i][mouseHighlight.j] = new Water(mouseHighlight.i + i, mouseHighlight.j)
+        }else if (DrawingWhat == 2) {
+            Points[mouseHighlight.i + i][mouseHighlight.j] = new Stone(mouseHighlight.i + i, mouseHighlight.j)
+        }
     }
 }
 

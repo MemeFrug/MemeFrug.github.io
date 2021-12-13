@@ -50,8 +50,12 @@ class Sand extends MovableSolid {
 class Stone extends ImmovableSolid {
     // Class For Stone Extends ImmovableSolid Class
     constructor(i, j) {
+        super(i, j);
+
         this.i = i; 
         this.j = j;
+
+        this.c = "grey"
 
         this.Element = elementType.STONE;
 
