@@ -17,6 +17,8 @@ class Water extends Liquid {
 
         this.i = i; 
         this.j = j;
+        
+        this.dispersionRate = 3
 
         this.Element = elementType.WATER;
 

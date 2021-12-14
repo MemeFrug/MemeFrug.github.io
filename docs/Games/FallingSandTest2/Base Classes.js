@@ -75,72 +75,84 @@ class Liquid extends Element {
             // 0 == Left
             // 1 == Right
             if (RandomLeftRight == 0) {
-                for (let i = 0; i < this.dispersionRate; i++) {
-                    if (Points[this.i - i]) {
+                let FoundEnd = false
+                for (let i = 1; i <= this.dispersionRate; i++) {
+                    if (Points[this.i - i] && Points[this.i + i]) {
                         TargetCell = Points[this.i - i][this.j];
-
-                        if (TargetCell instanceof Void) {
+                        if (TargetCell instanceof Solid || TargetCell instanceof Liquid){
+                            FoundEnd = true
+                            i -= 2;
+                            continue;
+                        }
+                        else if (FoundEnd) {
                             Change.push(() => {
                                 let CurrentOccupied = Points[this.i][this.j]
                                 let CurrentOccupied2 = Points[this.i - i][this.j]
-
+                
                                 Points[this.i][this.j] = CurrentOccupied2
                                 Points[this.i - i][this.j] = CurrentOccupied
-
+                
                                 Points[this.i][this.j].i = this.i;
-
+                
+                                this.i = this.i - i;
+                            })
+                            break;
+                        }else if (i == this.dispersionRate){
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i][this.j]
+                                let CurrentOccupied2 = Points[this.i - i][this.j]
+                
+                                Points[this.i][this.j] = CurrentOccupied2
+                                Points[this.i - i][this.j] = CurrentOccupied
+                
+                                Points[this.i][this.j].i = this.i;
+                
                                 this.i = this.i - i;
                             })
                         }
-                        else if (TargetCell instanceof Solid || TargetCell instanceof Liquid && Points[this.i - (i - 1)]) {
-                            Change.push(() => {
-                                let CurrentOccupied = Points[this.i + 1][this.j]
-                                let CurrentOccupied2 = Points[this.i - (i - 1)][this.j]
-
-                                Points[this.i + 1][this.j] = CurrentOccupied2
-                                Points[this.i - (i - 1)][this.j] = CurrentOccupied
-
-                                Points[this.i + 1][this.j].i = this.i;
-
-                                this.i = this.i - (i - 1);
-                            })
-                            break;
-                        }
+                    }else {
+                        break;
                     }
                 }
+
             }
             else if (RandomLeftRight == 1) {
-                for (let i = 0; i < this.dispersionRate; i++) {
-                    if (Points[this.i + i]) {
+                let FoundEnd = false
+                for (let i = 1; i <= this.dispersionRate; i++) {
+                    if (Points[this.i - i] && Points[this.i + i]) {
                         TargetCell = Points[this.i + i][this.j];
-
-                        if (TargetCell instanceof Void) {
+                        if (TargetCell instanceof Solid || TargetCell instanceof Liquid){
+                            FoundEnd = true
+                            i -= 2;
+                            continue;
+                        }else if (FoundEnd) {
                             Change.push(() => {
                                 let CurrentOccupied = Points[this.i][this.j]
                                 let CurrentOccupied2 = Points[this.i + i][this.j]
-
+                
                                 Points[this.i][this.j] = CurrentOccupied2
                                 Points[this.i + i][this.j] = CurrentOccupied
-
+                
                                 Points[this.i][this.j].i = this.i;
-
+                
+                                this.i = this.i + i;
+                            })
+                            break;
+                        }else if (i == this.dispersionRate){
+                            Change.push(() => {
+                                let CurrentOccupied = Points[this.i][this.j]
+                                let CurrentOccupied2 = Points[this.i + i][this.j]
+                
+                                Points[this.i][this.j] = CurrentOccupied2
+                                Points[this.i + i][this.j] = CurrentOccupied
+                
+                                Points[this.i][this.j].i = this.i;
+                
                                 this.i = this.i + i;
                             })
                         }
-                        else if (TargetCell instanceof Solid || TargetCell instanceof Liquid && Points[this.i + (i - 1)]) {
-                            Change.push(() => {
-                                let CurrentOccupied = Points[this.i - 1][this.j]
-                                let CurrentOccupied2 = Points[this.i + (i - 1)][this.j]
-
-                                Points[this.i - 1][this.j] = CurrentOccupied2
-                                Points[this.i + (i - 1)][this.j] = CurrentOccupied
-
-                                Points[this.i - 1][this.j].i = this.i;
-
-                                this.i = this.i + (i - 1);
-                            })
-                            break;
-                        }
+                    }else {
+                        break;
                     }
                 }
             }
