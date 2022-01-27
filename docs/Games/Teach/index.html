@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: black;">
+    <canvas id="canvas"></canvas>
+    <script>
+        window.onload = function(){
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext("2d");
+  var x = 100;
+  var y = 100;
+  var dir = 0;
+ var speed = 10;
+ 
+  function play(deltaTime){
+
+
+  context.clearRect(0,0,1000,1000);
+
+  context.beginPath();
+  context.rect(x,y,100,100);
+  context.fillStyle = "#0000ff";
+  context.fill();
+
+
+
+
+  if(dir==1){
+      x += speed ;
+  }
+  else if (dir==2){
+      x -=(speed*deltatime);
+  }
+  else if (dir ==3){
+      y +=speed;
+  }
+  else if (dir==4){
+      y -=speed;
+  }
+
+  window.requestAnimationFrame(play );
+
+  console.log(deltaTime );
+
+
+  }
+  play();
+}
+    </script>
+</body>
+</html>
