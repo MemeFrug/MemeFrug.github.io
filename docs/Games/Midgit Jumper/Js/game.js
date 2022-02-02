@@ -218,15 +218,17 @@ function Hell(amountofhell = 50) {
 	_amountofhell = amountofhell
 }
 
-function YesIagree() {
-	alert("Warning this will lag the computer, Press ok to continue")
+async function YesIagree() {
+	alert("Warning this will lag the computer, Press ok to continue and wait till another popup pops... up i guess")
 
 	let i = 0
 
 	while (i < _amountofhell) {
-		_GenerateWorld()
+		await _GenerateWorld()
 		i++
 	}
+
+	
 
 	alert("Finished Creating Hell, Start the game to see hell :thumbsup:")
 }
