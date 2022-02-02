@@ -208,6 +208,29 @@ function _GenerateWorld() {
 	})
 }
 
+let _amountofhell = 50
+
+// Funny Gamemode: (WARNING THIS WILL BREAK IT)
+function Hell(amountofhell = 50) {
+	console.log('Are you sure you want to do this? reply with the text below if you wish to continue.');
+	console.log("YesIagree()");
+
+	_amountofhell = amountofhell
+}
+
+function YesIagree() {
+	alert("Warning this will lag the computer, Press ok to continue")
+
+	let i = 0
+
+	while (i < _amountofhell) {
+		_GenerateWorld()
+		i++
+	}
+
+	alert("Finished Creating Hell, Start the game to see hell :thumbsup:")
+}
+
 //Game Functions
 function _AddEventListeners() {
     window.addEventListener("resize", windowResize, false);
