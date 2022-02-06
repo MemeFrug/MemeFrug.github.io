@@ -2,6 +2,12 @@
 If you want specific game updates then go into that specific game and find a 'Updates' column <br>
 
 <p>
+6/02/2022<br>
+Ive Deleted Project 3 because there is no need for it (ive kept it in the files so you can search it up if u want <a style="color: blue;" href="./Games/Project 3/index.html">here </a>)
+<br><br>
+</p>
+
+<p>
 27/01/2022<br>
 Happy New Year!!<br>
 Ive added some stuff like falling sand tests, hope u enjoy!!
@@ -22,5 +28,5 @@ I have also updated the Rpg game a bunch the past few days you will find more in
 <br>
 -I have added the 'Update' Tab in the main hub.
 <br>
--I have also added a new folder will all the updates manually <a style="color: blue;" href="./Updates">here </a>
+-I have also added a new folder will all the updates manually <a style="color: blue;" href="./Updates">here </a> (Broken)
 </p>
