@@ -56,6 +56,8 @@ function Draw() {
         // ctx.clearRect(0, 0, newwidth, newheight)
     }else {
         ctx.strokeStyle = colorpick.value
+        
+        ctx.lineWidth = rangepick.value;
         ctx.moveTo(lastMousePosition.x, lastMousePosition.y);
         ctx.lineTo(mousePos.x, mousePos.y);
         ctx.stroke();
