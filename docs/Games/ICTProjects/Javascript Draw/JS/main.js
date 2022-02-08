@@ -35,10 +35,6 @@ let isClicking = false
 canvas.addEventListener('mousedown', event =>
 {
     isClicking = true
-    let bound = canvas.getBoundingClientRect();
-
-    let x = event.clientX - bound.left - canvas.clientLeft;
-    let y = event.clientY - bound.top - canvas.clientTop;
 });
 
 canvas.addEventListener('mouseup', event =>
