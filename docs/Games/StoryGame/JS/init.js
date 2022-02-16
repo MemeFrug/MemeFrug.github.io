@@ -1,3 +1,7 @@
+const Canvas = document.getElementById("canvas")
+let ctx = Canvas.getContext("2d")
+
+const MainMenuElement = document.getElementById("MainMenu")
 var isonfocus = true;
 
 function quad(timeFraction) {
@@ -16,6 +20,19 @@ const Animations = {
         for (var i = 0, max = TextElements.length; i < max; i++) {
             TextElements[i].style.opacity = progress;
         }
+    },
+    
+    opacity_buttons_none: (progress) => {
+        var TextElements = document.getElementsByClassName("button_container");
+    
+        for (var i = 0, max = TextElements.length; i < max; i++) {
+            TextElements[i].style.opacity = progress - 1;
+            console.log(progress - 1);
+        }
+    },
+
+    people: (progress) => {
+        ctx.globalAlpha = progress
     }
 }
 
@@ -61,6 +78,12 @@ async function _Init() {
     }
 }
 
+async function Play() {
+    await animate(quad, Animations.opacity_buttons_none, 2000, 1)
+    MainMenuElement.style.display = "none"
+    await animate(quad, Animations.opacity_buttons, 2000, 0.8)
+}
+
 window.onload = _Init
 
 window.onblur = function () {
@@ -78,6 +101,4 @@ document.getElementById("Settings-Button").addEventListener("mouseup", () => {
     
 })
 
-document.getElementById("Play-Button").addEventListener("mouseup", () => {
-    
-})
+document.getElementById("Play-Button").addEventListener("mouseup", Play)
