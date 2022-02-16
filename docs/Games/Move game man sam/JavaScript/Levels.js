@@ -53,7 +53,7 @@
         this.laser5.draw(ctx, danger)
         this.nextlvl.draw(ctx, "#0f0")
         this.char1.draw(ctx)
-        this.Level2.draw(ctx, "Level 2 (Test)")
+        this.Level2.draw(ctx, "Level 2")
     }
 
 }, {//Level3
