@@ -13,8 +13,8 @@
 }
 
 canvas {
-    height: auto;
-    width: auto;
+    height: 100%;
+    /* width: 100%; */
     background-color: white;
     position: absolute;
 }

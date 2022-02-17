@@ -1,13 +1,4 @@
 /**
- * When The Window Reloads
- */
-window.addEventListener("resize", () => {
-	canvas.width = newwidth;
-	canvas.height = newheight;
-	ctx = canvas.getContext("2d");
-})
-
-/**
  * When the Window Loads
  */
 window.onload = async () => {
@@ -24,6 +15,8 @@ async function Play() {
     document.getElementById("Settings-Button").removeEventListener("mouseup", Settings)
     document.getElementById("Back-Button").removeEventListener("mouseup", BackToHub)
     document.getElementById("Play-Button").removeEventListener("mouseup", Play)
+    
+    Game.Start()
 }
 
 /**

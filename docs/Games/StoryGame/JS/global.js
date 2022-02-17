@@ -1,11 +1,148 @@
 /**
+ * Main Class Function for The Game
+ */
+const Game = new class Game {
+    constructor() {
+        this._Save = {
+            saveData: {
+                // ["LoadinAnimSeen"]: false,
+            },
+            Save: () => {
+                window.localStorage.setItem("StoryGameSaveData", JSON.stringify(this._Save.saveData))
+            },
+            Load: () => {
+                const saveData = window.localStorage.getItem("StoryGameSaveData")
+                if (!saveData) {
+                    console.log("No Save Found, Creating a new save");
+                    this._Save.Save()
+                    this._Save.Load()
+                } else {
+                    console.log("Save Found, Overiting Save Object");
+                    this._Save.saveData = JSON.parse(saveData)
+                }
+            },
+            UpdateSave: (Variable, Value, CreateNew) => {
+                if (CreateNew) {
+                    if (typeof(Variable) !== "string"){
+                        console.error("Variable Parameter is Not A String");
+                        return false
+                    }
+        
+                    _Save.saveData[Variable] = Value
+                    return true
+                }
+                if (typeof(Variable) !== "string"){
+                    console.error("Variable Parameter is Not A String");
+                    return false
+                }
+                if (_Save.saveData[Variable] == undefined) {
+                    console.error("Variable Parameter Does not exist in saveData");
+                    return false
+                }
+                this._Save.saveData[Variable] = Value
+                return true
+            }
+        }
+        //Debug
+        this.Debug = {
+    
+        }
+        // Config
+        this.Config = {
+            //Resolution
+            scale: 1
+    
+        }
+        //Start The Game
+        this.Start = () => {
+            //Check if browser supports localStorage
+            if (window.localStorage == undefined) {
+                while (window.localStorage == undefined) {
+                    alert("Your browser does not support localStorage, therefore cannot save, please switch browsers")
+                }
+            }
+    
+            // Start Resizing the canvas
+            this.canvas.addResizeEvent()
+            this.Update()
+        }
+        // Draw Each Frame
+        this.Draw = () => {
+    
+            this.canvas.ctx.clearRect(0,0,this.canvas.element.width, this.canvas.element.height)
+            this.canvas.ctx.fillRect(20,20,100,100)
+        }
+        //Each Frame Update
+        this.Update = (deltaTime) => {
+            const scale = this.Config.scale
+    
+            //Update
+            
+    
+            //Draw
+            this.Draw()
+    
+            // context.scale will scale the original drawings to fit on
+            // the newly resized canvas
+            this.canvas.ctx.scale(scale,scale);
+    
+            //Draw
+            this.Draw(this.canvas.ctx);
+    
+            // always clean up! Reverse the scale
+            this.canvas.ctx.scale(scale,scale);
+    
+            //Get New Frame
+            requestAnimationFrame(this.Update)
+        }
+        // window object
+        this.canvas = {
+            // Get the canvas element
+            element: document.getElementById("canvas"),
+            
+            // The Context
+            ctx: undefined,
+    
+            // resize
+            resize: () => {
+                this.canvas.element.width = window.innerWidth;
+                this.canvas.element.height = 16 * this.canvas.element.width / 9;
+                this.canvas.ctx = this.canvas.element.getContext("2d");
+                console.log("Resizing");
+            },
+            // add the resize event
+            addResizeEvent: () => {
+                if (!this.canvas.element) {
+                    throw new Error("Canvas Is Not Reachable, Try adding a canvas tag with an id of 'canvas'")
+                }
+    
+                this.canvas.resize()
+                window.addEventListener("resize", this.canvas.resize)
+                
+            }
+        }
+    }
+}
+
+//-----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+/**
  * 
  *  Variables
  *  Description: Variables Here
  * 
  */
-
-const canvas = document.getElementById("canvas");
 const MainMenuElementDOM = document.getElementById("MainMenu");
 const TitleButtonsDOM = document.getElementById("title-buttons");
 const ButtonsInContainerDOM = document.getElementsByClassName("button_container");
@@ -34,49 +171,18 @@ const Animations = { /* A List Of All The Animations in a Object */
     }
 }
 
-let ctx = canvas.getContext("2d") // Get The Context of the canvas Used For Drawing
 let _IsFocused = true; // A Variable Used To See if Is In focussed
 
-/**
- * @param {*} Person The Character Or Thing Saying The Text, Displayed in the Draw function
- * @param {*} Text The Text Of The Dialogue, Displayed in the Draw Function
- * @param {*} DelayStart Used For When Start To TypeWrite, there is a delay at the start of typewriting (Not Inbetween Each Letters)
- */
-class Dialogue {
-    constructor(Person, Text, DelayStart = 0) {
-        this.text = Text
-        this.person = Person
-        this.DelayStart = DelayStart
 
-        this.displayText = ""
 
-        this.timeoutType = 50
-        this.active = false
-        this.textPosition = 0
 
-        this.stopTyping = true
-    }
 
-    Draw(ctx) {
-        if (!this.active) { return false }
 
-        return true
-    }
 
-    TypeWrite() {
-        if (this.textPosition < txt.length && !this.stopTyping) {
-            this.displayText += this.text.charAt(this.textPosition);
-            this.textPosition++;
-            setTimeout(this.TypeWrite, this.timeoutType);
-        }
-    }
 
-    Start() {
-        this.stopTyping = false
-        this.active = true
-        this.TypeWrite()
-    }
-}
+
+
+
 
 
 /**
@@ -119,6 +225,19 @@ _Levels = [
 
     },
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Global Functions
