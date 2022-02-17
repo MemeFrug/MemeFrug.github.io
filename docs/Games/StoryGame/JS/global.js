@@ -5,7 +5,7 @@
  * 
  */
 
-const Canvas = document.getElementById("canvas");
+const canvas = document.getElementById("canvas");
 const MainMenuElementDOM = document.getElementById("MainMenu");
 const TitleButtonsDOM = document.getElementById("title-buttons");
 const ButtonsInContainerDOM = document.getElementsByClassName("button_container");
@@ -34,7 +34,7 @@ const Animations = { /* A List Of All The Animations in a Object */
     }
 }
 
-let ctx = Canvas.getContext("2d") // Get The Context of the Canvas Used For Drawing
+let ctx = canvas.getContext("2d") // Get The Context of the canvas Used For Drawing
 let _IsFocused = true; // A Variable Used To See if Is In focussed
 
 /**
@@ -119,3 +119,59 @@ _Levels = [
 
     },
 ]
+
+/**
+ * Global Functions
+ */
+
+/**
+ * 
+ * Used in the Animate Function For Returning a timeFraction to the power of 2
+ * 
+ */
+function _Quad(timeFraction) {
+    return Math.pow(timeFraction, 2)
+}
+
+/**
+ * 
+ * @param {*} min The Min
+ * @param {*} max The Max
+ * @returns A Random Number Between the Min And the Max
+ */
+function GetRndInteger(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * @param {*} timing The Time Fraction Used For 
+ * @param {*} draw The Function Used For Drawing Each Frame
+ * @param {*} duration The Duration Of The Animation
+ * @param {*} max The Max Number It Can Reach 0 - 1
+ * @returns A Promise used for await only returns a resolve()
+ */
+ function animate(timing, draw, duration, max) {
+
+    return new Promise((resolve, reject) => {
+
+        let start = performance.now();
+
+        requestAnimationFrame(function animate(time) {
+            // timeFraction goes from 0 to 1
+            let timeFraction = (time - start) / duration;
+            if (timeFraction > max) timeFraction = max;
+
+            // calculate the current animation state
+            let progress = timing(timeFraction);
+
+            draw(progress); // draw it
+
+            if (timeFraction < max) {
+                requestAnimationFrame(animate);
+            } else {
+                resolve();
+            }
+
+        });
+    })
+}
