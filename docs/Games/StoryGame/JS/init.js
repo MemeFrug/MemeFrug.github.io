@@ -16,7 +16,7 @@ async function Play() {
     document.getElementById("Back-Button").removeEventListener("mouseup", BackToHub)
     document.getElementById("Play-Button").removeEventListener("mouseup", Play)
     
-    Game.Start()
+    Game._Init()
 }
 
 /**
@@ -31,16 +31,6 @@ async function Settings() {
  */
 async function BackToHub() {
     window.location.replace("../../index.html"); // Send The Player Back to The Hub
-}
-
-/**
- * Check When The Window is being focussed and not, and change a variable depending on that
- */
-window.onblur = () => {
-    _IsFocused = false;
-}
-window.onfocus = () => {
-    _IsFocused = true;
 }
 
 /**
