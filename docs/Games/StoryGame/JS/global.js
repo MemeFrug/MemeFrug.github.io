@@ -32,7 +32,13 @@ const Animations = { /* A List Of All The Animations in a Object */
     }
 }
 
-
+const SaveData = {
+    ["LoadinAnimSeen"]: false,
+    ["Settings"]: {
+        SkipDialogue: false,
+        BackgroundColour: "#000000",
+    },
+}
 
 /**
  *
@@ -40,7 +46,7 @@ const Animations = { /* A List Of All The Animations in a Object */
  *   Description: A Object Containing All the Data For All the Levels, Might Move to Its Own File If It Gets Too Big
  *
  */
-_Levels = [
+const _Levels = [
     {
         Name: "Tutorial",
         Data: {
