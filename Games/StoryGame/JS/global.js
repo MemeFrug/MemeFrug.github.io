@@ -1,4 +1,11 @@
 /**
+ * Define The GameEngine
+ */
+const Game = new _("StoryGame")
+Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
+
+
+/**
  * 
  *  Variables
  *  Description: Variables Here
@@ -37,13 +44,14 @@ const SaveData = {
     ["Settings"]: {
         SkipDialogue: false,
         BackgroundColour: "#000000",
+        Debug: false,
+
     },
 }
 
 /**
  *
- *   Levels Global
- *   Description: A Object Containing All the Data For All the Levels, Might Move to Its Own File If It Gets Too Big
+ *   A Object Containing All the Data For All the Levels, Might Move to Its Own File If It Gets Too Big
  *
  */
 const _Levels = [

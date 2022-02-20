@@ -26,7 +26,11 @@ canvas {
 }
 
 .TooSmall {
-    padding: 100px;
+    top: 35vh;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 5vw;
+    padding-right: 5vw;
     text-align: center;
     display: none;
     position: absolute;

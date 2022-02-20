@@ -1,10 +1,4 @@
 /**
- * Define The GameEngine
- */
-const Game = new _("StoryGame")
-Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
-
-/**
  * When the Window Loads
  */
 window.onload = async () => {
