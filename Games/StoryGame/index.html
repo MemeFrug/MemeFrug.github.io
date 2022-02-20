@@ -15,13 +15,16 @@
     <script src="./JS/Classes/Dialogue.js"></script>
 </head>
 <body>
-    <div class="TooSmall" id="Screen-Too-Small-Element">
-        <h1>Your Screen Is Too Small Please Increase Your Screen Size</h1>
-        <h5>You Can Try Openning this tab in full screen (F11)</h5>
-        <h5>Or, Increase The Size Of The Window So its full screen (Top Bar Still Showing)</h5>
-        <h5>If You Have Dev Tools Open (Inspect Element) Close It, Thanks</h5>
-    </div>
+    <!-- The Canvas That is Used To Draw Onto -->
     <canvas width="0" height="0" id="canvas">Your Browser Cannot Handle Html5, please upgrade</canvas>
+    <!-- A Screen That Shows When The Canvas Element Goes Too Small -->
+    <div class="TooSmall" id="Screen-Too-Small-Element">
+        <p>Your Screen Is Too Small Please Increase Your Screen Size</p>
+        <p>Also Note, That this game is not playable on mobile and ipad devices, please move to a computer</p>
+        <p>You Can Try Openning this tab in full screen (F11)</p>
+        <p>Or, Increase The Size Of The Window So its full screen (Top Bar Still Showing)</p>
+        <p>If You Have Dev Tools Open (Inspect Element) Close It, Thanks</p>
+    </div>
     <div id="MainMenu" class="container">
         <div class="mainmenu_container">
             <div id="title" class="title">Story Game</div>

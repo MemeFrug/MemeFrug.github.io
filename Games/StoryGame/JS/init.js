@@ -1,10 +1,4 @@
 /**
- * Define The GameEngine
- */
-const Game = new _("StoryGame")
-Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
-
-/**
  * When the Window Loads
  */
 window.onload = async () => {
@@ -16,13 +10,15 @@ window.onload = async () => {
  * When Clicks Play Button Play An Animation to Remove The Buttons with an opacity
  */
 async function Play() {
+    //Remove the Event Listeners for the buttons
+    document.getElementById("Settings-Button").removeEventListener("mouseup", Settings)
+    document.getElementById("Back-Button").removeEventListener("mouseup", BackToHub)
+    document.getElementById("Play-Button").removeEventListener("mouseup", Play)
+
     await animate((time) => { return time }, Animations.opacity_buttons_none, 2000, 1) // Play An Animation, but wait till it it resoved by the Promise
     MainMenuElementDOM.style.display = "none" // Remove The Buttons Completely so they dont get into the way
-    // document.getElementById("Settings-Button").removeEventListener("mouseup")
-    // document.getElementById("Back-Button").removeEventListener("mouseup")
-    // document.getElementById("Play-Button").removeEventListener("mouseup")
-    
-    Game._Init()
+
+    Game._Init() // Start The Game
 }
 
 /**
