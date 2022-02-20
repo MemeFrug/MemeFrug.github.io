@@ -13,7 +13,7 @@
 
 canvas {
     background-color: white;
-    display: block;
+    display: none;
     padding: 0;
     margin: auto;
     width: 800px;
@@ -26,10 +26,15 @@ canvas {
 }
 
 .TooSmall {
+    padding: 100px;
+    text-align: center;
     display: none;
     position: absolute;
-    width: 100%;
-    height: 100%;
+    height: auto;
+}
+.TooSmall p{
+    padding-top: 10px;
+    font-size: 3vw;
 }
 
 .container {
