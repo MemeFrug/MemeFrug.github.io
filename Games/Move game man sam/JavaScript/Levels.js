@@ -101,7 +101,7 @@
         this.Enemy3.position.y = 1000
         this.Enemy4.position.x = 500
         this.Enemy4.position.y = 400
-        this.Timeleft = 30
+        this.Timeleft = 10
     },
 
     draw: function (ctx, walls) {
