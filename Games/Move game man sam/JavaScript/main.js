@@ -54,8 +54,8 @@ function MainMenu() {
     // Render button and text
     ctx.fillStyle = 'red'
     ctx.fillRect(buttonX, buttonY, buttonW, buttonH);
-    var MainMenuText = new TextCreator((GAME_WIDTH / 2) - 240, (GAME_HEIGHT / 2) - 230, "90px", "Arial", 'red')
-    MainMenuText.draw(ctx, "Max's Game")
+    var MainMenuText = new TextCreator((GAME_WIDTH / 2) - 420, (GAME_HEIGHT / 2) - 230, "90px", "Arial", 'red')
+    MainMenuText.draw(ctx, "Move Gam Man Sam")
     var PlayText = new TextCreator(buttonX + 180, buttonY + 80, "80px", "Arial", 'white')
     PlayText.draw(ctx, "Play")
 
