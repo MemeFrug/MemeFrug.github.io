@@ -7,12 +7,14 @@ Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element")
 /**
  * Define The Player
  */
-const Player = new Square(Game, false, 10,10, 50, 50, 100)
+const character = new Player(Game, 10,10, 50, 50, 100)
 
 /**
  * Debug
  */
 const ground = new Square(Game, true, 10, 800, 1000, 50)
+
+console.log(ground);
 
 /**
  * 
@@ -71,8 +73,7 @@ const _Levels = [
 
             },
             Dialogue: [
-                new Dialogue("John", "Text", 1000),
-                new Dialogue("Me", "Text", 100) // Like so
+                
             ]
         }
     },
