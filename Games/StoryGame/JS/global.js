@@ -4,6 +4,15 @@
 const Game = new _("StoryGame")
 Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
 
+/**
+ * Define The Player
+ */
+const Player = new Square(Game, false, 10,10, 50, 50, 100)
+
+/**
+ * Debug
+ */
+const ground = new Square(Game, true, 10, 800, 1000, 50)
 
 /**
  * 
