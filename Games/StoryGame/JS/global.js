@@ -12,9 +12,9 @@ const character = new Player(Game, 10,10, 50, 50, 100)
 /**
  * Debug
  */
-const ground = new Square(Game, true, 10, 800, 1000, 50)
+// const ground = new Square(Game, true, 10, 800, 1000, 50)
 
-console.log(ground);
+const world = new World(levelData, 0)
 
 /**
  * 
