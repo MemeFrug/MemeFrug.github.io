@@ -7,7 +7,7 @@ Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element")
 /**
  * Define The Player
  */
-const player = new Player(Game, 10,10, 50, 50, 100, 300, -300)
+const player = new Player(Game, 10, 10, 50, 50, 100, 300, -300)
 Game.addPlayer(player, true)
 
 /**
