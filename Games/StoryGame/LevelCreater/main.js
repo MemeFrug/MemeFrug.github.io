@@ -5,39 +5,45 @@ Game.Config.sideScroller = true
 const player = new Player(Game, 0, 0, 50, 50, 100, 300, -300, 0)
 Game.addPlayer(player, true)
 
-window.addEventListener("Game:UpdateLoop", () => {
-    
+const world = new World(levelData)
+
+let cubeHoveringOver = {i: 1, j: 1}
+
+let mouseDown = false
+
+window.addEventListener("mouseup", () => {
+    mouseDown = false
 })
 
-let mousePos = {
-    x: 0,
-    y: 0
-}
+window.addEventListener("mousedown", () => {
+    mouseDown = true
+})
 
+window.addEventListener("Game:BeforeDrawLoop", () => {
+    const MousePosition = Game.canvas.getMousePosition()
+    const ctx = Game.canvas.ctx
 
-                // A Config Varaible Assigned to A Local Variable For Easier Typing
-                const nativeWidth = Game.Config.nativeWidth;
-                const nativeHeight = Game.Config.nativeHeight;
+    let x = 0;
+    let y = 1;
 
-                // The Current Size Of The Window in Width and Height
-                const deviceWidth = window.innerWidth;
-                const deviceHeight = window.innerHeight;
+    for (let i = 0; i < levelData.length; i++) {
+        x = 0;
 
-                // Get The Scale
-                const scaleFitNative = Math.min(deviceWidth / nativeWidth, deviceHeight / nativeHeight);
+        for (let j = 0; j < levelData[i].length; j++) {
+            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)){
+                ctx.fillRect(x, y, 50, 50)
 
-document.addEventListener("mousemove", (e) => {
-    var rect = Game.canvas.element.getBoundingClientRect();
+                if (mouseDown) {
+                    let dirt = new Square(Game, true, x, y, 50, 50);
+                    world.tiles.push(dirt);
+                }
+            }
 
-    e.preventDefault();
-    e.stopPropagation();
+            ctx.strokeRect(x, y, 50, 50)
+            x += 50;
+        }
 
-    var mouseX = parseInt(e.clientX - rect.left);
-    var mouseY = parseInt(e.clientY - rect.top);
-    
-    mousePos = {
-        x: mouseX,
-        y: mouseY
+        y += 50;
     }
 })
 
@@ -47,7 +53,5 @@ window.addEventListener("Game:AfterDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
     Game.canvas.ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 })
-
-const world = new World(levelData, 0)
 
 Game._Init() // Start The Game
