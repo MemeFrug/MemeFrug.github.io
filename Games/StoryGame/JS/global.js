@@ -1,30 +1,30 @@
 /**
  * Define The GameEngine
  */
-const Game = new _("StoryGame")
-Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
+const Game = new _("StoryGame") // Define The Game Engine
 
 /**
  * Define The Player
  */
-const Player = new Square(Game, false, 10,10, 50, 50, 100)
+const player = new Player(Game, 10, 10, 50, 50, 100, 300, -300) // Define A New Player
 
 /**
  * Debug
  */
-const ground = new Square(Game, true, 10, 800, 1000, 50)
+const world = new World(levelData, 0) // Define The World
 
 /**
- * 
- *  Variables
- *  Description: Variables Here
- * 
+ *  DOM Elements
  */
 const MainMenuElementDOM = document.getElementById("MainMenu");
 const TitleButtonsDOM = document.getElementById("title-buttons");
 const ButtonsInContainerDOM = document.getElementsByClassName("button_container");
 const TitleDOM = document.getElementById("title");
-const Animations = { /* A List Of All The Animations in a Object */
+
+/**
+ * List Of All Current Animations
+ */
+const Animations = {
     title_position: (progress) => {
         TitleButtonsDOM.style.height = progress * 100 + "%"
     },
@@ -71,8 +71,7 @@ const _Levels = [
 
             },
             Dialogue: [
-                new Dialogue("John", "Text", 1000),
-                new Dialogue("Me", "Text", 100) // Like so
+                
             ]
         }
     },
@@ -97,6 +96,11 @@ const _Levels = [
 
     },
 ]
+Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
+Game.Config.sideScroller = true // Set if a sidescroller (Camera Movement)
+Game.Config.boundries.left = -50 // Set The Boundries (Currently only left)
+Game.Config.sideScrollerSideOffset = 50 // Set the camera offset on the edges
+Game.addPlayer(player, true)
 
 
 

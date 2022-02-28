@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Creator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        canvas {
+            background-color: white;
+            padding: 0;
+            margin: auto;
+            width: 800px;
+            height: 600px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .UI {
+            display: flex;
+            position: absolute;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 15%;
+        }
+
+        .blocks_column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: auto;
+            padding-top: 15px;
+            width: 50%;
+            height: 100%;
+
+            font-size: 1.5vw;
+        }
+
+        .Blocks_choose {
+            display: flex;
+        }
+
+        .Button:hover {
+            background-color: grey;
+        }
+
+        .Button {
+            background-color: darkgrey;
+            transition-duration: 0.2s;
+            width: 8vw;
+            height: 8vw;
+        }
+
+        .Button_container {
+            padding-right: 5px;
+        }
+
+        input {
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="UI">
+        <div style="padding: 5px;">Name Of Level:</div> <input type="text" placeholder="Name Of Level">
+        <div class="blocks_column">
+            <div class="Title">Blocks:</div>
+            <div class="Blocks_choose">
+                <div class="Button_container">
+                    <div class="Button">
+    
+                    </div>
+                </div>
+                <div class="Button_container">
+                    <div class="Button">
+    
+                    </div>
+                </div>
+                <div class="Button_container">
+                    <div class="Button">
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 5px; margin-left: auto;"><button style="padding: 5px;" id="SaveLocallyButton">Save Locally</button></div>
+        <div style="padding: 5px;"><button style="padding: 5px;" id="LoadSaveButton">Load Save</button></div>
+        <div style="padding: 5px;"><button style="padding: 5px;" id="DownloadSaveButton">Download</button></div>
+    </div>
+
+    <script src="/lib/MemeFrug-GameEngine/engine.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>
