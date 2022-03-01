@@ -1,26 +1,44 @@
 //Define The Game
-let Game = new _("StoryGameLevelCreator")
-Game.Config.sideScroller = true
-
+const Game = new _("StoryGameLevelCreator")
 const player = new Player(Game, 0, 0, 50, 50, 100, 300, -300, 0)
-Game.addPlayer(player, true)
-
 const world = new World(levelData)
+Game.Config.sideScroller = true
+Game.addPlayer(player, true)
+Game._Init() // Start The Game
 
-let cubeHoveringOver = {i: 1, j: 1}
-
-let mouseDown = false
-
-window.addEventListener("mouseup", () => {
-    mouseDown = false
+window.addEventListener('contextmenu', (event) => {
+    event.preventDefault()
 })
 
-window.addEventListener("mousedown", () => {
-    mouseDown = true
+let Drawing = false
+let Deleting = false
+window.addEventListener("mouseup", (e) => {
+    e.preventDefault()
+    if (e.button == 0) { // Pressing Left Button
+        Drawing = false
+        Deleting = false
+    }
+    else if (e.button == 2) { // Pressing Right
+        Drawing = false
+        Deleting = false
+    }
+})
+
+window.addEventListener("mousedown", (e) => {
+    e.preventDefault()
+    if (e.button == 0) { // Pressing Left Button
+        Drawing = true
+        Deleting = false
+    }
+    else if (e.button == 2) { // Pressing Right
+        Drawing = false
+        Deleting = true
+    }
 })
 
 window.addEventListener("Game:BeforeDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
+
     const ctx = Game.canvas.ctx
 
     let x = 0;
@@ -31,11 +49,16 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
         for (let j = 0; j < levelData[i].length; j++) {
             if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)){
+                ctx.globalAlpha = 0.4
                 ctx.fillRect(x, y, 50, 50)
+                ctx.globalAlpha = 1
 
-                if (mouseDown) {
-                    let dirt = new Square(Game, true, x, y, 50, 50);
-                    world.tiles.push(dirt);
+                if (Drawing) {
+                    let element = new Square(Game, true, x, y, 50, 50);
+                    world.setTile({i: i, j: j}, element);
+                }
+                else if (Deleting) {
+                    world.deleteTile({i: i, j: j})
                 }
             }
 
@@ -48,10 +71,6 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 })
 
 window.addEventListener("Game:AfterDrawLoop", () => {
-    Game.canvas.ctx.setTransform(1, 0, 0, 1, 0, 0); //reset the transform matrix as it is cumulative
-
     const MousePosition = Game.canvas.getMousePosition()
     Game.canvas.ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 })
-
-Game._Init() // Start The Game
