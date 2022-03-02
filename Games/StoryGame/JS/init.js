@@ -2,6 +2,7 @@
  * When the Window Loads
  */
 window.onload = async () => {
+    new Audio('./Assets/Audio/masterpiece.mp3').play(); // MainMenu Music.play(); // Start The Main Music Audio (DEBUG)
     await animate(_Quad, Animations.title_position, 2000, 0.8)
     await animate(_Quad, Animations.opacity_buttons, 1000, 1)
 }
