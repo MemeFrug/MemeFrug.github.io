@@ -1,7 +1,15 @@
 //Define The Game
-const Game = new _("StoryGameLevelCreator")
+const GameName = "StoryGameLevelCreator"
+const Game = new _(GameName)
 const player = new Player(Game, 0, 0, 50, 50, 100, 300, -300, 0)
 const world = new World(levelData)
+const SaveNameInput = document.getElementById("NameOfSaveInput");
+const LocalSaveButton = document.getElementById("SaveLocallyButton");
+const LoadSaveButton = document.getElementById("LoadSaveButton");
+const DownloadButton = document.getElementById("DownloadSaveButton");
+let LocalSaveLevels = []
+let Drawing = false
+let Deleting = false
 Game.Config.sideScroller = true
 Game.addPlayer(player, true)
 Game._Init() // Start The Game
@@ -10,8 +18,6 @@ window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
 
-let Drawing = false
-let Deleting = false
 window.addEventListener("mouseup", (e) => {
     e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
@@ -25,12 +31,12 @@ window.addEventListener("mouseup", (e) => {
 })
 
 window.addEventListener("mousedown", (e) => {
-    e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
         Drawing = true
         Deleting = false
     }
     else if (e.button == 2) { // Pressing Right
+        e.preventDefault()
         Drawing = false
         Deleting = true
     }
@@ -55,9 +61,11 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
                 if (Drawing) {
                     let element = new Square(Game, true, x, y, 50, 50);
+                    levelData[i][j] = 1
                     world.setTile({i: i, j: j}, element);
                 }
                 else if (Deleting) {
+                    levelData[i][j] = 0
                     world.deleteTile({i: i, j: j})
                 }
             }
@@ -73,4 +81,32 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 window.addEventListener("Game:AfterDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
     Game.canvas.ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
+})
+
+LocalSaveButton.addEventListener("mousedown", (e) => {
+    const LevelName = SaveNameInput.value
+    const LocalSaveStorage = localStorage.getItem(GameName+"Levels")
+    console.log("Inputed Name: ", LevelName);
+
+    if (LocalSaveStorage) {
+        console.log("Found Save File");
+        LocalSaveLevels = JSON.parse(LocalSaveStorage)
+        LocalSaveLevels.push(levelData)
+        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+    }
+    else {
+        console.log("Creating Save");
+        LocalSaveLevels.push(LevelName)
+        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+    }
+})
+
+LoadSaveButton.addEventListener("mousedown", (e) => {
+    const LevelName = SaveNameInput.value
+    const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+    LevelsFromStorage.forEach(Level => {
+        Level.forEach(Name => {
+            if (Name = LevelName)
+        })
+    });
 })
