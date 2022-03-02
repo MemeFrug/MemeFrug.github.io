@@ -14,6 +14,12 @@ Game.Config.sideScroller = true
 Game.addPlayer(player, true)
 Game._Init() // Start The Game
 
+const music = new Audio('../Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
+music.autoplay = true
+music.loop = true
+function stopMusic() {music.pause()}
+function startMusic() {music.play()}
+
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
@@ -104,9 +110,13 @@ LocalSaveButton.addEventListener("mousedown", (e) => {
 LoadSaveButton.addEventListener("mousedown", (e) => {
     const LevelName = SaveNameInput.value
     const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
-    LevelsFromStorage.forEach(Level => {
-        Level.forEach(Name => {
-            if (Name = LevelName)
-        })
-    });
+    if (LevelsFromStorage) {
+        LevelsFromStorage.forEach(Level => {
+            Level.forEach(Name => {
+                if (Name = LevelName) {
+
+                }
+            })
+        });
+    }
 })
