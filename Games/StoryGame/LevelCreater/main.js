@@ -2,7 +2,7 @@
 const GameName = "StoryGameLevelCreator"
 const Game = new _(GameName)
 const player = new Player(Game, 0, 0, 50, 50, 100, 300, -300, 0)
-const world = new World(levelData)
+const world = new World(levelData, Game)
 const SaveNameInput = document.getElementById("NameOfSaveInput");
 const LocalSaveButton = document.getElementById("SaveLocallyButton");
 const LoadSaveButton = document.getElementById("LoadSaveButton");
@@ -10,7 +10,11 @@ const DownloadButton = document.getElementById("DownloadSaveButton");
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
+player.c = "red"
 Game.Config.sideScroller = true
+Game.Config.boundries.left = 0 // Set The Boundries (Currently only left)
+Game.Config.boundries.right = Game.Config.WorldSize.x - player.w
+Game.Config.sideScrollerSideOffset = 0 // Set the camera offset on the edges
 Game.addPlayer(player, true)
 Game._Init() // Start The Game
 
