@@ -1,7 +1,7 @@
 //Define The Game
 const GameName = "StoryGameLevelCreator"
 const Game = new _(GameName)
-const player = new Player(Game, 0, 0, 50, 50, 100, 300, -300, 0)
+const player = new Player(Game, false, 0, 0, 50, 50, 100, 300, -300, 0)
 const world = new World(levelData, Game)
 const SaveNameInput = document.getElementById("NameOfSaveInput");
 const LocalSaveButton = document.getElementById("SaveLocallyButton");
@@ -11,6 +11,45 @@ let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
 player.c = "red"
+player.gravityMax = 5000
+player.DisableCollision()
+player._Move = (movement) => {
+    switch (movement) { // Make a switch statement
+        case "w":
+            player.vy = -player.speed // set the virtical velocity to jump
+            break;
+
+        case "a":
+            player.vx = -player.speed // Make the speed negative to it goes the oposite way (-x)
+            break;
+
+        case "d":
+            player.vx = player.speed // Make the x velocity positive of the speed so it goes right
+            break;
+
+        case "s":
+            player.vy = player.speed
+    }
+}
+
+player._stopMoving = (movement) => {
+    switch (movement) {
+        case "w":
+            player.vy = 0
+            break;
+        case "a":
+            player.vx = 0;
+            break;
+
+        case "d":
+            player.vx = 0;
+            break;
+        
+        case "s":
+            player.vy = 0
+            break
+    }
+}
 Game.Config.sideScroller = true
 Game.Config.boundries.left = 0 // Set The Boundries (Currently only left)
 Game.Config.boundries.right = Game.Config.WorldSize.x - player.w
@@ -18,7 +57,7 @@ Game.Config.sideScrollerSideOffset = 0 // Set the camera offset on the edges
 Game.addPlayer(player, true)
 Game._Init() // Start The Game
 
-const music = new Audio('../Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
+const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
 music.autoplay = true
 music.loop = true
 function stopMusic() {music.pause()}
@@ -114,6 +153,7 @@ LocalSaveButton.addEventListener("mousedown", (e) => {
 LoadSaveButton.addEventListener("mousedown", (e) => {
     const LevelName = SaveNameInput.value
     const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+    console.log(LevelsFromStorage);
     if (LevelsFromStorage) {
         LevelsFromStorage.forEach(Level => {
             Level.forEach(Name => {
