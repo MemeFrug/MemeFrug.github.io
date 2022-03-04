@@ -1,4 +1,10 @@
 <p>
+6/02/2022<br>
+Game Has Been Discontinued As Ive Lossed The Server Files, And I do not, i repeat, do not want to recreate that Haha, Another multipleyer game might be in the works soon.
+<br><br>
+</p>
+
+<p>
 12/07/2021<br>
 Today, I added some functionallity to the new ui elements from yesterday, such as reloading, you now have a ammo counter that actually displays the amount of ammo that
 you have and also made a working inventory system so yeah.

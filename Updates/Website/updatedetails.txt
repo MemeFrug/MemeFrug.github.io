@@ -1,9 +1,14 @@
-<p> Welcome to My website In the updates column you will find everything that i have updated recently. <br> <br>
-If you want specific game updates then go into that specific game and find a 'Updates' column <br>
+<p> Welcome to My website In the updates column you will find everything that i have updated recently. <br>
+
+<p>
+4/03/2022<br>
+Moved Rhythm Game Into Archive Folder, And Started Work Onto A Stroy Game (Working on A Big Backend thing to help with future projects aswell)
+<br><br>
+</p>
 
 <p>
 6/02/2022<br>
-Ive Deleted Project 3 because there is no need for it (ive kept it in the files so you can search it up if u want <a style="color: blue;" href="./Games/Project 3/index.html">here </a>)
+Ive Deleted Project 3 because there is no need for it (ive kept it in the files so you can search it up if u want <a style="color: blue;" href="./Archive/Project 3/index.html">Project 3 Game</a>)
 <br><br>
 </p>
 
@@ -24,9 +29,9 @@ I have also updated the Rpg game a bunch the past few days you will find more in
 </p>
 
 <p>
-28/06/21
+28/06/2021
 <br>
 -I have added the 'Update' Tab in the main hub.
 <br>
--I have also added a new folder will all the updates manually <a style="color: blue;" href="./Updates">here </a> (Broken)
+-I have also added a new folder will all the updates manually <a style="color: blue;" href="./Updates">Update Folder </a> (Broken)
 </p>

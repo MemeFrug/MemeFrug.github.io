@@ -10,6 +10,7 @@ const DownloadButton = document.getElementById("DownloadSaveButton");
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
+let AlreadyLoaded = false
 player.c = "red"
 player.gravityMax = 0
 player.DisableCollision()
@@ -62,6 +63,15 @@ music.autoplay = true
 music.loop = true
 function stopMusic() {music.pause()}
 function startMusic() {music.play()}
+
+function download(filename, textInput) {
+    var element = document.createElement('a');
+    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
+    element.setAttribute('download', filename);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
 
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
@@ -171,23 +181,87 @@ LocalSaveButton.addEventListener("mousedown", (e) => {
 })
 
 LoadSaveButton.addEventListener("mousedown", (e) => {
-    const LevelName = SaveNameInput.value
-    const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
-    console.log(LevelsFromStorage);
-    if (LevelsFromStorage) {
-        LocalSaveStorage = LevelsFromStorage
-        LevelsFromStorage.forEach(element => {
-            if (element.name == LevelName) {
-                levelData = element.data
-                console.log(levelData);
-                world.regen(levelData)
-                console.log("Found Save File");
-                return;
+    if (!AlreadyLoaded) {
+        const LevelName = SaveNameInput.value
+        const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+        console.log(LevelsFromStorage);
+        if (LevelsFromStorage) {
+            LocalSaveStorage = LevelsFromStorage
+            LocalSaveStorage.forEach(element => {
+                if (element.name == LevelName) {
+                    AlreadyLoaded = true
+                    levelData = element.data
+                    console.log(levelData);
+                    world.regen(levelData)
+                    console.log("Found Save File");
+                    return;
+                }
+            });
+            if (!AlreadyLoaded) {
+                console.error("Could Not Find That Save File Locally");
+                alert("Could Not Find That Save File Locally")
             }
-        });
+        }
+    } else {
+        console.error("Already Loaded A Save, Cannot Anymore please refresh the page");
+        alert("Already Loaded A Save, Cannot Anymore please refresh the page")
     }
 })
 
 DownloadButton.addEventListener("mousedown", () => {
-    
+    const LevelName = SaveNameInput.value
+    if (LocalSaveLevels) {
+        if (LocalSaveLevels.length > 0) {
+            LocalSaveLevels.forEach(element => {
+                if (element.name == LevelName) {
+                    console.log("Found Level Name In Files, Downloading It");
+                    download(LevelName + ".level", JSON.stringify(element.data))
+                }
+            });
+        } else {
+            console.log("Downloading Current Scene");
+            download(LevelName + ".level", JSON.stringify(levelData))
+        }
+    }
+})
+
+document.addEventListener("dragenter", (e) => {
+    const isLink = e.dataTransfer.types.includes("Files");
+    console.log(e.dataTransfer.types);
+    console.log(isLink);
+    if (isLink) {
+      e.preventDefault();
+    }
+})
+document.addEventListener("dragover", (e) => {
+    const isLink = e.dataTransfer.types.includes("Files");
+    if (isLink) {
+      e.preventDefault();
+    }
+})
+document.addEventListener("drop", (e) => {
+    e.preventDefault()
+    if (!AlreadyLoaded) {
+        AlreadyLoaded = true
+        var file = e.dataTransfer.files[0]
+        if (file.name.includes(".level")) {
+            reader = new FileReader();
+            reader.onload = function(event) {
+                const filename = file.name
+                const data = event.target.result
+                SaveNameInput.value = filename.replace(".level", "")
+                levelData = JSON.parse(data)
+                world.regen(levelData)
+                console.log("Loaded World");
+                return;
+            };
+            reader.readAsText(file);
+            return false;
+        } else {
+            console.error("File Is Not a .level");
+        }
+    } else {
+        console.error("Already Loaded A Save, Cannot Anymore please refresh the page");
+        alert("Already Loaded A Save, Cannot Anymore please refresh the page")
+    }
 })
