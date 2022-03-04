@@ -11,7 +11,7 @@ let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
 player.c = "red"
-player.gravityMax = 5000
+player.gravityMax = 0
 player.DisableCollision()
 player._Move = (movement) => {
     switch (movement) { // Make a switch statement
@@ -137,15 +137,35 @@ LocalSaveButton.addEventListener("mousedown", (e) => {
     const LocalSaveStorage = localStorage.getItem(GameName+"Levels")
     console.log("Inputed Name: ", LevelName);
 
+    if (!LevelName || LevelName == "") {
+        console.error("Level Name Cant Be Nothing");
+        return
+    }
+
     if (LocalSaveStorage) {
+        let FoundSave = false
+        let SaveIndex = undefined
         console.log("Found Save File");
         LocalSaveLevels = JSON.parse(LocalSaveStorage)
-        LocalSaveLevels.push(levelData)
-        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        for (let i = 0; i < LocalSaveLevels.length; i++) {
+            const element = LocalSaveLevels[i];
+            if (element.name == LevelName) {
+                FoundSave = true
+                SaveIndex = i
+            }
+        }
+        if (FoundSave) {
+            console.log(LocalSaveLevels[SaveIndex]);
+            LocalSaveLevels[SaveIndex].data = levelData
+            localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        } else {
+            LocalSaveLevels.push({name: LevelName, data: levelData})
+            localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        }
     }
     else {
         console.log("Creating Save");
-        LocalSaveLevels.push(LevelName)
+        LocalSaveLevels.push({name: LevelName, data: levelData})
         localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
     }
 })
@@ -155,12 +175,19 @@ LoadSaveButton.addEventListener("mousedown", (e) => {
     const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
     console.log(LevelsFromStorage);
     if (LevelsFromStorage) {
-        LevelsFromStorage.forEach(Level => {
-            Level.forEach(Name => {
-                if (Name = LevelName) {
-
-                }
-            })
+        LocalSaveStorage = LevelsFromStorage
+        LevelsFromStorage.forEach(element => {
+            if (element.name == LevelName) {
+                levelData = element.data
+                console.log(levelData);
+                world.regen(levelData)
+                console.log("Found Save File");
+                return;
+            }
         });
     }
+})
+
+DownloadButton.addEventListener("mousedown", () => {
+    
 })
