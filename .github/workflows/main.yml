@@ -16,15 +16,16 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checking out the files from a specific repository and branch
       - uses: actions/checkout@v2
+
+      # Running the `auto-minify` action
       - name: Auto Minify
-        uses: nizarmah/auto-minify@v2.1.1
-        with:
-          overwrite: false
-          directory: .
-          maxdepth: 25
-      - name: Auto commit minified files
+        uses: nizarmah/auto-minify@v2.1
+
+      # Committing the files to a specific repository and branch 
+      - name: Auto committing minified files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Github Action: Auto Minified JS and CSS files"
-          branch: ${{ github.ref }}
+          branch: "release"  # <--- change this line to your branch name or use "${{ github.ref }}" for default branch
