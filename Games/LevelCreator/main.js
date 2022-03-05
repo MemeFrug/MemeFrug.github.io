@@ -61,6 +61,7 @@ Game._Init() // Start The Game
 const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
 music.autoplay = true
 music.loop = true
+console.log("Test");
 function stopMusic() {music.pause()}
 function startMusic() {music.play()}
 
