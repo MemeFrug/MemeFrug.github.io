@@ -1,6 +1,8 @@
 name: minisauras
 
-on: [pull]
+on:   # Triggers the workflow on push or pull request events but only for the release branch
+  pull_request:
+    branches: [ release ]
 
 jobs:
   read:
@@ -12,7 +14,7 @@ jobs:
     - name: minisauras
       uses: TeamTigers/minisauras@v2.0.0
       env:
-        GITHUB_TOKEN: ${{ secrets.COMPILER }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       id: dir
       with:
         directory: './' ## minify all files from root directory
