@@ -1,20 +1,22 @@
-name: minisauras
-
-on:   # Triggers the workflow on push or pull request events but only for the release branch
-  pull_request:
+name: Minify Workflow
+on:
+  push:
     branches: [ release ]
 
 jobs:
-  read:
-    runs-on: ubuntu-18.04
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: minisauras
-      uses: TeamTigers/minisauras@v2.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      id: dir
-      with:
-        directory: './' ## minify all files from root directory
+      # Checks-out your repository
+      - uses: actions/checkout@v2
+        with:
+          ref: release
+
+      - name: Minify Action
+        uses: anthonyftwang/minify-action@v1.0.1
+
+      # Auto-commit to repository
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Minify source code
+          branch: release
