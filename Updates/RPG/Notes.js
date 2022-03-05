@@ -1,11 +1,1 @@
-//Getting Update Details for the Notes Div
-var url = "../../../Updates/RPG/updatedetails.txt";
-let reader = new FileReader();
-
-fetch(url).then((response) => {
-	response.text().then((text) => {
-		var Notes = document.getElementById("Notes");
-		Notes.innerHTML = Notes.innerHTML + "\n" + text;
-	});
-});
-//------------------
+var url="../../../Updates/RPG/updatedetails.txt";let reader=new FileReader;fetch(url).then((e=>{e.text().then((e=>{var t=document.getElementById("Notes");t.innerHTML=t.innerHTML+"\n"+e}))}));
