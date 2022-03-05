@@ -1,6 +1,6 @@
 name: minisauras
 
-on: [push]
+on: [pull]
 
 jobs:
   read:
