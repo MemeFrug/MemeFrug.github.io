@@ -1,0 +1,18 @@
+{
+  "name": "rpg",
+  "version": "1.0.0",
+  "description": "A Rpg game by MemeFrug",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.21.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "socket.io": "^4.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npx nodemon server.js"
+  },
+  "author": "Max Knight",
+  "license": "ISC"
+}
