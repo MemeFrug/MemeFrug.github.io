@@ -6,12 +6,12 @@ const Game = new _("StoryGame") // Define The Game Engine
 /**
  * Define The Player
  */
-const player = new Player(Game, 10, 10, 50, 50, 100, 300, -300) // Define A New Player
+const player = new Player(Game, false, 10, 10, 50, 50, 100, 300, -500) // Define A New Player
 
 /**
  * Debug
  */
-const world = new World(levelData, 0) // Define The World
+const world = new World(levelData, Game) // Define The World
 
 /**
  *  DOM Elements
@@ -96,6 +96,7 @@ const _Levels = [
 
     },
 ]
+Game.Config.g = 1000
 Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element") // Change The TooSmallScreen Element
 Game.Config.sideScroller = true // Set if a sidescroller (Camera Movement)
 Game.Config.boundries.left = -50 // Set The Boundries (Currently only left)

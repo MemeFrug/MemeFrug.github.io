@@ -12,6 +12,10 @@
             padding: 0;
         }
         
+        html:-moz-drag-over {
+            background-color: aqua;
+        }
+
         canvas {
             background-color: white;
             padding: 0;
@@ -32,6 +36,7 @@
             position: absolute;
             justify-content: center;
             align-items: center;
+            flex-direction: row;
             width: 100%;
             height: 15%;
         }
@@ -48,8 +53,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-left: auto;
-            margin-right: auto;
             padding-top: 15px;
             width: 50%;
             height: 100%;
@@ -79,10 +82,21 @@
         input {
             height: 20px;
         }
+
+        .UI_Bottom {
+            position: absolute;
+            top: 85%;
+            height: 15%;
+            background-color: rgba(49, 49, 49, 0.164);
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas">Your Browser Cannot Handle Html5, please upgrade</canvas>
+    <canvas id="canvas"></canvas>
 
     <div class="UI">
         <div style="padding: 5px;">Name Of Level:</div> <input id="NameOfSaveInput" type="text" placeholder="Name Of Level">
@@ -109,6 +123,12 @@
         <div><button id="SaveLocallyButton">Save Locally</button></div>
         <div><button id="LoadSaveButton">Load Save</button></div>
         <div><button id="DownloadSaveButton">Download</button></div>
+    </div>
+
+    <div class="UI_Bottom">
+        <div>
+            <h1 class="Title">Settings</h1>
+        </div>
     </div>
 
     <script src="/lib/MemeFrug-GameEngine/engine.js"></script>
