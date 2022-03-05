@@ -1,31 +1,18 @@
-# This is a basic workflow to help you get started with Actions
+name: minisauras
 
-name: Compiler
+on: [push]
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the release branch
-  pull_request:
-    branches: [ release ]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    runs-on: ubuntu-latest
+  read:
+    runs-on: ubuntu-18.04
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # Checking out the files from a specific repository and branch
-      - uses: actions/checkout@v2
-
-      # Running the `auto-minify` action
-      - name: Auto Minify
-        uses: nizarmah/auto-minify@v2.1
-
-      # Committing the files to a specific repository and branch 
-      - name: Auto committing minified files
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "Github Action: Auto Minified JS and CSS files"
-          branch: "release"  # <--- change this line to your branch name or use "${{ github.ref }}" for default branch
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: minisauras
+      uses: TeamTigers/minisauras@v2.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.COMPILER }}
+      id: dir
+      with:
+        directory: './' ## minify all files from root directory
