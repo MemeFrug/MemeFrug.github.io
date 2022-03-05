@@ -2,11 +2,12 @@
 const GameName = "StoryGameLevelCreator"
 const Game = new _(GameName)
 const player = new Player(Game, false, 0, 0, 50, 50, 100, 300, -300, 0)
-const world = new World(levelData, Game)
 const SaveNameInput = document.getElementById("NameOfSaveInput");
 const LocalSaveButton = document.getElementById("SaveLocallyButton");
 const LoadSaveButton = document.getElementById("LoadSaveButton");
 const DownloadButton = document.getElementById("DownloadSaveButton");
+const DeleteAllSavesButton = document.getElementById("deleteallsaves");
+let world = undefined
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
@@ -54,17 +55,19 @@ player._stopMoving = (movement) => {
 Game.Config.sideScroller = true
 Game.Config.boundries.left = 0 // Set The Boundries (Currently only left)
 Game.Config.boundries.right = Game.Config.WorldSize.x - player.w
-Game.Config.sideScrollerSideOffset = 0 // Set the camera offset on the edges
+Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
+Game.Config.sideScrollerSideOffset.top = 10
+Game.Config.sideScrollerSideOffset.bottom = 10
+Game.Config.sideScrollerSideOffset.right = 10
+Game.Config.sideScrollPlayerFollowDelay = 5   
 Game.addPlayer(player, true)
-Game._Init() // Start The Game
+// Game._Init() // Start The Game
 
 const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
 music.autoplay = true
 music.loop = true
-console.log("Test");
 function stopMusic() {music.pause()}
 function startMusic() {music.play()}
-
 function download(filename, textInput) {
     var element = document.createElement('a');
     element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
@@ -73,6 +76,59 @@ function download(filename, textInput) {
     element.click();
     document.body.removeChild(element);
 }
+function onload() {
+    const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+    const LevelsElement = document.getElementById("Levels")
+    if (LocalSaveStorage) {
+        console.log("Found Save File");
+        for (let i = 0; i < LocalSaveStorage.length; i++) {
+            const element = LocalSaveStorage[i];
+            console.log(element);
+            const LevelContainer = document.createElement("div")
+            const LevelBox = document.createElement("div")
+            const LevelName = document.createElement("span")
+            LevelContainer.className = "Level_Container"
+            LevelBox.className = "Level"
+            LevelBox.id = element.name
+            LevelName.className = "Level_Name"
+            LevelName.innerHTML = element.name
+            LevelBox.appendChild(LevelName)
+            LevelContainer.appendChild(LevelBox)
+            LevelsElement.appendChild(LevelContainer)
+
+            LevelContainer.addEventListener("mouseup", () => {
+                const ElementData = element.data
+                const MainMenuElement = document.getElementById("MainMenu")
+                const UIElement = document.getElementById("UI")
+                SaveNameInput.value = element.name
+                UIElement.style.display = "flex"
+                MainMenuElement.style.display = "none"
+                levelData = ElementData
+                world = new World(levelData, Game)
+                Game._Init()
+                console.log("Started game");
+            })
+        }
+    }
+    else {
+        console.log("Creating Save");
+        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        onload()
+    }
+
+    document.getElementById("CreateNew").addEventListener("mouseup", () => {
+        console.log("Creating New Save");
+        const MainMenuElement = document.getElementById("MainMenu")
+        const UIElement = document.getElementById("UI")
+        UIElement.style.display = "flex"
+        MainMenuElement.style.display = "none"
+        world = new World(levelData, Game)
+        Game._Init()
+        console.log("Started game");
+    })
+}
+
+window.onload = onload()
 
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
@@ -143,7 +199,12 @@ window.addEventListener("Game:AfterDrawLoop", () => {
     Game.canvas.ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 })
 
-LocalSaveButton.addEventListener("mousedown", (e) => {
+DeleteAllSavesButton.addEventListener("mouseup", () => {
+    localStorage.clear()
+    window.location.reload()
+})
+
+LocalSaveButton.addEventListener("mouseup", (e) => {
     const LevelName = SaveNameInput.value
     const LocalSaveStorage = localStorage.getItem(GameName+"Levels")
     console.log("Inputed Name: ", LevelName);
@@ -181,7 +242,7 @@ LocalSaveButton.addEventListener("mousedown", (e) => {
     }
 })
 
-LoadSaveButton.addEventListener("mousedown", (e) => {
+LoadSaveButton.addEventListener("mouseup", (e) => {
     if (!AlreadyLoaded) {
         const LevelName = SaveNameInput.value
         const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
@@ -209,20 +270,24 @@ LoadSaveButton.addEventListener("mousedown", (e) => {
     }
 })
 
-DownloadButton.addEventListener("mousedown", () => {
+DownloadButton.addEventListener("mouseup", () => {
     const LevelName = SaveNameInput.value
-    if (LocalSaveLevels) {
-        if (LocalSaveLevels.length > 0) {
-            LocalSaveLevels.forEach(element => {
-                if (element.name == LevelName) {
-                    console.log("Found Level Name In Files, Downloading It");
-                    download(LevelName + ".level", JSON.stringify(element.data))
-                }
-            });
-        } else {
-            console.log("Downloading Current Scene");
-            download(LevelName + ".level", JSON.stringify(levelData))
+    if (LevelName != "") {
+        if (LocalSaveLevels) {
+            if (LocalSaveLevels.length > 0) {
+                LocalSaveLevels.forEach(element => {
+                    if (element.name == LevelName) {
+                        console.log("Found Level Name In Files, Downloading It");
+                        download(LevelName + ".level", JSON.stringify(element.data))
+                    }
+                });
+            } else {
+                console.log("Downloading Current Scene");
+                download(LevelName + ".level", JSON.stringify(levelData))
+            }
         }
+    } else {
+        console.error("Level Name Cannot Be ''");
     }
 })
 

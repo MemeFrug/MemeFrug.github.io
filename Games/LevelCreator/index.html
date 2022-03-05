@@ -6,99 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level Creator</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        
-        html:-moz-drag-over {
-            background-color: aqua;
-        }
-
-        canvas {
-            background-color: white;
-            padding: 0;
-            margin: auto;
-            width: 800px;
-            height: 600px;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        .UI {
-            padding-bottom: 1%;
-            background-color: rgba(49, 49, 49, 0.164);
-            display: flex;
-            position: absolute;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-            width: 100%;
-            height: 15%;
-        }
-
-        .UI div {
-            padding: 5px;
-        }
-
-        .UI div button {
-            padding: 5px;
-        }
-
-        .blocks_column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 15px;
-            width: 50%;
-            height: 100%;
-
-            font-size: 1.5vw;
-        }
-
-        .Blocks_choose {
-            display: flex;
-        }
-
-        .Button:hover {
-            background-color: grey;
-        }
-
-        .Button {
-            background-color: darkgrey;
-            transition-duration: 0.2s;
-            width: 8vw;
-            height: 8vw;
-        }
-
-        .Button_container {
-            padding-right: 5px;
-        }
-
-        input {
-            height: 20px;
-        }
-
-        .UI_Bottom {
-            position: absolute;
-            top: 85%;
-            height: 15%;
-            background-color: rgba(49, 49, 49, 0.164);
-            display: flex;
-            justify-content: center;
-            flex-direction: row;
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="MainMenu" class="MainMenu">
+        <div class="Title">Levels</div>
+        <div id="Levels" class="Level_Select">  
+            <div class="Level_Container"><div  id="CreateNew" class="Level"><span class="Level_Name">Create New Level</span></div></div>
+        </div>
+        <div class="button_container"></div><button id="deleteallsaves">Delete All Saves</button>
+    </div>
+
     <canvas id="canvas"></canvas>
 
-    <div class="UI">
+    <div id="UI" class="UI">
         <div style="padding: 5px;">Name Of Level:</div> <input id="NameOfSaveInput" type="text" placeholder="Name Of Level">
         <div class="blocks_column">
             <div class="Title">Blocks:</div>
@@ -123,12 +44,6 @@
         <div><button id="SaveLocallyButton">Save Locally</button></div>
         <div><button id="LoadSaveButton">Load Save</button></div>
         <div><button id="DownloadSaveButton">Download</button></div>
-    </div>
-
-    <div class="UI_Bottom">
-        <div>
-            <h1 class="Title">Settings</h1>
-        </div>
     </div>
 
     <script src="/lib/MemeFrug-GameEngine/engine.js"></script>
