@@ -1,9 +1,1 @@
-﻿//DARK MODE
-var darkmodebut = document.getElementById("darkmode")
-darkmodebut.addEventListener('click', darkmodefunc)
-
-function darkmodefunc() {
-    var element = document.body;
-    element.classList.toggle("dark-mode");
-}
-//END OF DARK MODE
+var darkmodebut=document.getElementById("darkmode");function darkmodefunc(){document.body.classList.toggle("dark-mode")}darkmodebut.addEventListener("click",darkmodefunc);
