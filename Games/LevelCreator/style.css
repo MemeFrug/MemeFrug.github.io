@@ -1,7 +1,6 @@
 * {
 	margin: 0;
 	padding: 0;
-	user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 body {
@@ -13,6 +12,7 @@ body:-moz-drag-over {
 }
 
 canvas {
+	cursor: none;
 	display: none;
 	background-color: white;
 	padding: 0;
@@ -27,15 +27,17 @@ canvas {
 }
 
 .UI {
-	padding-bottom: 1%;
+	/* left: -13%; */
+	user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+	font-size: 1.5vw;
 	background-color: rgba(49, 49, 49, 0.164);
 	display: none; /* Needs To Be Flex */
 	position: absolute;
 	justify-content: center;
 	align-items: center;
-	flex-direction: row;
-	width: 100%;
-	height: 15%;
+	flex-direction: column;
+	width: 15%;
+	height: 100%;
 }
 
 .UI div {
@@ -53,12 +55,14 @@ canvas {
 	padding-top: 15px;
 	width: 50%;
 	height: 100%;
-
-	font-size: 1.5vw;
+	max-height: 80%;
 }
 
 .Blocks_choose {
 	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	overflow-x: none;
 }
 
 .Button:hover {
@@ -81,6 +85,7 @@ input {
 }
 
 .MainMenu {
+	user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -118,7 +123,8 @@ input {
 }
 
 .Level_Container {
-	padding-left: 15px;
+	padding-left: 1px;
+	/* margin-left: -1px; */
 	height: 100%;
 }
 
@@ -129,7 +135,7 @@ input {
 	background-color: grey;
 	border: 3px solid black;
 	height: calc(100% - 10px);
-	width: 20vw;
+	width: 10vw;
 	text-align: center;
 	transition: all;
 	transition-duration: 0.2s;
@@ -149,4 +155,65 @@ input {
 
 .Title {
 	font-size: 2vw;
+}
+
+.NameOfLevel {
+	user-select: none;
+}
+.NameOfLevel input {
+	user-select: all;
+}
+.NameOfLevel_Container {
+	position: absolute;
+	display: none; /* Needs to be flex */
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	font-size: 1.5vw;
+}
+.NameOfLevel_Container button{
+	width: 10vw;
+	height: 5%;
+	font-size: 1.5vw;
+}
+.NameOfLevel_Container .SaveNameError {
+	font-size: 1vw;
+	color: red;
+	display: none;
+}
+
+.HideUI {
+	position: absolute;
+	top: 50%;
+	background-color: white;
+	border: 0.5px black solid;
+	left: calc(100% - 2vw);
+
+	transition-duration: 0.15s;
+}
+.HideUI:hover {
+	background-color: grey;
+}
+.HideUI:active {
+	background-color: darkgrey;
+}
+
+.Notes_Container {
+	/* position: absolute; */
+	
+	/* right: 0; */
+	padding: 2vw;
+	/* width: 15%; */
+	/* height: 50%; */
+	overflow-y: auto;
+	font-size: 1.5vw;
+}
+
+.Notes_Container .Notes {
+	background-color: darkgrey;
+	width: 100%;
+	height: 100%;
 }

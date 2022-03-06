@@ -3,15 +3,22 @@ const GameName = "StoryGameLevelCreator"
 const Game = new _(GameName)
 const player = new Player(Game, false, 0, 0, 50, 50, 100, 300, -300, 0)
 const SaveNameInput = document.getElementById("NameOfSaveInput");
+const SaveNameErrorElement = document.getElementById("SaveNameError")
 const LocalSaveButton = document.getElementById("SaveLocallyButton");
-const LoadSaveButton = document.getElementById("LoadSaveButton");
+// const LoadSaveButton = document.getElementById("LoadSaveButton");
 const DownloadButton = document.getElementById("DownloadSaveButton");
 const DeleteAllSavesButton = document.getElementById("deleteallsaves");
+const RemoveUIButton = document.getElementById("Hide UI");
+const UIElement = document.getElementById("UI")
+const NameOfLevelContainer = document.getElementById("NameOfLevelContainer")
+const SubmitLevelName = document.getElementById("SubmitLevelName")
+let LevelName = ""
 let world = undefined
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
 let AlreadyLoaded = false
+let UIClosed = true
 player.c = "red"
 player.gravityMax = 0
 player.DisableCollision()
@@ -61,7 +68,6 @@ Game.Config.sideScrollerSideOffset.bottom = 10
 Game.Config.sideScrollerSideOffset.right = 10
 Game.Config.sideScrollPlayerFollowDelay = 5   
 Game.addPlayer(player, true)
-// Game._Init() // Start The Game
 
 const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
 music.autoplay = true
@@ -86,13 +92,13 @@ function onload() {
             console.log(element);
             const LevelContainer = document.createElement("div")
             const LevelBox = document.createElement("div")
-            const LevelName = document.createElement("span")
+            const LevelNameElement = document.createElement("span")
             LevelContainer.className = "Level_Container"
             LevelBox.className = "Level"
             LevelBox.id = element.name
-            LevelName.className = "Level_Name"
-            LevelName.innerHTML = element.name
-            LevelBox.appendChild(LevelName)
+            LevelNameElement.className = "Level_Name"
+            LevelNameElement.innerHTML = element.name
+            LevelBox.appendChild(LevelNameElement)
             LevelContainer.appendChild(LevelBox)
             LevelsElement.appendChild(LevelContainer)
 
@@ -100,7 +106,7 @@ function onload() {
                 const ElementData = element.data
                 const MainMenuElement = document.getElementById("MainMenu")
                 const UIElement = document.getElementById("UI")
-                SaveNameInput.value = element.name
+                LevelName = element.name
                 UIElement.style.display = "flex"
                 MainMenuElement.style.display = "none"
                 levelData = ElementData
@@ -117,14 +123,9 @@ function onload() {
     }
 
     document.getElementById("CreateNew").addEventListener("mouseup", () => {
-        console.log("Creating New Save");
         const MainMenuElement = document.getElementById("MainMenu")
-        const UIElement = document.getElementById("UI")
-        UIElement.style.display = "flex"
+        NameOfLevelContainer.style.display = "flex"
         MainMenuElement.style.display = "none"
-        world = new World(levelData, Game)
-        Game._Init()
-        console.log("Started game");
     })
 }
 
@@ -134,7 +135,7 @@ window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
 
-window.addEventListener("mouseup", (e) => {
+Game.canvas.element.addEventListener("mouseup", (e) => {
     e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
         Drawing = false
@@ -146,7 +147,7 @@ window.addEventListener("mouseup", (e) => {
     }
 })
 
-window.addEventListener("mousedown", (e) => {
+Game.canvas.element.addEventListener("mousedown", (e) => {
     if (e.button == 0) { // Pressing Left Button
         Drawing = true
         Deleting = false
@@ -160,8 +161,8 @@ window.addEventListener("mousedown", (e) => {
 
 window.addEventListener("Game:BeforeDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
-
     const ctx = Game.canvas.ctx
+    ctx.fillStyle = "black"
 
     let x = 0;
     let y = 1;
@@ -196,7 +197,9 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
 window.addEventListener("Game:AfterDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
-    Game.canvas.ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
+    const ctx = Game.canvas.ctx
+    ctx.fillStyle = "black"
+    ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 })
 
 DeleteAllSavesButton.addEventListener("mouseup", () => {
@@ -204,8 +207,23 @@ DeleteAllSavesButton.addEventListener("mouseup", () => {
     window.location.reload()
 })
 
+SubmitLevelName.addEventListener("mouseup", () => {
+    if (SaveNameInput.value == "") {
+        console.error("SaveNameInput Cannot Be Nothing");
+        SaveNameErrorElement.innerText = "Error: SaveNameInput Cannot Be Nothing"
+        SaveNameErrorElement.style.display = "block"
+    } else {
+        SaveNameErrorElement.style.display = "none"
+        NameOfLevelContainer.style.display = "none"
+        UIElement.style.display = "flex"
+        LevelName = SaveNameInput.value
+        world = new World(levelData, Game)
+        Game._Init()
+        console.log("Started game");
+    }
+})
+
 LocalSaveButton.addEventListener("mouseup", (e) => {
-    const LevelName = SaveNameInput.value
     const LocalSaveStorage = localStorage.getItem(GameName+"Levels")
     console.log("Inputed Name: ", LevelName);
 
@@ -242,36 +260,34 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
     }
 })
 
-LoadSaveButton.addEventListener("mouseup", (e) => {
-    if (!AlreadyLoaded) {
-        const LevelName = SaveNameInput.value
-        const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
-        console.log(LevelsFromStorage);
-        if (LevelsFromStorage) {
-            LocalSaveStorage = LevelsFromStorage
-            LocalSaveStorage.forEach(element => {
-                if (element.name == LevelName) {
-                    AlreadyLoaded = true
-                    levelData = element.data
-                    console.log(levelData);
-                    world.regen(levelData)
-                    console.log("Found Save File");
-                    return;
-                }
-            });
-            if (!AlreadyLoaded) {
-                console.error("Could Not Find That Save File Locally");
-                alert("Could Not Find That Save File Locally")
-            }
-        }
-    } else {
-        console.error("Already Loaded A Save, Cannot Anymore please refresh the page");
-        alert("Already Loaded A Save, Cannot Anymore please refresh the page")
-    }
-})
+// LoadSaveButton.addEventListener("mouseup", () => {
+//     if (!AlreadyLoaded) {
+//         const LevelsFromStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+//         console.log(LevelsFromStorage);
+//         if (LevelsFromStorage) {
+//             LocalSaveStorage = LevelsFromStorage
+//             LocalSaveStorage.forEach(element => {
+//                 if (element.name == LevelName) {
+//                     AlreadyLoaded = true
+//                     levelData = element.data
+//                     console.log(levelData);
+//                     world.regen(levelData)
+//                     console.log("Found Save File");
+//                     return;
+//                 }
+//             });
+//             if (!AlreadyLoaded) {
+//                 console.error("Could Not Find That Save File Locally");
+//                 alert("Could Not Find That Save File Locally")
+//             }
+//         }
+//     } else {
+//         console.error("Already Loaded A Save, Cannot Anymore please refresh the page");
+//         alert("Already Loaded A Save, Cannot Anymore please refresh the page")
+//     }
+// })
 
 DownloadButton.addEventListener("mouseup", () => {
-    const LevelName = SaveNameInput.value
     if (LevelName != "") {
         if (LocalSaveLevels) {
             if (LocalSaveLevels.length > 0) {
@@ -291,6 +307,33 @@ DownloadButton.addEventListener("mouseup", () => {
     }
 })
 
+RemoveUIButton.addEventListener("mouseup", () => {
+    console.log("Pressed");
+    if (UIClosed) {
+        UIClosed = false
+        let percentage = 0
+        const intervalID = setInterval(() => {
+            percentage--
+            UIElement.style.left = JSON.stringify(percentage) + "%"
+            if (percentage == -13) {
+                clearInterval(intervalID)
+            }
+        }, 10);
+        RemoveUIButton.innerHTML = ">"
+    } else {
+        UIClosed = true
+        let percentage = -15
+        const intervalID = setInterval(() => {
+            percentage++
+            UIElement.style.left = JSON.stringify(percentage) + "%"
+            if (percentage == 0) {
+                clearInterval(intervalID)
+            }
+        }, 10);
+        RemoveUIButton.innerHTML = "<"
+    }
+})
+
 document.addEventListener("dragenter", (e) => {
     const isLink = e.dataTransfer.types.includes("Files");
     console.log(e.dataTransfer.types);
@@ -305,7 +348,12 @@ document.addEventListener("dragover", (e) => {
       e.preventDefault();
     }
 })
+
 document.addEventListener("drop", (e) => {
+    e.preventDefault()
+})
+
+Game.canvas.element.addEventListener("drop", (e) => {
     e.preventDefault()
     if (!AlreadyLoaded) {
         AlreadyLoaded = true
@@ -315,7 +363,7 @@ document.addEventListener("drop", (e) => {
             reader.onload = function(event) {
                 const filename = file.name
                 const data = event.target.result
-                SaveNameInput.value = filename.replace(".level", "")
+                LevelName = filename.replace(".level", "")
                 levelData = JSON.parse(data)
                 world.regen(levelData)
                 console.log("Loaded World");
