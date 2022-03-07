@@ -1,1 +1,16 @@
-async function Play(){document.getElementById("Settings-Button").removeEventListener("mouseup",Settings),document.getElementById("Back-Button").removeEventListener("mouseup",BackToHub),document.getElementById("Play-Button").removeEventListener("mouseup",Play),await animate((t=>t),Animations.opacity_buttons_none,2e3,1),MainMenuElementDOM.style.display="none",Game._Init()}async function Settings(){}async function BackToHub(){window.location.replace("../../index.html")}window.onload=async()=>{const t=new Audio("./Assets/Audio/masterpiece.mp3");t.autoplay=!0,t.loop=!0,await animate(_Quad,Animations.title_position,2e3,.8),await animate(_Quad,Animations.opacity_buttons,1e3,1)},document.getElementById("Back-Button").addEventListener("mouseup",BackToHub),document.getElementById("Settings-Button").addEventListener("mouseup",Settings),document.getElementById("Play-Button").addEventListener("mouseup",Play);
+async function BackToHub() {window.location.replace("../../index.html");}
+async function Play() {
+    document.getElementById("Back-Button").removeEventListener("mouseup", BackToHub);
+    document.getElementById("Play-Button").removeEventListener("mouseup", Play);
+    MainMenuElementDOM.style.display = "none";
+    Game._Init();
+}
+
+window.onload = async () => {
+    const t = new Audio("./Assets/Audio/masterpiece.mp3");
+    t.autoplay = true
+    t.loop = true 
+}
+
+document.getElementById("Back-Button").addEventListener("mouseup", BackToHub);
+document.getElementById("Play-Button").addEventListener("mouseup", Play);

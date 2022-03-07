@@ -1,89 +1,37 @@
 //Define The Game
-const GameName = "StoryGameLevelCreator"
-const Game = new _(GameName)
-const player = new Player(Game, false, 0, 0, 50, 50, 100, 300, -300, 0)
-const SaveNameInput = document.getElementById("NameOfSaveInput");
+const GameName = "StoryGameLevelCreator" // Set The Game Name
+const Game = new _(GameName) // Get The Game
+const player = new Player(Game, false, 0, 0, 50, 50, 100, 300, -300, 0) // Instance the player
+const SaveNameInput = document.getElementById("NameOfSaveInput"); // Get All of the elements
 const SaveNameErrorElement = document.getElementById("SaveNameError")
 const LocalSaveButton = document.getElementById("SaveLocallyButton");
-// const LoadSaveButton = document.getElementById("LoadSaveButton");
 const DownloadButton = document.getElementById("DownloadSaveButton");
-const DeleteAllSavesButton = document.getElementById("deleteallsaves");
+const DeleteAllSavesButton = document.getElementById("deleteAllSaves");
 const RemoveUIButton = document.getElementById("Hide UI");
 const UIElement = document.getElementById("UI")
 const NameOfLevelContainer = document.getElementById("NameOfLevelContainer")
 const SubmitLevelName = document.getElementById("SubmitLevelName")
-let LevelName = ""
+const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // Start The Main Music Audio (Debug)
+let LevelName = "" // Set Some Default Variables Used For Later On
 let world = undefined
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
 let AlreadyLoaded = false
 let UIClosed = true
-player.c = "red"
-player.gravityMax = 0
-player.DisableCollision()
-player._Move = (movement) => {
-    switch (movement) { // Make a switch statement
-        case "w":
-            player.vy = -player.speed // set the vertical velocity to jump
-            break;
-
-        case "a":
-            player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
-            break;
-
-        case "d":
-            player.vx = player.speed // Make the x velocity positive of the speed so it goes right
-            break;
-
-        case "s":
-            player.vy = player.speed
-    }
+function stopMusic() { music.pause() } // Used to stop the music (Debug)
+function startMusic() { music.play() } // Used to start the music (Debug)
+function download(filename, textInput) { // A Function For Downloading Files
+    var element = document.createElement('a'); // Create a new element
+    element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput)); // Set the elements attribute to the files contents
+    element.setAttribute('download', filename); // Set another attribute to tell the browser to download this
+    document.body.appendChild(element); // Add the download tag to the document
+    element.click(); // Click on the tag (To download it)
+    document.body.removeChild(element); // Remove the tag from the document
 }
-//T
-player._stopMoving = (movement) => {
-    switch (movement) {
-        case "w":
-            player.vy = 0
-            break;
-        case "a":
-            player.vx = 0;
-            break;
 
-        case "d":
-            player.vx = 0;
-            break;
-        
-        case "s":
-            player.vy = 0
-            break
-    }
-}
-Game.Config.sideScroller = true
-Game.Config.boundaries.left = 0 // Set The Boundaries (Currently only left)
-Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w
-Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
-Game.Config.sideScrollerSideOffset.top = 10
-Game.Config.sideScrollerSideOffset.bottom = 10
-Game.Config.sideScrollerSideOffset.right = 10
-Game.Config.sideScrollPlayerFollowDelay = 5   
-Game.addPlayer(player, true)
-
-const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // MainMenu Music.play(); // Start The Main Music Audio (Debug)
-music.autoplay = true
-music.loop = true
-function stopMusic() {music.pause()}
-function startMusic() {music.play()}
-function download(filename, textInput) {
-    var element = document.createElement('a');
-    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
-    element.setAttribute('download', filename);
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-}
-function onload() {
-    const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName+"Levels"))
+window.onload = () => {
+    const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
     const LevelsElement = document.getElementById("Levels")
     if (LocalSaveStorage) {
         console.log("Found Save File");
@@ -118,7 +66,7 @@ function onload() {
     }
     else {
         console.log("Creating Save");
-        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         onload()
     }
 
@@ -128,8 +76,6 @@ function onload() {
         MainMenuElement.style.display = "none"
     })
 }
-
-window.onload = onload()
 
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
@@ -171,7 +117,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
         x = 0;
 
         for (let j = 0; j < levelData[i].length; j++) {
-            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)){
+            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)) {
                 ctx.globalAlpha = 0.4
                 ctx.fillRect(x, y, 50, 50)
                 ctx.globalAlpha = 1
@@ -179,11 +125,11 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
                 if (Drawing) {
                     let element = new Square(Game, true, x, y, 50, 50);
                     levelData[i][j] = 1
-                    world.setTile({i: i, j: j}, element);
+                    world.setTile({ i: i, j: j }, element);
                 }
                 else if (Deleting) {
                     levelData[i][j] = 0
-                    world.deleteTile({i: i, j: j})
+                    world.deleteTile({ i: i, j: j })
                 }
             }
 
@@ -224,8 +170,8 @@ SubmitLevelName.addEventListener("mouseup", () => {
 })
 
 LocalSaveButton.addEventListener("mouseup", (e) => {
-    const LocalSaveStorage = localStorage.getItem(GameName+"Levels")
-    console.log("Inputed Name: ", LevelName);
+    const LocalSaveStorage = localStorage.getItem(GameName + "Levels")
+    console.log("Inputted Name: ", LevelName);
 
     if (!LevelName || LevelName == "") {
         console.error("Level Name Cant Be Nothing");
@@ -247,16 +193,16 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
         if (FoundSave) {
             console.log(LocalSaveLevels[SaveIndex]);
             LocalSaveLevels[SaveIndex].data = levelData
-            localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+            localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         } else {
-            LocalSaveLevels.push({name: LevelName, data: levelData})
-            localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+            LocalSaveLevels.push({ name: LevelName, data: levelData })
+            localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         }
     }
     else {
         console.log("Creating Save");
-        LocalSaveLevels.push({name: LevelName, data: levelData})
-        localStorage.setItem(GameName+"Levels", JSON.stringify(LocalSaveLevels))
+        LocalSaveLevels.push({ name: LevelName, data: levelData })
+        localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
     }
 })
 
@@ -334,48 +280,117 @@ RemoveUIButton.addEventListener("mouseup", () => {
     }
 })
 
+// A event listener to see when a file enters the screen
 document.addEventListener("dragenter", (e) => {
-    const isLink = e.dataTransfer.types.includes("Files");
-    console.log(e.dataTransfer.types);
-    console.log(isLink);
+    const isLink = e.dataTransfer.types.includes("Files"); // Check if its a file
     if (isLink) {
-      e.preventDefault();
+        e.preventDefault(); // Needed For the drop event listener to work
     }
 })
+// A event listener to see when the file gets dragged across the screen
 document.addEventListener("dragover", (e) => {
-    const isLink = e.dataTransfer.types.includes("Files");
+    const isLink = e.dataTransfer.types.includes("Files"); // Check if its a file
     if (isLink) {
-      e.preventDefault();
+        e.preventDefault(); // Needed For the drop event listener to work
     }
 })
-
+// A Event listener to listen for the event of dropping a file onto the screen
 document.addEventListener("drop", (e) => {
-    e.preventDefault()
+    e.preventDefault() // Prevents the default event (Opening a new tab that reads the files content)
 })
 
+// A Event listener to listen for the event of dropping a file onto the canvas
+//TODO Remove AlreadyLoaded Variable
 Game.canvas.element.addEventListener("drop", (e) => {
-    e.preventDefault()
-    if (!AlreadyLoaded) {
+    e.preventDefault() // Prevents the default event (Opening a new tab that reads the files content)
+    if (!AlreadyLoaded) { // Check if already been loaded
         AlreadyLoaded = true
         var file = e.dataTransfer.files[0]
         if (file.name.includes(".level")) {
-            reader = new FileReader();
-            reader.onload = function(event) {
-                const filename = file.name
-                const data = event.target.result
-                LevelName = filename.replace(".level", "")
-                levelData = JSON.parse(data)
-                world.regenerate(levelData)
+            reader = new FileReader(); // Instance a new fileReader
+            reader.onload = function (event) { // When Read the file and ready (on load)
+                const filename = file.name // Store the file name
+                const data = event.target.result // Store the data inside the file
+                LevelName = filename.replace(".level", "") // Change the level name to the files name (Without the .level at the end)
+                levelData = JSON.parse(data) // Turn the data that was a string into proper format and set levelData to it
+                world.regenerate(levelData) // Reload the world with the new levelData
                 console.log("Loaded World");
-                return;
+                return; // Leave the function (No current use for it)
             };
-            reader.readAsText(file);
-            return false;
+            reader.readAsText(file); // Read the file
+            return false; // Idk why i just felt like it was necessary
         } else {
             console.error("File Is Not a .level");
+            alert("That File is not a .level") // Alert the user that the file that was dragged into the screen was not a .level files
         }
-    } else {
+    } else { // If already been loaded then
         console.error("Already Loaded A Save, Cannot Anymore please refresh the page");
-        alert("Already Loaded A Save, Cannot Anymore please refresh the page")
+        alert("Already Loaded A Save, Cannot Anymore please refresh the page") // Alert the user that You Cannot load anymore
     }
 })
+
+// Custom Move Code the incorporate the 's' key
+player._Move = (movement) => {
+    switch (movement) { // Make a switch statement
+        case "w":
+            player.vy = -player.speed // set the vertical velocity to jump
+            break;
+
+        case "a":
+            player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
+            break;
+
+        case "d":
+            player.vx = player.speed // Make the x velocity positive of the speed so it goes right
+            break;
+
+        case "s":
+            player.vy = player.speed
+    }
+}
+// Custom Stop Moving Code, to incorporate the 's' key and to make the 'w' key incorporate the 's' key aswell
+player._stopMoving = (movement) => {
+    switch (movement) {
+        case "w":
+            if (!Game.inputHandler.keys_down.s)
+                player.vy = 0
+            else
+                player._Move("s")
+            break;
+        case "a":
+            if (!Game.inputHandler.keys_down.d)
+                player.vx = 0;
+            else
+                player._Move("d")
+            break;
+
+        case "d":
+            if (!Game.inputHandler.keys_down.a)
+                player.vx = 0;
+            else
+                player._Move("a")
+            break;
+
+        case "s":
+            if (!Game.inputHandler.keys_down.w)
+                player.vy = 0
+            else
+                player._Move("w")
+            break
+    }
+}
+player.c = "red" // Set the colour of the player from default: black to red
+player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
+player.DisableCollision() // Disable the collisions with other gameObjects (Removes it from the gameObjects Array)
+Game.Config.sideScroller = true // Sets The Camera To Be Moveable
+Game.Config.boundaries.left = 0 // Set the Boundaries
+Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w 
+Game.Config.boundaries.top = 0
+Game.Config.boundaries.bottom = Game.Config.WorldSize.y - player.h
+Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
+Game.Config.sideScrollerSideOffset.top = 10
+Game.Config.sideScrollerSideOffset.bottom = 10
+Game.Config.sideScrollerSideOffset.right = 10
+Game.addPlayer(player, true) // Add the player to the game as a local player
+music.autoplay = true // Set the debug music to autoplay
+music.loop = true // And Set the music to loop

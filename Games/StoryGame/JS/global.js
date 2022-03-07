@@ -1,1 +1,36 @@
-const Game=new _("StoryGame"),player=new Player(Game,!1,10,10,50,50,100,300,-500),world=new World(levelData,Game),MainMenuElementDOM=document.getElementById("MainMenu"),TitleButtonsDOM=document.getElementById("title-buttons"),ButtonsInContainerDOM=document.getElementsByClassName("button_container"),TitleDOM=document.getElementById("title"),Animations={title_position:e=>{TitleButtonsDOM.style.height=100*e+"%"},opacity_buttons:e=>{for(var t=0,n=ButtonsInContainerDOM.length;t<n;t++)ButtonsInContainerDOM[t].style.opacity=e},opacity_buttons_none:e=>{TitleDOM.style.opacity=1-e;for(var t=0,n=ButtonsInContainerDOM.length;t<n;t++)ButtonsInContainerDOM[t].style.opacity=1-e},people:e=>{ctx.globalAlpha=1-e}},SaveData={LoadinAnimSeen:!1,Settings:{SkipDialogue:!1,BackgroundColour:"#000000",Debug:!1}},_Levels=[{Name:"Tutorial",Data:{Objects:{},Dialogue:[]}},{Name:"Level 1"},{Name:"Level 2"},{Name:"Level 3"},{Name:"Level 4"},{Name:"Level 5"}];function _Quad(e){return Math.pow(e,2)}function animate(e,t,n,o){return new Promise(((a,l)=>{let i=performance.now();requestAnimationFrame((function l(m){let r=(m-i)/n;r>o&&(r=o);let u=e(r);t(u),r<o?requestAnimationFrame(l):a()}))}))}Game.Config.g=1e3,Game.Config.TooSmallScreen=document.getElementById("Screen-Too-Small-Element"),Game.Config.sideScroller=!0,Game.Config.boundries.left=-50,Game.Config.sideScrollerSideOffset=50,Game.addPlayer(player,!0);
+const Game = new _("StoryGame");
+const player = new Player(Game, !1, 10, 10, 50, 50, 100, 300, -500);
+const world = new World(levelData, Game);
+const MainMenuElementDOM = document.getElementById("MainMenu");
+const TitleButtonsDOM = document.getElementById("title-buttons");
+const TooSmallElement = document.getElementById("Screen-Too-Small-Element")
+const TitleDOM = document.getElementById("title");
+const ButtonsInContainerDOM = document.getElementsByClassName("button_container");
+const SaveData = { Settings: { SkipDialogue: false, BackgroundColour: "#000000", Debug: false } }
+const _Levels = [
+    { 
+        Name: "Tutorial", 
+        Data: { Objects: {}, Dialogue: [] } 
+    }, 
+    { 
+        Name: "Level 1",
+    }, 
+    {
+        Name: "Level 2",
+    }, 
+    { 
+        Name: "Level 3",
+    }, 
+    {
+        Name: "Level 4",
+    }, 
+    {
+        Name: "Level 5",
+    }
+];
+
+Game.Config.g = 300
+Game.Config.TooSmallScreen = TooSmallElement
+Game.Config.boundaries.left = -50
+Game.Config.sideScrollerSideOffset = 50
+Game.addPlayer(player, true)
