@@ -25,11 +25,11 @@ player.DisableCollision()
 player._Move = (movement) => {
     switch (movement) { // Make a switch statement
         case "w":
-            player.vy = -player.speed // set the virtical velocity to jump
+            player.vy = -player.speed // set the vertical velocity to jump
             break;
 
         case "a":
-            player.vx = -player.speed // Make the speed negative to it goes the oposite way (-x)
+            player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
             break;
 
         case "d":
@@ -40,7 +40,7 @@ player._Move = (movement) => {
             player.vy = player.speed
     }
 }
-
+//T
 player._stopMoving = (movement) => {
     switch (movement) {
         case "w":
@@ -60,8 +60,8 @@ player._stopMoving = (movement) => {
     }
 }
 Game.Config.sideScroller = true
-Game.Config.boundries.left = 0 // Set The Boundries (Currently only left)
-Game.Config.boundries.right = Game.Config.WorldSize.x - player.w
+Game.Config.boundaries.left = 0 // Set The Boundaries (Currently only left)
+Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w
 Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
 Game.Config.sideScrollerSideOffset.top = 10
 Game.Config.sideScrollerSideOffset.bottom = 10
@@ -271,7 +271,7 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
 //                     AlreadyLoaded = true
 //                     levelData = element.data
 //                     console.log(levelData);
-//                     world.regen(levelData)
+//                     world.regenerate(levelData)
 //                     console.log("Found Save File");
 //                     return;
 //                 }
@@ -365,7 +365,7 @@ Game.canvas.element.addEventListener("drop", (e) => {
                 const data = event.target.result
                 LevelName = filename.replace(".level", "")
                 levelData = JSON.parse(data)
-                world.regen(levelData)
+                world.regenerate(levelData)
                 console.log("Loaded World");
                 return;
             };
