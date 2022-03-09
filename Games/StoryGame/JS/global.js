@@ -29,8 +29,12 @@ const _Levels = [
     }
 ];
 
-Game.Config.g = 300
-Game.Config.TooSmallScreen = TooSmallElement
-Game.Config.boundaries.left = -50
-Game.Config.sideScrollerSideOffset = 50
+player.c = "red" // Set the colour of the player from default: black to red
+Game.Config.sideScroller = true // Sets The Camera To Be Moveable
+Game.Config.boundaries.left = 0 // Set the Boundaries
+Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w 
+Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
+Game.Config.sideScrollerSideOffset.top = 10
+Game.Config.sideScrollerSideOffset.bottom = 10
+Game.Config.sideScrollerSideOffset.right = 10
 Game.addPlayer(player, true)

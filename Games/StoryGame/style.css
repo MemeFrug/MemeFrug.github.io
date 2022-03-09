@@ -84,9 +84,11 @@ canvas {
 .button_container button {
     height: 100%;
     width: 100%;
-    transition: .9s
+    transition: .3s;
+    border-color: white;
+    border-radius: 10px;
 }
 
 .button_container button:hover {
-    background-color: rgba(57, 74, 73, .483)
+    background-color: rgba(57, 74, 73, .483);
 }

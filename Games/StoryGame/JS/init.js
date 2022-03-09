@@ -12,5 +12,12 @@ window.onload = async () => {
     t.loop = true 
 }
 
+window.addEventListener("Game:AfterDrawLoop", () => {
+    const MousePosition = Game.canvas.getMousePosition()
+    const ctx = Game.canvas.ctx
+    ctx.fillStyle = "black"
+    ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
+})
+
 document.getElementById("Back-Button").addEventListener("mouseup", BackToHub);
 document.getElementById("Play-Button").addEventListener("mouseup", Play);
