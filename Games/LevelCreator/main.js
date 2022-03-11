@@ -144,6 +144,8 @@ window.addEventListener("Game:AfterDrawLoop", () => {
     const ctx = Game.canvas.ctx
     ctx.fillStyle = "black"
     ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
+
+    ctx.strokeRect(0, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y)
 })
 
 DeleteAllSavesButton.addEventListener("mouseup", () => {
