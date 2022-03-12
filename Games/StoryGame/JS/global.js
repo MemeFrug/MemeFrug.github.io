@@ -86,9 +86,5 @@ player.c = "red" // Set the colour of the player from default: black to red
 player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
 Game.Config.sideScroller = true // Sets The Camera To Be Moveable
 Game.Config.boundaries.left = 0 // Set the Boundaries
-Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w 
-Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
-Game.Config.sideScrollerSideOffset.top = 10
-Game.Config.sideScrollerSideOffset.bottom = 10
-Game.Config.sideScrollerSideOffset.right = 10
+Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w
 Game.addPlayer(player, true)

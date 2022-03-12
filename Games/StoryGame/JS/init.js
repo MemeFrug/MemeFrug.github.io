@@ -1,8 +1,3 @@
-for (let a = 0; a < 365; a += 1) {
-    rays[a] = new Ray(400, 600, radians(a, 10))
-}
-// rays[0] = new Ray(400, 600, radians(90, 10))
-
 for (let i = 0; i < 5; i++) {
     let x1 = _GetRndInteger(0, Game.Config.WorldSize.x)    
     let x2 = _GetRndInteger(0, Game.Config.WorldSize.x)   
@@ -34,39 +29,110 @@ window.onload = async () => {
 window.addEventListener("Game:BeforeDrawLoop", () => {
     const Mouse = Game.canvas.getMousePosition() // Returns As a {x: 0, y: 0} aka a vector
     const ctx = Game.canvas.ctx
-    walls.forEach(wall => {
-        wall.draw(ctx)
-    });
-    rays.forEach(ray => {
-        ray.draw(ctx)
-        ray.pos = {
-            x: Mouse.x,
-            y: Mouse.y
-        }
-        // ray.lookAt(Mouse.x, Mouse.y) 
+	// Draw walls
+	ctx.globalAlpha = 0;
+	for(var i=0;i<walls.length;i++){
+		walls[i].draw(ctx)
+	}
+	ctx.globalAlpha = 1;
 
-        let closest = null;
+	// Get all unique points
+	var points = (function(walls){
+		var a = [];
+		walls.forEach(function(seg){
+			a.push(seg.pos1,seg.pos2);
+
+            walls.forEach(function(wall){
+                const intersect = lineIntersects(seg.pos1, seg.pos2, wall.pos1, wall.pos2)
+                if (intersect) {
+                    a.push(intersect)
+                    ctx.fillStyle = "green"
+                    ctx.fillRect(intersect.x - 10, intersect.y - 10, 20, 20)
+                }
+            })
+		});
+		return a;
+	})(walls);
+	var uniquePoints = (function(points){
+		var set = {};
+		return points.filter(function(p){
+			var key = p.x+","+p.y;
+			if(key in set){
+				return false;
+			}else{
+				set[key]=true;
+				return true;
+			}
+		});
+	})(points);
+
+	// Get all angles
+	var uniqueAngles = [];
+	for(var j=0;j<uniquePoints.length;j++){
+		var uniquePoint = uniquePoints[j];
+		var angle = Math.atan2(uniquePoint.y-Game.GetLocalPlayer().package.y,uniquePoint.x-Game.GetLocalPlayer().package.x);
+		uniquePoint.angle = angle;
+		uniqueAngles.push(angle-0.00001,angle,angle+0.00001);
+	}
+
+	// RAYS IN ALL DIRECTIONS
+	var intersects = [];
+	for(var j=0;j<uniqueAngles.length;j++){
+		var angle = uniqueAngles[j];
+
+		// Ray from center of screen to mouse
+        var ray = new Ray(Game.GetLocalPlayer().package.x, Game.GetLocalPlayer().package.y, angleToVectorDistance(angle))
+
+		// Find CLOSEST intersection
+        let closestIntersect = null;
         let record = Infinity;
-        for (let wall of walls) {
-            const pt = ray.cast(wall)
+		for(var i=0;i<walls.length;i++){
+			var pt = ray.cast(walls[i]);
             if (pt.result) {
                 const d = pt.dist
                 if (d < record) {
                     record = d;
-                    closest = pt.result;
+                    closestIntersect = pt.result;
                 }
             } 
         };
-        if (closest) {
-            ctx.strokeStyle = "red"
-            ctx.beginPath(); // Start a new path
-            ctx.moveTo(ray.pos.x, ray.pos.y); // Move the pen to (30, 50)
-            ctx.lineTo(closest.x, closest.y); // Draw a line to (150, 100)
-            ctx.stroke(); // Render the path
-            ctx.fillStyle = "green"
-            ctx.fillRect(closest.x - 5, closest.y - 5, 10, 10)
-        }
-    });
+
+		// Intersect angle
+		if(!closestIntersect) continue;
+		closestIntersect.angle = angle;
+
+		// Add to list of intersects
+		intersects.push(closestIntersect);
+
+	}
+
+	// Sort intersects by angle
+	intersects = intersects.sort(function(a,b){
+		return a.angle-b.angle;
+	});
+
+	// DRAW AS A GIANT POLYGON
+    ctx.globalAlpha = 0.4
+	ctx.fillStyle = "white";
+	ctx.beginPath();
+	ctx.moveTo(intersects[0].x,intersects[0].y);
+	for(var i=1;i<intersects.length;i++){
+		var intersect = intersects[i];
+		ctx.lineTo(intersect.x,intersect.y);
+	}
+	ctx.fill();
+    ctx.globalAlpha = 1
+
+	// DRAW DEBUG LINES
+	ctx.strokeStyle = "green";
+	for(var i=0;i<intersects.length;i++){
+		var intersect = intersects[i];
+		ctx.beginPath();
+		ctx.moveTo(Game.GetLocalPlayer().package.x, Game.GetLocalPlayer().package.y,);
+		ctx.lineTo(intersect.x,intersect.y);
+		ctx.stroke();
+	}
+
 })
 
 window.addEventListener("Game:AfterDrawLoop", () => {
