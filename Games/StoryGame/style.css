@@ -7,7 +7,9 @@
 }
 
 canvas {
-    background-color: rgb(34, 34, 34);
+    /* background-color: rgb(34, 34, 34); */
+    
+    background-color: rgb(0, 0, 0);
     display: none;
     padding: 0;
     margin: auto;

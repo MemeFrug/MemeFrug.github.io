@@ -1,16 +1,30 @@
-for (let i = 0; i < 5; i++) {
-    let x1 = _GetRndInteger(0, Game.Config.WorldSize.x)    
-    let x2 = _GetRndInteger(0, Game.Config.WorldSize.x)   
-    let y1 = _GetRndInteger(0, Game.Config.WorldSize.y)    
-    let y2 = _GetRndInteger(0, Game.Config.WorldSize.y)    
+// for (let i = 0; i < 5; i++) {
+//     let x1 = _GetRndInteger(0, Game.Config.WorldSize.x)    
+//     let x2 = _GetRndInteger(0, Game.Config.WorldSize.x)   
+//     let y1 = _GetRndInteger(0, Game.Config.WorldSize.y)    
+//     let y2 = _GetRndInteger(0, Game.Config.WorldSize.y)    
 
-    walls[i] = new Wall(x1, y1, x2, y2)
-}
+//     walls[i] = new Wall(x1, y1, x2, y2)
+// }
 
 walls.push(new Wall(0, 0, Game.Config.WorldSize.x, 0))
 walls.push(new Wall(0, 0, 0, Game.Config.WorldSize.y))
 walls.push(new Wall(0, Game.Config.WorldSize.y, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
 walls.push(new Wall(Game.Config.WorldSize.x, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
+
+//test
+for (let i = 0; i < world.tiles.length; i++) {
+	const Tile = world.tiles[i];
+	for (let j = 0; j < Tile.length; j++) {
+		const element = Tile[j];
+		if (element instanceof Square) {
+			walls.push(new Wall(element.x, element.y, element.x, element.y + element.h))
+			walls.push(new Wall(element.x, element.y, element.x + element.w, element.y))
+			walls.push(new Wall(element.x + element.w, element.y, element.x + element.w, element.y + element.h))
+			walls.push(new Wall(element.x + element.w, element.y + element.h, element.x, element.y + element.h))
+		}
+	}
+}
 
 async function BackToHub() {window.location.replace("../../index.html");}
 async function Play() {
@@ -29,8 +43,11 @@ window.onload = async () => {
 window.addEventListener("Game:BeforeDrawLoop", () => {
     const Mouse = Game.canvas.getMousePosition() // Returns As a {x: 0, y: 0} aka a vector
     const ctx = Game.canvas.ctx
+	const LocalPlayer = Game.GetLocalPlayer().package
+	const RayPosition = {x: LocalPlayer.x + LocalPlayer.w / 2, y: LocalPlayer.y + LocalPlayer.h / 2}
 	// Draw walls
-	ctx.globalAlpha = 0;
+	ctx.globalAlpha = 1;
+	ctx.fillStyle = "white"
 	for(var i=0;i<walls.length;i++){
 		walls[i].draw(ctx)
 	}
@@ -42,12 +59,10 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 		walls.forEach(function(seg){
 			a.push(seg.pos1,seg.pos2);
 
-            walls.forEach(function(wall){
+            walls.forEach(function(wall){ // Check if there is an intersection then put a point there too
                 const intersect = lineIntersects(seg.pos1, seg.pos2, wall.pos1, wall.pos2)
-                if (intersect) {
+                if (intersect ) {
                     a.push(intersect)
-                    ctx.fillStyle = "green"
-                    ctx.fillRect(intersect.x - 10, intersect.y - 10, 20, 20)
                 }
             })
 		});
@@ -70,7 +85,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 	var uniqueAngles = [];
 	for(var j=0;j<uniquePoints.length;j++){
 		var uniquePoint = uniquePoints[j];
-		var angle = Math.atan2(uniquePoint.y-Game.GetLocalPlayer().package.y,uniquePoint.x-Game.GetLocalPlayer().package.x);
+		var angle = Math.atan2(uniquePoint.y-RayPosition.y,uniquePoint.x-RayPosition.x);
 		uniquePoint.angle = angle;
 		uniqueAngles.push(angle-0.00001,angle,angle+0.00001);
 	}
@@ -81,7 +96,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 		var angle = uniqueAngles[j];
 
 		// Ray from center of screen to mouse
-        var ray = new Ray(Game.GetLocalPlayer().package.x, Game.GetLocalPlayer().package.y, angleToVectorDistance(angle))
+        var ray = new Ray(RayPosition.x, RayPosition.y, angleToVectorDistance(angle))
 
 		// Find CLOSEST intersection
         let closestIntersect = null;
@@ -124,14 +139,14 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
     ctx.globalAlpha = 1
 
 	// DRAW DEBUG LINES
-	ctx.strokeStyle = "green";
-	for(var i=0;i<intersects.length;i++){
-		var intersect = intersects[i];
-		ctx.beginPath();
-		ctx.moveTo(Game.GetLocalPlayer().package.x, Game.GetLocalPlayer().package.y,);
-		ctx.lineTo(intersect.x,intersect.y);
-		ctx.stroke();
-	}
+	// ctx.strokeStyle = "green";
+	// for(var i=0;i<intersects.length;i++){
+	// 	var intersect = intersects[i];
+	// 	ctx.beginPath();
+	// 	ctx.moveTo(RayPosition.x, RayPosition.y,);
+	// 	ctx.lineTo(intersect.x,intersect.y);
+	// 	ctx.stroke();
+	// }
 
 })
 
