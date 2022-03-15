@@ -1,5 +1,5 @@
 const Game = new _("StoryGame");
-const player = new Player(Game, !1, 10, 10, 50, 50, 100, 300, -500);
+const player = new Player(Game, !1, 0, 10, 200, 200, 100, 1000, -650);
 const world = new World(levelData, Game);
 const MainMenuElementDOM = document.getElementById("MainMenu");
 const TitleButtonsDOM = document.getElementById("title-buttons");

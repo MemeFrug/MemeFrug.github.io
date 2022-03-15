@@ -1,12 +1,3 @@
-// for (let i = 0; i < 5; i++) {
-//     let x1 = _GetRndInteger(0, Game.Config.WorldSize.x)    
-//     let x2 = _GetRndInteger(0, Game.Config.WorldSize.x)   
-//     let y1 = _GetRndInteger(0, Game.Config.WorldSize.y)    
-//     let y2 = _GetRndInteger(0, Game.Config.WorldSize.y)    
-
-//     walls[i] = new Wall(x1, y1, x2, y2)
-// }
-
 walls.push(new Wall(0, 0, Game.Config.WorldSize.x, 0))
 walls.push(new Wall(0, 0, 0, Game.Config.WorldSize.y))
 walls.push(new Wall(0, Game.Config.WorldSize.y, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
@@ -127,8 +118,8 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 	});
 
 	// DRAW AS A GIANT POLYGON
-    ctx.globalAlpha = 0.4
-	ctx.fillStyle = "white";
+    ctx.globalAlpha = 0.9	
+	ctx.fillStyle = "lightblue";
 	ctx.beginPath();
 	ctx.moveTo(intersects[0].x,intersects[0].y);
 	for(var i=1;i<intersects.length;i++){
