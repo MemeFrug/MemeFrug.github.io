@@ -36,13 +36,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
     const ctx = Game.canvas.ctx
 	const LocalPlayer = Game.GetLocalPlayer().package
 	const RayPosition = {x: LocalPlayer.x + LocalPlayer.w / 2, y: LocalPlayer.y + LocalPlayer.h / 2}
-	// Draw walls
-	ctx.globalAlpha = 1;
-	ctx.fillStyle = "white"
-	for(var i=0;i<walls.length;i++){
-		walls[i].draw(ctx)
-	}
-	ctx.globalAlpha = 1;
+	// const RayPosition = {x: Mouse.x, y: Mouse.y}
 
 	// Get all unique points
 	var points = (function(walls){
@@ -119,7 +113,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
 	// DRAW AS A GIANT POLYGON
     ctx.globalAlpha = 0.9	
-	ctx.fillStyle = "lightblue";
+	ctx.fillStyle = "gray";
 	ctx.beginPath();
 	ctx.moveTo(intersects[0].x,intersects[0].y);
 	for(var i=1;i<intersects.length;i++){

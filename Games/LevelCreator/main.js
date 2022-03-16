@@ -19,6 +19,7 @@ let Drawing = false
 let Deleting = false
 let AlreadyLoaded = false
 let UIClosed = true
+let playerSpawnPosition = {x: 0, y: 0}
 function stopMusic() { music.pause() } // Used to stop the music (Debug)
 function startMusic() { music.play() } // Used to start the music (Debug)
 function download(filename, textInput) { // A Function For Downloading Files
@@ -29,6 +30,19 @@ function download(filename, textInput) { // A Function For Downloading Files
     element.click(); // Click on the tag (To download it)
     document.body.removeChild(element); // Remove the tag from the document
 }
+function ChangePlayerSpawnPos(position) {
+    if (position) {
+        if (position.x && position.y) {
+            playerSpawnPosition = position
+        } else {
+            console.error("Position.x and y does not Exist");
+        }
+    } else {
+        console.error("Position Does not Exist");
+    }
+}
+
+ChangePlayerSpawnPos({x: 10, y: 20})
 
 window.onload = () => {
     const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
@@ -137,6 +151,12 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
         y += 50;
     }
+
+    // Draw where player gets spawn
+    ctx.fillStyle = "green"
+    ctx.globalAlpha = 0.5
+    ctx.fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50)
+    ctx.globalAlpha = 1
 })
 
 window.addEventListener("Game:AfterDrawLoop", () => {
