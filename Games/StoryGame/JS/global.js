@@ -87,8 +87,10 @@ player.c = "red" // Set the colour of the player from default: black to red
 Game.Config.sideScroller = true // Sets The Camera To Be Moveable
 Game.Config.boundaries.left = 0 // Set the Boundaries
 Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w
-Game.Config.sideScrollerSideOffset.left = 10000 // Set the camera offset on the edges
+Game.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
 Game.Config.sideScrollerSideOffset.top = 10000
 Game.Config.sideScrollerSideOffset.bottom = 10000
 Game.Config.sideScrollerSideOffset.right = 10000
 Game.addPlayer(player, true)
+const secondPlayer = new Player(Game)
+Game.addPlayer(secondPlayer)
