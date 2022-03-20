@@ -32,11 +32,19 @@ window.onload = async () => {
 }
 
 window.addEventListener("Game:BeforeDrawLoop", () => {
-    const Mouse = Game.canvas.getMousePosition() // Returns As a {x: 0, y: 0} aka a vector
     const ctx = Game.canvas.ctx
 	const LocalPlayer = Game.GetLocalPlayer().package
 	const RayPosition = {x: LocalPlayer.x + LocalPlayer.w / 2, y: LocalPlayer.y + LocalPlayer.h / 2}
 	// const RayPosition = {x: Mouse.x, y: Mouse.y}
+
+	if (Game.inputHandler.keys_down.w) LocalPlayer._Move('w'); // Move the player
+	else LocalPlayer._stopMoving("w")
+	if (Game.inputHandler.keys_down.a) LocalPlayer._Move('a');
+	else LocalPlayer._stopMoving("a")
+	if (Game.inputHandler.keys_down.s) LocalPlayer._Move('s');
+	else LocalPlayer._stopMoving("s")
+	if (Game.inputHandler.keys_down.d) LocalPlayer._Move('d');
+	else LocalPlayer._stopMoving("d")
 
 	// Get all unique points
 	var points = (function(walls){
@@ -81,7 +89,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 		var angle = uniqueAngles[j];
 
 		// Ray from center of screen to mouse
-        var ray = new Ray(RayPosition.x, RayPosition.y, angleToVectorDistance(angle))
+        var ray = new Ray(RayPosition.x, RayPosition.y, angleToVector(angle))
 
 		// Find CLOSEST intersection
         let closestIntersect = null;
@@ -124,14 +132,14 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
     ctx.globalAlpha = 1
 
 	// DRAW DEBUG LINES
-	// ctx.strokeStyle = "green";
-	// for(var i=0;i<intersects.length;i++){
-	// 	var intersect = intersects[i];
-	// 	ctx.beginPath();
-	// 	ctx.moveTo(RayPosition.x, RayPosition.y,);
-	// 	ctx.lineTo(intersect.x,intersect.y);
-	// 	ctx.stroke();
-	// }
+	ctx.strokeStyle = "white";
+	for(var i=0;i<intersects.length;i++){
+		var intersect = intersects[i];
+		ctx.beginPath();
+		ctx.moveTo(RayPosition.x, RayPosition.y,);
+		ctx.lineTo(intersect.x,intersect.y);
+		ctx.stroke();
+	}
 
 })
 

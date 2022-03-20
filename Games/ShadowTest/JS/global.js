@@ -9,28 +9,6 @@ const ButtonsInContainerDOM = document.getElementsByClassName("button_container"
 const SaveData = { Settings: { SkipDialogue: false, BackgroundColour: "#000000", Debug: false } }
 const walls = []
 const rays = []
-const _Levels = [
-    { 
-        Name: "Tutorial", 
-        Data: { Objects: {}, Dialogue: [] } 
-    }, 
-    { 
-        Name: "Level 1",
-    }, 
-    {
-        Name: "Level 2",
-    }, 
-    { 
-        Name: "Level 3",
-    }, 
-    {
-        Name: "Level 4",
-    }, 
-    {
-        Name: "Level 5",
-    }
-];
-
 
 // Custom Move Code the incorporate the 's' key
 // player._Move = (movement) => {
@@ -82,8 +60,10 @@ const _Levels = [
 //             break
 //     }
 // }
+
 player.c = "red" // Set the colour of the player from default: black to red
 // player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
+Game.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element")
 Game.Config.sideScroller = true // Sets The Camera To Be Moveable
 Game.Config.boundaries.left = 0 // Set the Boundaries
 Game.Config.boundaries.right = Game.Config.WorldSize.x - player.w

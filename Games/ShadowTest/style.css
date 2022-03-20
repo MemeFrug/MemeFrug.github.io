@@ -101,13 +101,3 @@ canvas {
 .button_container button:hover {
     background-color: rgba(57, 74, 73, .483);
 }
-
-
-.CustomLevel {
-    position: absolute;
-    display: flex; /*Needs to be Flex*/
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-}
