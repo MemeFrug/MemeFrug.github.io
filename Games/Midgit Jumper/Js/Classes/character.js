@@ -8,10 +8,10 @@ class Character {
         this.isOnGround = false
 
         //Unchangeable
-        this.speedmax = 12.5
-        this.gravityMax = 30
-        this.gravity = 0.8
-        this.jumppower = -15
+        this.speedmax = 480
+        this.gravityMax = 2000
+        this.gravity = 50
+        this.jumppower = -950
         this.gravityTweenFloat = 0.1
 
         this.coyoteTime = 400 //Milliseconds
@@ -307,11 +307,11 @@ class Character {
     _Update(deltaTime, inputhandler) {
         if (!deltaTime) return;
 
-        this.x += this.vleft;
-        this.x += this.vright;
+        this.x += this.vleft * deltaTime;
+        this.x += this.vright * deltaTime;
 
-        this.y += this.vdown;
-        this.y += this.vup;
+        this.y += this.vdown * deltaTime;
+        this.y += this.vup * deltaTime;
 
         // console.log(this.isOnGround);
 
@@ -333,6 +333,7 @@ class Character {
         // console.log(this.gravity)
         if (this.vup < this.gravityMax)
             this.vup += this.gravity
+            console.log(this.vup);
 
         if (this.health > 100) 
             this.health = 100

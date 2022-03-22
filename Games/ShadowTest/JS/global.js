@@ -72,5 +72,3 @@ Game.Config.sideScrollerSideOffset.top = 10000
 Game.Config.sideScrollerSideOffset.bottom = 10000
 Game.Config.sideScrollerSideOffset.right = 10000
 Game.addPlayer(player, true)
-const secondPlayer = new Player(Game)
-Game.addPlayer(secondPlayer)

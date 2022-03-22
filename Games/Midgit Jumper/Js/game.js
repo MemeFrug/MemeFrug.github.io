@@ -1,29 +1,20 @@
-//Get the gifs
-
 //From onload.js
 let character;
 let inputhandler
 let stopwatch;
-
 //Width Of Window changes to movement of the window
 let newwidth;
 let newheight;
-
 let DeathSquare = new blockCreator(0, 0, 0, 0, "black", 0)
-
 let NextWorldSquare = new blockCreator(0, 0, 0, 0, "black", 0)
 let NextWorldSquareText = new Text(0, 0, "Next World", "white", 0)
-
 let HurtSquare = new blockCreator(0, 0, 0, 0, "red", 0);
-
 let WinSquare = new blockCreator(0, 0, 0, 0, "black", 0)
 let WinSquareText = new Text(0, 0, "You Win With The Time: 00:00:00", "white", 0)
 
 function windowResize() {
-
 	newwidth = window.innerWidth;
 	newheight = window.innerHeight;
-	
 	DeathSquare.w = newwidth
 	DeathSquare.h = newheight
 	NextWorldSquare.w = newwidth
@@ -36,7 +27,6 @@ function windowResize() {
 	WinSquare.h = newheight
 	WinSquareText.x = newwidth / 2
 	WinSquareText.y = newheight / 2
-
 	canvas.width = newwidth;
 	canvas.height = newheight;
 	canvascontainer.style.width = `${newwidth}px`;
@@ -138,6 +128,8 @@ function _GenerateWorld() {
 			//Create the first block
 			Worlds[index].Objects.push(new blockCreator(0, Worlds[index].Size.y - 2000, 300,  Worlds[index].Size.y - 2000)) // This is the starting block
 		
+			let lastrandomnum = -1
+
 			for (let i = 0; i < Infinity; i++) {
 				const element = Worlds[index].Objects;
 				const Enemy = Worlds[index].Enemys;
@@ -145,7 +137,7 @@ function _GenerateWorld() {
 
 				// console.log(lastblock);
 		
-				const upordown = Math.floor(Math.random() * 5);
+				const upordown = Math.floor(Math.random() * 6);
 		
 				if (lastblock.x + lastblock.w > Worlds[index].Size.x - 2000) {
 					//Get Bosses Health
@@ -178,9 +170,13 @@ function _GenerateWorld() {
 					element.push(new blockCreator(lastblock.x + lastblock.w, lastblock.y - 50, 50, Worlds[index].Size.y - lastblock.y + 550))
 					element.push(new blockCreator(lastblock.x + lastblock.w + 250, lastblock.y - 100, 50, Worlds[index].Size.y - lastblock.y + 550))
 					element.push(new blockCreator(lastblock.x + lastblock.w + 300, lastblock.y - 50, 200, Worlds[index].Size.y - lastblock.y + 550))
+				}else if (upordown == 5 && lastrandomnum != 4 && lastrandomnum != -1) {
+					element.push(new blockCreator(lastblock.x + lastblock.w * 2, lastblock.y, 50, Worlds[index].Size.y - lastblock.y + 550))
 				}else {
 					console.log("added nothing");
 				}
+
+				lastrandomnum = upordown
 			}
 			
 			const AmountofEnemys = Math.floor(Math.random() * (maxAmountofEnemys - minAmountofEnemys + 1) + minAmountofEnemys);
@@ -238,7 +234,11 @@ function _AddEventListeners() {
     window.addEventListener("resize", windowResize, false);
 }
 
-function _Update(deltaTime) {
+let oldTimeStamp = 0;
+
+function _Update(timeStamp) {
+	const deltaTime = (timeStamp - oldTimeStamp) / 1000; //Algorithm To Get DeltaTime
+	oldTimeStamp = timeStamp; // Update oldTimeStamp To the new one
 	character._Update(deltaTime, inputhandler)
 
 	const WorldInRn = Worlds[WorldIn]

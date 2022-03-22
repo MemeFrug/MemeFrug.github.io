@@ -68,6 +68,11 @@ function Onload() {
     const Data = JSON.parse(LoadData());
     if (Data == null) LeaderBoard.innerHTML = ""
     else { 
+        Data.sort(function(a, b){
+            let aAfter = a.time.replaceAll(":", "")
+            let bAfter = b.time.replaceAll(":", "")
+            return aAfter-bAfter
+        })
         for (let i = 0; i < Data.length; i++) {
             const element = Data[i];
             const li = document.createElement('li')
