@@ -133,6 +133,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 
 	// DRAW DEBUG LINES
 	ctx.strokeStyle = "white";
+    ctx.globalAlpha = 0.5	
 	for(var i=0;i<intersects.length;i++){
 		var intersect = intersects[i];
 		ctx.beginPath();
@@ -140,7 +141,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 		ctx.lineTo(intersect.x,intersect.y);
 		ctx.stroke();
 	}
-
+    ctx.globalAlpha = 1
 })
 
 window.addEventListener("Game:AfterDrawLoop", () => {

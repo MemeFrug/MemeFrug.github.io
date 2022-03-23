@@ -8,12 +8,11 @@ const LocalSaveButton = document.getElementById("SaveLocallyButton");
 const DownloadButton = document.getElementById("DownloadSaveButton");
 const DeleteAllSavesButton = document.getElementById("deleteAllSaves");
 const RemoveUIButton = document.getElementById("Hide UI");
-const UIElementLocal = document.getElementById("UI")
+const UIElement = document.getElementById("UI")
 const NameOfLevelContainer = document.getElementById("NameOfLevelContainer")
 const SubmitLevelName = document.getElementById("SubmitLevelName")
-const music = new Audio('../StoryGame/Assets/Audio/masterpiece.mp3'); // Start The Main Music Audio (Debug)
+const music = new Audio('../ShadowTest/Assets/Audio/masterpiece.mp3'); // Start The Main Music Audio (Debug)
 let LevelName = "" // Set Some Default Variables Used For Later On
-let world = undefined
 let LocalSaveLevels = []
 let Drawing = false
 let Deleting = false
@@ -22,14 +21,6 @@ let UIClosed = true
 let playerSpawnPosition = {x: 0, y: 0}
 function stopMusic() { music.pause() } // Used to stop the music (Debug)
 function startMusic() { music.play() } // Used to start the music (Debug)
-function download(filename, textInput) { // A Function For Downloading Files
-    var element = document.createElement('a'); // Create a new element
-    element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput)); // Set the elements attribute to the files contents
-    element.setAttribute('download', filename); // Set another attribute to tell the browser to download this
-    document.body.appendChild(element); // Add the download tag to the document
-    element.click(); // Click on the tag (To download it)
-    document.body.removeChild(element); // Remove the tag from the document
-}
 function ChangePlayerSpawnPos(position) {
     if (position) {
         if (position.x && position.y) {
@@ -67,10 +58,11 @@ window.onload = () => {
                 const ElementData = element.data
                 const MainMenuElement = document.getElementById("MainMenu")
                 LevelName = element.name
-                UIElementLocal.style.display = "flex"
+                UIElement.style.display = "flex"
                 MainMenuElement.style.display = "none"
                 levelData = ElementData
-                world = new World(levelData, Game)
+                World.data = levelData
+                World.init(levelData)
                 Game._Init()
                 console.log("Started game");
             })
@@ -86,6 +78,8 @@ window.onload = () => {
         const MainMenuElement = document.getElementById("MainMenu")
         NameOfLevelContainer.style.display = "flex"
         MainMenuElement.style.display = "none"
+        World.data = levelData
+        World.init(levelData)
     })
 }
 
@@ -93,7 +87,7 @@ window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
 
-document.addEventListener("mouseup", (e) => {
+canvas.addEventListener("mouseup", (e) => {
     e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
         Drawing = false
@@ -105,13 +99,13 @@ document.addEventListener("mouseup", (e) => {
     }
 })
 
-document.addEventListener("mousedown", (e) => {
+canvas.addEventListener("mousedown", (e) => {
+    e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
         Drawing = true
         Deleting = false
     }
     else if (e.button == 2) { // Pressing Right
-        e.preventDefault()
         Drawing = false
         Deleting = true
     }
@@ -120,7 +114,17 @@ document.addEventListener("mousedown", (e) => {
 window.addEventListener("Game:BeforeDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
     const ctx = Game.canvas.ctx
+	const LocalPlayer = Game.GetLocalPlayer().package
     ctx.fillStyle = "black"
+
+    if (Game.inputHandler.keys_down.w) LocalPlayer._Move('w'); // Move the player
+	else LocalPlayer._stopMoving("w")
+	if (Game.inputHandler.keys_down.a) LocalPlayer._Move('a');
+	else LocalPlayer._stopMoving("a")
+	if (Game.inputHandler.keys_down.s) LocalPlayer._Move('s');
+	else LocalPlayer._stopMoving("s")
+	if (Game.inputHandler.keys_down.d) LocalPlayer._Move('d');
+	else LocalPlayer._stopMoving("d")
 
     let x = 0;
     let y = 1;
@@ -137,11 +141,11 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
                 if (Drawing) {
                     let element = new Square(Game, true, x, y, 50, 50);
                     levelData[i][j] = 1
-                    world.setTile({ i: i, j: j }, element);
+                    World.setTile({ i: i, j: j }, element);
                 }
                 else if (Deleting) {
                     levelData[i][j] = 0
-                    world.deleteTile({ i: i, j: j })
+                    World.deleteTile({ i: i, j: j })
                 }
             }
 
@@ -181,9 +185,9 @@ SubmitLevelName.addEventListener("mouseup", () => {
     } else {
         SaveNameErrorElement.style.display = "none"
         NameOfLevelContainer.style.display = "none"
-        UIElementLocal.style.display = "flex"
+        UIElement.style.display = "flex"
         LevelName = SaveNameInput.value
-        world = new World(levelData, Game)
+        World.data = levelData
         Game._Init()
         console.log("Started game");
     }
@@ -237,7 +241,7 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
 //                     AlreadyLoaded = true
 //                     levelData = element.data
 //                     console.log(levelData);
-//                     world.regenerate(levelData)
+//                     World.regenerate(levelData)
 //                     console.log("Found Save File");
 //                     return;
 //                 }
@@ -280,7 +284,7 @@ RemoveUIButton.addEventListener("mouseup", () => {
         let percentage = 0
         const intervalID = setInterval(() => {
             percentage--
-            UIElementLocal.style.left = JSON.stringify(percentage) + "%"
+            UIElement.style.left = JSON.stringify(percentage) + "%"
             if (percentage == -13) {
                 clearInterval(intervalID)
             }
@@ -291,7 +295,7 @@ RemoveUIButton.addEventListener("mouseup", () => {
         let percentage = -15
         const intervalID = setInterval(() => {
             percentage++
-            UIElementLocal.style.left = JSON.stringify(percentage) + "%"
+            UIElement.style.left = JSON.stringify(percentage) + "%"
             if (percentage == 0) {
                 clearInterval(intervalID)
             }
@@ -333,7 +337,7 @@ Game.canvas.element.addEventListener("drop", (e) => {
                 const data = event.target.result // Store the data inside the file
                 LevelName = filename.replace(".level", "") // Change the level name to the files name (Without the .level at the end)
                 levelData = JSON.parse(data) // Turn the data that was a string into proper format and set levelData to it
-                world.regenerate(levelData) // Reload the world with the new levelData
+                World.regenerate(levelData) // Reload the World with the new levelData
                 console.log("Loaded World");
                 return; // Leave the function (No current use for it)
             };
@@ -412,6 +416,5 @@ Game.Config.sideScrollerSideOffset.top = 10
 Game.Config.sideScrollerSideOffset.bottom = 10
 Game.Config.sideScrollerSideOffset.right = 10
 Game.addPlayer(player, true) // Add the player to the game as a local player
-UIElement.appendChild(UIElementLocal)
 music.autoplay = true // Set the debug music to autoplay
 music.loop = true // And Set the music to loop
