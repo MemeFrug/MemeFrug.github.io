@@ -4,8 +4,8 @@ walls.push(new Wall(0, Game.Config.WorldSize.y, Game.Config.WorldSize.x, Game.Co
 walls.push(new Wall(Game.Config.WorldSize.x, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
 
 //test
-for (let i = 0; i < world.tiles.length; i++) {
-	const Tile = world.tiles[i];
+for (let i = 0; i < World.tiles.length; i++) {
+	const Tile = World.tiles[i];
 	for (let j = 0; j < Tile.length; j++) {
 		const element = Tile[j];
 		if (element instanceof Square) {

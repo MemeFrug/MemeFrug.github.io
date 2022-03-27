@@ -1,6 +1,5 @@
 const Game = new _("StoryGame");
 const player = new Player(Game, !1, 0, 10, 50, 50, 100, 500, -650);
-const world = new World(levelData, Game);
 const MainMenuElementDOM = document.getElementById("MainMenu");
 const TitleButtonsDOM = document.getElementById("title-buttons");
 const TooSmallElement = document.getElementById("Screen-Too-Small-Element")
@@ -72,3 +71,4 @@ Game.Config.sideScrollerSideOffset.top = 10000
 Game.Config.sideScrollerSideOffset.bottom = 10000
 Game.Config.sideScrollerSideOffset.right = 10000
 Game.addPlayer(player, true)
+World.init() // Start World
