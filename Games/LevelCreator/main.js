@@ -87,7 +87,7 @@ window.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
 
-canvas.addEventListener("mouseup", (e) => {
+document.addEventListener("mouseup", (e) => {
     e.preventDefault()
     if (e.button == 0) { // Pressing Left Button
         Drawing = false
@@ -166,7 +166,7 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 window.addEventListener("Game:AfterDrawLoop", () => {
     const MousePosition = Game.canvas.getMousePosition()
     const ctx = Game.canvas.ctx
-    ctx.fillStyle = "black"
+    ctx.fillStyle = "grey"
     ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 
     ctx.strokeRect(0, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y)
