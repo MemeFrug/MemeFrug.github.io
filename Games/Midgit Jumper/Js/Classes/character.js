@@ -8,7 +8,7 @@ class Character {
         this.isOnGround = false
 
         //Unchangeable
-        this.speedmax = 480
+        this.speedmax = 500
         this.gravityMax = 2000
         this.gravity = 50
         this.jumppower = -950
@@ -307,6 +307,8 @@ class Character {
     _Update(deltaTime, inputhandler) {
         if (!deltaTime) return;
 
+        this.speedmax = 500
+
         this.x += this.vleft * deltaTime;
         this.x += this.vright * deltaTime;
 
@@ -333,7 +335,6 @@ class Character {
         // console.log(this.gravity)
         if (this.vup < this.gravityMax)
             this.vup += this.gravity
-            console.log(this.vup);
 
         if (this.health > 100) 
             this.health = 100

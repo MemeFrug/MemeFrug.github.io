@@ -76,7 +76,7 @@ function _GenerateWorld() {
 		const maxWorldSizeX = 9000
 		const minWorldSizeX = 5000
 
-		const maxAmtWorlds = 4
+		const maxAmtWorlds = 3
 		const minAmtWorlds = 2
 
 		//Random the ammount of enemys
@@ -89,7 +89,7 @@ function _GenerateWorld() {
 
 		//Get the ammount of worlds to create
 		const AmountOfWorlds = Math.floor(Math.random() * (maxAmtWorlds - minAmtWorlds + 1) + minAmtWorlds);
-		console.log(AmountOfWorlds);
+		console.log(AmountOfWorlds, ", The amount of Worlds");
 		for (let index = 0; index <= AmountOfWorlds; index++) {
 			//World Already Exists
 			if (index <= Worlds.length) {
@@ -155,6 +155,7 @@ function _GenerateWorld() {
 					element.push(new blockCreator(lastblock.x + lastblock.w + 250, lastblock.y + 200, 1000, Worlds[index].Size.y - lastblock.y + 550))
 					element.push(new blockCreator(lastblock.x + lastblock.w + 200, lastblock.y + 50, 50, Worlds[index].Size.y - lastblock.y + 550))
 					element.push(new blockCreator(lastblock.x + lastblock.w + 1250, lastblock.y + 100, 600, Worlds[index].Size.y - lastblock.y + 550))
+					element.push(new blockCreator(lastblock.x + lastblock.w + 1250, lastblock.y + 1000, 100, 2999))
 					break
 				}else if (upordown == 0) {// 0 is same level
 					element[Worlds[index].Objects.length-1].w += 50

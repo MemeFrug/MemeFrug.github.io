@@ -33,17 +33,19 @@ function MainMenuPlay() {
 async function _Init() {
 
     windowResize()
-
-    await _GenerateWorld();
-
+    
     let mainMenuElement = document.getElementById("loginMenuContainer");
     mainMenuElement.style.display = "none";
     document.getElementById("Loading").style.display = "block"
+
+    await _GenerateWorld();
 
     stopwatch = new Stopwatch(Time, Times);
 
     //Make the character
     character = new Character()
+    const originalSpeed = character.speedmax //Get original Speed
+    character.speedmax = 0
     await character.LoadAnims()
     //Make sure the player is on the first block with a little offset
     character.y = Worlds[WorldIn].Objects[0].y - character.w - 100
@@ -61,6 +63,9 @@ async function _Init() {
 
     //Play Sound
     background1.play()
+    
+    //Set original Speed
+    character.speedmax = originalSpeed
 }
 
 function Onload() {
