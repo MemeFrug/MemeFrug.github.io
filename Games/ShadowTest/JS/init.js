@@ -157,7 +157,7 @@ window.addEventListener("Game:AfterDrawLoop", () => {
     ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
 })
 
+window.addEventListener("Game:BeforeStartUp", GenerateWalls)
+
 document.getElementById("Back-Button").addEventListener("mouseup", BackToHub);
 document.getElementById("Play-Button").addEventListener("mouseup", Play);
-
-startup = GenerateWalls
