@@ -1,18 +1,21 @@
-walls.push(new Wall(0, 0, Game.Config.WorldSize.x, 0))
-walls.push(new Wall(0, 0, 0, Game.Config.WorldSize.y))
-walls.push(new Wall(0, Game.Config.WorldSize.y, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
-walls.push(new Wall(Game.Config.WorldSize.x, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
+function GenerateWalls() {
+	walls = []
+	walls.push(new Wall(0, 0, Game.Config.WorldSize.x, 0))
+	walls.push(new Wall(0, 0, 0, Game.Config.WorldSize.y))
+	walls.push(new Wall(0, Game.Config.WorldSize.y, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
+	walls.push(new Wall(Game.Config.WorldSize.x, 0, Game.Config.WorldSize.x, Game.Config.WorldSize.y))
 
-//test
-for (let i = 0; i < World.tiles.length; i++) {
-	const Tile = World.tiles[i];
-	for (let j = 0; j < Tile.length; j++) {
-		const element = Tile[j];
-		if (element instanceof Square) {
-			walls.push(new Wall(element.x, element.y, element.x, element.y + element.h))
-			walls.push(new Wall(element.x, element.y, element.x + element.w, element.y))
-			walls.push(new Wall(element.x + element.w, element.y, element.x + element.w, element.y + element.h))
-			walls.push(new Wall(element.x + element.w, element.y + element.h, element.x, element.y + element.h))
+	//test
+	for (let i = 0; i < World.tiles.length; i++) {
+		const Tile = World.tiles[i];
+		for (let j = 0; j < Tile.length; j++) {
+			const element = Tile[j];
+			if (element instanceof Square) {
+				walls.push(new Wall(element.x, element.y, element.x, element.y + element.h))
+				walls.push(new Wall(element.x, element.y, element.x + element.w, element.y))
+				walls.push(new Wall(element.x + element.w, element.y, element.x + element.w, element.y + element.h))
+				walls.push(new Wall(element.x + element.w, element.y + element.h, element.x, element.y + element.h))
+			}
 		}
 	}
 }
@@ -131,17 +134,20 @@ window.addEventListener("Game:BeforeDrawLoop", () => {
 	ctx.fill();
     ctx.globalAlpha = 1
 
-	// DRAW DEBUG LINES
-	ctx.strokeStyle = "white";
-    ctx.globalAlpha = 0.5	
-	for(var i=0;i<intersects.length;i++){
-		var intersect = intersects[i];
-		ctx.beginPath();
-		ctx.moveTo(RayPosition.x, RayPosition.y,);
-		ctx.lineTo(intersect.x,intersect.y);
-		ctx.stroke();
+
+	if (drawDebugLines) {
+		// DRAW DEBUG LINES
+		ctx.strokeStyle = "white";
+		ctx.globalAlpha = 0.5	
+		for(var i=0;i<intersects.length;i++){
+			var intersect = intersects[i];
+			ctx.beginPath();
+			ctx.moveTo(RayPosition.x, RayPosition.y,);
+			ctx.lineTo(intersect.x,intersect.y);
+			ctx.stroke();
+		}
+		ctx.globalAlpha = 1
 	}
-    ctx.globalAlpha = 1
 })
 
 window.addEventListener("Game:AfterDrawLoop", () => {
@@ -153,3 +159,5 @@ window.addEventListener("Game:AfterDrawLoop", () => {
 
 document.getElementById("Back-Button").addEventListener("mouseup", BackToHub);
 document.getElementById("Play-Button").addEventListener("mouseup", Play);
+
+startup = GenerateWalls
