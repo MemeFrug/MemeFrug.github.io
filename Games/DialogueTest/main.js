@@ -1,29 +1,34 @@
 const loadingScreen = createLoadingScreenFromDOM(document.getElementById("LoadingElement"), "flex")
 const SideLaugh = document.createElement("img")
 const Default = document.createElement("img")
-const TextToSay = "Woah, arnt u a sussy baka!!!"
+const TextToSay = "Are You Ready???"
 let ImageShowing = Default
-let TextShowing = "* "
+let TextShowing = ""
+let PageInteracted = false
 
 async function ReadText(Text = TextToSay) {
-    TextShowing = "* "
-    ImageShowing = Default
-    for (let i = 0; i < Text.length; i++) {
-        const element = Text[i];
-        new Audio("./Assets/snd_txtsans.wav").play()
-        TextShowing += element
-        if (element == ",") {
-            await sleep(500)
-            ImageShowing = SideLaugh
-        } else if (element == "?") {
-            await sleep(700)
-        }else {
-            await sleep(80)
+    return new Promise(async (resolve, reject) => {
+        TextShowing = ""
+        ImageShowing = Default
+        for (let i = 0; i < Text.length; i++) {
+            const element = Text[i];
+            const SansAudio = new Audio("./Assets/snd_txtsans.wav")
+            SansAudio.volume = 0.3
+            SansAudio.play()
+            TextShowing += element
+            if (element == ",") {
+                await sleep(500)
+                ImageShowing = SideLaugh
+            } else if (element == "?") {
+                await sleep(700)
+            }else {
+                await sleep(80)
+            }
         }
-    }
-    await sleep(500)
-    ImageShowing = Default
-    return
+        await sleep(500)
+        ImageShowing = Default
+        resolve()
+    });
 }
 
 function setup() {
@@ -34,8 +39,19 @@ function setup() {
 
 async function onload() {
     loadingScreen.destroy()
-    ReadText()
 }
+
+listen("click", async () => {
+    if (PageInteracted == false) {
+        PageInteracted = true
+        for (let i = 0; i < Dialogue[0].Dialogue.length; i++) {
+            const element = Dialogue[0].Dialogue[i];
+            await ReadText(element.text)
+            await sleep(element.sleep)
+        }
+        console.log("Finished");
+    }
+})
 
 function draw(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 1)"
@@ -43,8 +59,9 @@ function draw(ctx) {
     ctx.strokeStyle = "white"
     ctx.lineWidth = 9
     ctx.strokeRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.6, ENGINE.Config.nativeWidth / 2, 300)
+    ctx.drawImage(ImageShowing, 500, 700, 250, 250)
     ctx.fillStyle = "rgb(216, 216, 216)"
     ctx.font = "40px DTM-Sans"
-    ctx.fillText(TextShowing, 760, 800)
-    ctx.drawImage(ImageShowing, 500, 700, 250, 250)
+    ctx.fillText("*", 720, 800)
+    wrapText(ctx, TextShowing, 760, 800, 650, 40)
 }
