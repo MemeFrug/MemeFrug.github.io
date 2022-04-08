@@ -1,54 +1,36 @@
 const loadingScreen = createLoadingScreenFromDOM(document.getElementById("LoadingElement"), "flex")
 const SideLaugh = document.createElement("img")
 const Default = document.createElement("img")
-const TextToSay = "Are You Ready???"
-let ImageShowing = Default
-let TextShowing = ""
 let PageInteracted = false
-
-async function ReadText(Text = TextToSay) {
-    return new Promise(async (resolve, reject) => {
-        TextShowing = ""
-        ImageShowing = Default
-        for (let i = 0; i < Text.length; i++) {
-            const element = Text[i];
-            const SansAudio = new Audio("./Assets/snd_txtsans.wav")
-            SansAudio.volume = 0.3
-            SansAudio.play()
-            TextShowing += element
-            if (element == ",") {
-                await sleep(500)
-                ImageShowing = SideLaugh
-            } else if (element == "?") {
-                await sleep(700)
-            }else {
-                await sleep(80)
-            }
-        }
-        await sleep(500)
-        ImageShowing = Default
-        resolve()
-    });
-}
 
 function setup() {
     createCanvas(true)
     SideLaugh.src = "./Assets/side_laugh.png"
     Default.src = "./Assets/default.png"
+    ImageShowing = Default
+    Dialogue = [
+        {
+            Dialogue: [
+                {text: "Okay, That was pretty Impressive.", sleep: 500, image: SideLaugh},
+                {text: "Now try this!", sleep: 500},
+                {text: "Wait, NO!", sleep: 200, image: SideLaugh},
+                {text: "What Are you doing!", sleep: 700},
+                {text: "That is incredibly sussy moment.", sleep: 1000, image: SideLaugh},
+                {text: "", sleep: 1500},
+                {text: "Okay Now your just being weird...", sleep: 100},
+            ]
+        }
+    ]
 }
 
-async function onload() {
+async function loaded() {
     loadingScreen.destroy()
 }
 
 listen("click", async () => {
     if (PageInteracted == false) {
         PageInteracted = true
-        for (let i = 0; i < Dialogue[0].Dialogue.length; i++) {
-            const element = Dialogue[0].Dialogue[i];
-            await ReadText(element.text)
-            await sleep(element.sleep)
-        }
+        await ReadDialogue(Dialogue[0])
         console.log("Finished");
     }
 })
@@ -62,6 +44,6 @@ function draw(ctx) {
     ctx.drawImage(ImageShowing, 500, 700, 250, 250)
     ctx.fillStyle = "rgb(216, 216, 216)"
     ctx.font = "40px DTM-Sans"
-    ctx.fillText("*", 720, 800)
-    wrapText(ctx, TextShowing, 760, 800, 650, 40)
+    fillText(ctx, "*", 720, 800)
+    fillText(ctx, TextShowing, 760, 800, 650, 40)
 }
