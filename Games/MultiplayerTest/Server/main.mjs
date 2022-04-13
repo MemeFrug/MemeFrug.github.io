@@ -5,7 +5,7 @@ const io = new Server(httpServer, {
     serveClient: false,
     cors: {
         origin: "http://127.0.0.1:3000", // Used For Testing
-        // origin: "http://memefrug.github.io/Games/MultiplayerTest/index.html" // Used For Production
+        // origin: "http://memefrug.github.io/" // Used For Production
     }
 });
 
@@ -13,4 +13,4 @@ io.on("connection", (socket) => {
     console.log("Connected To Client:", socket.id);
 });
 
-httpServer.listen(7777);
+httpServer.listen(8081);

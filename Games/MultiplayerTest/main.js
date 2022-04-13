@@ -25,7 +25,7 @@ function connectTo(ip) {
         document.getElementById("ConnectingScreen").innerHTML = "Spawning Players and Objects..."
         await sleep(500)
         document.getElementById("ConnectingScreen").style.display = "none"
-        await sleep(600)
+        await sleep(200)
         setupGame()
     })
 }
@@ -33,7 +33,7 @@ function connectTo(ip) {
 document.getElementById("ChangeToIpSelectElement").addEventListener("mouseup", () => { // TODO: Add Animations to These elements
     document.getElementById("MainMenu").style.display = "none"
     document.getElementById("IpChooser").style.display = "flex"
-    document.getElementById("IpInputElement").value = "localhost:7777"
+    document.getElementById("IpInputElement").value = "58.109.28.247:8081"
 })
 
 document.getElementById("ConnectToServerElement").addEventListener("mouseup", () => {
