@@ -17,10 +17,93 @@ canvas {
     user-select: none;
 }
 
+.IpChooser {
+    color: white;
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.IpChooser input {
+    width: 13vw;
+    height: 2vh;
+    transition-duration: 0.5s;
+    background-color: rgb(232, 232, 232);
+    border: 0;
+    border-radius: 2px;
+    text-align: center;
+}
+
+.IpChooser button {
+    width: 15vw;
+    height: 2vh;
+    transition-duration: 0.5s;
+    background-color: rgb(215, 215, 215);
+    border: 0;
+    border-radius: 2px;
+}
+
+.IpChooser button:hover {
+    width: 17%;
+    height: 2%;
+    background-color: rgb(152, 152, 152);
+}
+
+
 .MainMenu {
+    color: white;
     position: absolute;
     display: flex;
-    margin: 50%;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.MainMenu button {
+    width: 15vw;
+    height: 2vh;
+    transition-duration: 0.5s;
+    background-color: rgb(215, 215, 215);
+    border: 0;
+    border-radius: 2px;
+}
+
+.MainMenu button:hover {
+    width: 17%;
+    height: 2%;
+    background-color: rgb(152, 152, 152);
+}
+
+.ConnectingScreen {
+    color: white;
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ConnectionFailed {
+    color: white;
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ErrorText {
+    color: rgb(255, 79, 79);
 }
 
 .Version {

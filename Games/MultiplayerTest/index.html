@@ -32,8 +32,21 @@
         <div>Ver 1.0.0</div>
     </div>
 
-    <div class="MainMenu">
-        
+    <div class="MainMenu" id="MainMenu">
+        <h1>Multiplayer Test</h1>
+        <button id="ChangeToIpSelectElement">Play</button>
+    </div>
+
+    <div class="IpChooser" id="IpChooser">
+        <h2>Select Server</h2>
+        <div class="ErrorText" id="ErrorTextIpChooser"></div>
+        <input type="text" placeholder="127.0.0.1:3000" id="IpInputElement">
+        <div style="padding-top: 10px;"></div>
+        <button id="ConnectToServerElement">Connect</button>
+    </div>
+
+    <div class="ConnectingScreen" id="ConnectingScreen">
+        <div>Connecting To.. <span id="ConnectingToIpElement"></span></div>
     </div>
     
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
