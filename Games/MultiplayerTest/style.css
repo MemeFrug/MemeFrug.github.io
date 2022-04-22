@@ -4,10 +4,10 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
-    /* color: white; */
+    color: white;
 }
 
-canvas {
+#canvas {
     margin: auto;
     position: absolute;
     top: 0;
