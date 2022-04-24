@@ -1,82 +1,91 @@
-let stats;
-let i = 100;
 
+const player = new Player(false, 0, 10, 50, 50, 100, 500, -650);
+player.c = "red" // Set the colour of the player from default: black to red
+ENGINE.Config.TooSmallScreen = document.getElementById("Screen-Too-Small-Element")
+ENGINE.Config.sideScroller = true // Sets The Camera To Be Moveable
+ENGINE.addPlayer(player, true)
+
+let stats;
 
 //Generate World
-function _GenerateWorld() {
+function GenerateWorld() {
     return new Promise((resolve, reject) => {
-
-        //Some Values to change world gen
-        const WorldSizeX = 9000
-
-        //Set New World Size
-        ENGINE.Config.WorldSize.x = WorldSizeX
+        WORLD.ChangeWorldSize(2000, 2000) // was 10000, 40000
 
         //Create the first block
-        
-        var lastblock = WORLD.setTile({i: 0, j: 28}, new Square(true, 0, 28 * 50, 50, 50))
-        var lastblockPos = {i: 0, j: 28}
-        // WORLD.Objects.push(new Square(true, 0, WORLD[i].Size.y - 2000, 300, WORLD[i].Size.y - 2000)) // This is the starting block
+        var lastblockPos = {i: 20, j: 0}
 
-        let lastrandomnum = -1
+        function GenerateTerrainUnder() {
+            // if (WORLD.checkTile(lastblockPos)) {
+            //     WORLD.checkTile(lastblockPos).h = ((WORLD.data.length - 1) - (lastblockPos.i + 1)) * 50
+            // }
+            for (let ij = lastblockPos.i + 1; ij < WORLD.data.length; ij++) {
+                WORLD.setTile({i: ij, j: lastblockPos.j}, new Square(true, lastblockPos.j * 50, ij * 50, 50, 50))
+            }
+        }
 
         for (let i = 0; i < WORLD.data[0].length; i++) {
-            const upordown = _GetRndInteger(0, 2);
-            console.log(upordown);
-            if (upordown == 0) { // down
-                lastblockPos = {i: lastblockPos.i + 1, j: lastblockPos.j - 1}
-                // lastblock = WORLD.setTile(lastblockPos, new Square(true, 0, lastblockPos.j * 50, 50, 50))
-            } else if (upordown == 1) { // up
-                lastblockPos = {i: lastblockPos.i + 1, j: lastblockPos.j + 1}
-                // lastblock = WORLD.setTile(lastblockPos, new Square(true, 0, lastblockPos.j * 50, 50, 50))
-            } else if (upordown == 2) { // straight
-                lastblockPos = {i: lastblockPos.i + 1, j: lastblockPos.j}
-                // lastblock = WORLD.setTile(lastblockPos, new Square(true, 0, lastblockPos.j * 50, 50, 50))
+            const upordown = _GetRndInteger(0, 3);
+            if (upordown == 0 || upordown == 1) { // straight
+                WORLD.setTile(lastblockPos, new Square(true, lastblockPos.j * 50, lastblockPos.i * 50, 50, 50))
+                GenerateTerrainUnder()
+            }
+            if (upordown == 2 && WORLD.checkTile({i: lastblockPos.i + 1, j: lastblockPos.j}) == undefined) { // down
+                lastblockPos.i += 1
+                WORLD.setTile(lastblockPos, new Square(true, lastblockPos.j * 50, lastblockPos.i * 50, 50, 50))
+                GenerateTerrainUnder()
+            }
+            if (upordown == 3 && WORLD.checkTile({i: lastblockPos.i - 1, j: lastblockPos.j}) == undefined) { // up
+                lastblockPos.i -= 1
+                WORLD.setTile(lastblockPos, new Square(true, lastblockPos.j * 50, lastblockPos.i * 50, 50, 50))
+                GenerateTerrainUnder()
+            } else {
+                console.warn("Tile did not exist");
             }
 
-            lastrandomnum = upordown
+            lastblockPos.j += 1
         }
         resolve()
     })
 }
 
 function draw(ctx) {
-    const MousePosition = ENGINE.getMousePosition()
-    const canvas = ENGINE.canvas.element
-    const rect = ENGINE.canvas.element.getBoundingClientRect();
-    ctx.scale(0.3, 0.3)
-    ctx.fillRect(i += 1, 100, 50, 50)
-
+    ctx.scale(0.8, 0.8)
     let x = 0;
     let y = 1;
 
-    for (let i = 0; i < WORLD.data.length; i++) {
-        x = 0;
+    // for (let i = 0; i < WORLD.data.length; i++) {
+    //     x = 0;
 
-        for (let j = 0; j < WORLD.data[i].length; j++) {
-            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)) {
-                ctx.globalAlpha = 0.4
-                ctx.fillRect(x, y, 50, 50)
-                ctx.globalAlpha = 1
-            }
+    //     for (let j = 0; j < WORLD.data[i].length; j++) {
+    //         ctx.strokeRect(x, y, 50, 50)
+    //         x += 50;
+    //     }
 
-            ctx.strokeRect(x, y, 50, 50)
-            x += 50;
-        }
-
-        y += 50;
-    }
+    //     y += 50;
+    // }
 
     // ENGINE.VARIABLES.Cam.x = i -= 10
 }
 
+function update(deltaTime) {
+	const LocalPlayer = ENGINE.GetLocalPlayer()
+    if (ENGINE.InputHandler.keys_down.w) LocalPlayer.move('w'); // Move the player
+	else LocalPlayer.stopMove("w")
+	if (ENGINE.InputHandler.keys_down.a) LocalPlayer.move('a');
+	else LocalPlayer.stopMove("a")
+	if (ENGINE.InputHandler.keys_down.s) LocalPlayer.move('s');
+	else LocalPlayer.stopMove("s")
+	if (ENGINE.InputHandler.keys_down.d) LocalPlayer.move('d');
+	else LocalPlayer.stopMove("d")
+}
 
 function setupGame() {
     createCanvas(true, Enum.ResizeType.AspectRatio)
     setCanvasBackground("#2fa3b5")
 
     WORLD.init()
-    _GenerateWorld()
+    GenerateWorld()
 }
 
 function setup() {
