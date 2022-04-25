@@ -132,10 +132,19 @@ function noise(x, y = 0, z = 0) {
 
 let stats;
 let inc = 0.01;
+let CameraPositionX = 0
+let perlinNoise;
+let width;
+let height;
+let points = []
+const scl = 1
 
 function setup() {
     stats = new Stats();
     stats.autoLoad()
+
+	perlin_octaves = 2	
+	noiseSeed(2555676)
 
     document.getElementById("PlayButtonElement").addEventListener("mouseup", () => {
         document.getElementById("MainMenu").style.display = "none"
@@ -143,30 +152,73 @@ function setup() {
         // Setup Game
         createCanvas(true, Enum.ResizeType.AspectRatio)
         setCanvasBackground("grey")
-    })
+        const ctx = ENGINE.canvas.ctx
+		ctx.imageSmoothingEnabled = false
+
+		width = ENGINE.Config.WorldSize.x
+		height = ENGINE.Config.WorldSize.y
+
+		let yoff = 0;
+
+        // const imageData = ctx.getImageData(0, 0 , width, height);
+        // const data = imageData.data;
+        // for (let y = 0; y < height; y++) {
+        //     let xoff = 0;
+        //     for (let x = 0; x < width; x++) {
+        //         const i = (x + y * width) * 4;
+        //         var r = floor( noise(xoff * scl, yoff * scl) * 255 )
+        //         data[i + 0] = r; // red
+        //         data[i + 1] = r; // green
+        //         data[i + 2] = r; // blue
+        //         data[i + 3] = 255; // alpha
+
+        //         xoff += inc;
+        //     }
+        //     yoff += inc;
+        // }
+        // perlinNoise = imageData
+
+		//Generate The Map
+		for (let y = 0; y < height; y += 5) {
+            let xoff = 0;
+            for (let x = 0; x < width; x += 5) {
+                var r = floor( noise(xoff * scl, yoff * scl) * 255 )
+				
+				if (r > 100) {
+					// points.push({c: "lightblue", x: x, y: y})
+				}
+				else if (r <= 100) {
+					points.push({c: "rgb(54, 43, 16)", x: x, y: y})
+				}
+
+                xoff += inc;
+            }
+			yoff += inc;
+		}
+	})
+}
+
+function getColour(x, y) {
+	var r = floor( noise(x * .1, y * 0.1) * 255 )
+
+	// if (r < 50) return "blue"
+	// else if (r > )
+	// else return "black"
 }
 
 function draw(ctx) {
-    const width = ENGINE.Config.nativeWidth
-    const height = ENGINE.Config.nativeHeight
-    
-    let yoff = 0;
+	ctx.scale(0.3, 0.3)
 
-    const imageData = ctx.getImageData(0, 0 ,width, height);
-    const data = imageData.data;
-    for (let y = 0; y < width; y++) {
-        let xoff = 0;
-        for (let x = 0; x < height; x++) {
-            const i = (x + y * width) * 4;
-            var r = noise(xoff, yoff) * 255
-            data[i + 0] = r; // red
-            data[i + 1] = r; // green
-            data[i + 2] = r; // blue
-            data[i + 3] = 255; // alpha
-            
-            xoff += inc;
-        }
-        yoff += inc;
-    }
-    ctx.putImageData(imageData, 0, 0);
+	for (let i = 0; i < points.length; i++) {
+		const element = points[i];
+		ctx.fillStyle = element.c
+		ctx.fillRect(element.x, element.y, 6, 6)
+	}
+
+	ENGINE.VARIABLES.Cam.x = CameraPositionX
+	ENGINE.VARIABLES.Cam.y = CameraPositionX
+
+	CameraPositionX -= 1
+
+    // ctx.putImageData(perlinNoise, 0, 0);
 }
