@@ -131,14 +131,13 @@ function noise(x, y = 0, z = 0) {
 
 
 let inc = 0.01;
-let CameraPositionX = 0
 let perlinNoise;
 let width;
 let height;
 let points = []
 
-const pixelOffset = 10
-const cubeSize = 12
+const pixelOffset = 9
+const cubeSize = 10
 const scl = 1
 
 
@@ -167,17 +166,17 @@ const scl = 1
 
 
 
-const player = new Player(false, 0, 10, 50, 50, 100, 1000, -650);
+const player = new Player(false, 0, 10, 50, 50, 100, 500, -900);
 player.c = "red" // Set the colour of the player from default: black to red
 ENGINE.Config.sideScroller = true
 ENGINE.addPlayer(player, true)
 
 let stats;
 
-const WORLD_LAYER_1_SQUARE_SIZE = 500
+const WORLD_LAYER_1_SQUARE_SIZE = 150
 // const WORLD_LAYER_2_SQUARE_SIZE = 20
-const WORLD_COLS = 10
-const WORLD_ROWS = 10
+const WORLD_COLS = 50
+const WORLD_ROWS = 50
 const WORLD_SIZE_W = WORLD_LAYER_1_SQUARE_SIZE * WORLD_COLS
 const WORLD_SIZE_H = WORLD_LAYER_1_SQUARE_SIZE * WORLD_ROWS
 // const WORLD_LAYER_2_COLS = Math.round(WORLD_LAYER_1_SQUARE_SIZE / WORLD_LAYER_2_SQUARE_SIZE)
@@ -191,11 +190,11 @@ function setup() {
     stats = new Stats();
     stats.autoLoad()
 
-
+    ENGINE.Config.g = 2500
 
     
-	perlin_octaves = 2	
-	noiseSeed(2555676)
+	perlin_octaves = 2
+	noiseSeed(789)       
 
 
 
@@ -259,7 +258,7 @@ function setup() {
                         for (let j = 0; j < world[i].length; j++) {
                 
                             if (_rectIntersect(x2, y2, WORLD_LAYER_1_SQUARE_SIZE, WORLD_LAYER_1_SQUARE_SIZE, x, y, cubeSize, cubeSize)) {
-                                world[i][j].push({c: "rgb(54, 43, 16)", x: x, y: y})
+                                world[i][j].push({c: "rgb(74, 41, 3)", x: x, y: y})
                             }
                             x2 += WORLD_LAYER_1_SQUARE_SIZE;
                         }
@@ -277,7 +276,7 @@ function setup() {
 }
 
 function draw(ctx) {
-    ctx.scale(0.3, 0.3)
+    // ctx.scale(0.2, 0.2)
     let x = 0;
     let y = 1;
 
@@ -346,6 +345,8 @@ function draw(ctx) {
             const element2 = world[i][j][k]
             ctx.fillStyle = element2.c
             ctx.fillRect(element2.x, element2.y, cubeSize, cubeSize)
+
+            player.collisionDetection({x: element2.x, y: element2.y, w: cubeSize, h: cubeSize})
         }
         // const layer2Length = world[i][j].length
 
@@ -372,79 +373,14 @@ function update(deltaTime) {
 	else LocalPlayer.stopMove("w")
 	if (ENGINE.InputHandler.keys_down.a) LocalPlayer.move('a');
 	else LocalPlayer.stopMove("a")
-	if (ENGINE.InputHandler.keys_down.s) LocalPlayer.move('s');
-	else LocalPlayer.stopMove("s")
 	if (ENGINE.InputHandler.keys_down.d) LocalPlayer.move('d');
 	else LocalPlayer.stopMove("d")
 }
 
 function setupGame() {
     createCanvas(true, Enum.ResizeType.AspectRatio)
-    setCanvasBackground("#2fa3b5")
+    setCanvasBackground("#63c0c2")
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Custom Move Code the incorporate the 's' key
-player.move = (movement) => {
-    switch (movement) { // Make a switch statement
-        case "w":
-            player.vy = -player.speed // set the vertical velocity to jump
-            break;
-
-        case "a":
-            player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
-            break;
-
-        case "d":
-            player.vx = player.speed // Make the x velocity positive of the speed so it goes right
-            break;
-
-        case "s":
-            player.vy = player.speed
-    }
-}
-// Custom Stop Moving Code, to incorporate the 's' key and to make the 'w' key incorporate the 's' key aswell
-player.stopMove = (movement) => {
-    switch (movement) {
-        case "w":
-            if (!ENGINE.InputHandler.keys_down.s)
-                player.vy = 0
-            else
-                player.move("s")
-            break;
-        case "a":
-            if (!ENGINE.InputHandler.keys_down.d)
-                player.vx = 0;
-            else
-                player.move("d")
-            break;
-
-        case "d":
-            if (!ENGINE.InputHandler.keys_down.a)
-                player.vx = 0;
-            else
-                player.move("a")
-            break;
-
-        case "s":
-            if (!ENGINE.InputHandler.keys_down.w)
-                player.vy = 0
-            else
-                player.move("w")
-            break
-    }
-}
 player.c = "red" // Set the colour of the player from default: black to red
-player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
+// player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
