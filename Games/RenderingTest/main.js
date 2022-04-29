@@ -163,9 +163,6 @@ const scl = 1
 
 
 
-
-
-
 const player = new Player(false, 0, 10, 50, 50, 100, 500, -900);
 player.c = "red" // Set the colour of the player from default: black to red
 ENGINE.Config.sideScroller = true
@@ -187,7 +184,7 @@ let world = []
 let CubeToShow = []
 
 function setup() {
-	stats = new Stats();
+	stats = STATS.new();
 	stats.autoLoad()
 
 	ENGINE.Config.g = 2300
@@ -195,9 +192,6 @@ function setup() {
 
 	perlin_octaves = 4
 	// noiseSeed(789)
-
-
-
 
 
 	WORLD.size = {

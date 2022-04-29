@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Creator</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="NameOfLevelContainer" class="NameOfLevel_Container">
+        <div class="SaveNameError" id="SaveNameError">Error:</div>
+        <div class="NameOfLevel" style="padding: 5px;">Name Of Level: <input id="NameOfSaveInput" type="text" placeholder="Name Of Level"></div>
+        <button id="SubmitLevelName">Submit</button>
+    </div>
+
+    <div id="MainMenu" class="MainMenu">
+        <div class="Title">Levels</div>
+        <div id="Levels" class="Level_Select">  
+            <div class="Level_Container"><div  id="CreateNew" class="Level"><span class="Level_Name">Create New Level</span></div></div>
+        </div>
+        <div class="button_container"></div><button id="deleteAllSaves">Delete All Saves</button>
+    </div>
+
+    <div id="UI" class="UI">
+        <div id="Hide UI" class="HideUI"><</div>
+        <div class="blocks_column">
+            <div class="Title">Blocks:</div>
+            <div class="Blocks_choose">
+                <div class="Button_container">
+                    <div class="Button">
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div><button id="SaveLocallyButton">Save Locally</button></div>
+        <!-- <div><button id="LoadSaveButton">Load Save</button></div> -->
+        <div><button id="DownloadSaveButton">Download</button></div>
+    </div>
+
+    <script src="/lib/engine_2.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>
