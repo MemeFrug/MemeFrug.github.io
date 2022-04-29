@@ -1,16 +1,24 @@
 //Define The ENGINE
-const GameName = "StoryGameLevelCreator" // Set The ENGINE Name
+const GameName = "StoryGameLevelCreator2" // Set The ENGINE Name
 ENGINE.NameOfGame = GameName
-const player = new Player(false, 0, 0, 50, 50, 100, 300, -300, 0) // Instance the player
-const SaveNameInput = document.getElementById("NameOfSaveInput"); // Get All of the elements
-const SaveNameErrorElement = document.getElementById("SaveNameError")
-const LocalSaveButton = document.getElementById("SaveLocallyButton");
-const DownloadButton = document.getElementById("DownloadSaveButton");
-const DeleteAllSavesButton = document.getElementById("deleteAllSaves");
-const RemoveUIButton = document.getElementById("Hide UI");
-const UIElement = document.getElementById("UI")
-const NameOfLevelContainer = document.getElementById("NameOfLevelContainer")
-const SubmitLevelName = document.getElementById("SubmitLevelName")
+
+const SaveNameInput = getElementById("NameOfSaveInput"); // Get All of the elements
+const SaveNameErrorElement = getElementById("SaveNameError")
+
+const LocalSaveButton = getElementById("SaveLocallyButton");
+const DownloadButton = getElementById("DownloadSaveButton");
+
+const DeleteAllSavesButton = getElementById("deleteAllSaves");
+
+const RemoveUIButton = getElementById("Hide UI");
+const UIElement = getElementById("UI")
+
+const NameOfLevelContainer = getElementById("NameOfLevelContainer")
+const SubmitLevelName = getElementById("SubmitLevelName")
+
+const GameAssetsContainer = getElementById("GameAssetsContainer")
+
+let stats;
 let LevelName = "" // Set Some Default Variables Used For Later On
 let LocalSaveLevels = []
 let Drawing = false
@@ -18,7 +26,8 @@ let Deleting = false
 let AlreadyLoaded = false
 let UIClosed = true
 let playerSpawnPosition = { x: 0, y: 0 }
-function ChangePlayerSpawnPos(position) {
+
+function ChangePlayerSpawnPos(position) { //DEBUG
     if (position) {
         if (position.x && position.y) {
             playerSpawnPosition = position
@@ -33,8 +42,28 @@ function ChangePlayerSpawnPos(position) {
 ChangePlayerSpawnPos({ x: 10, y: 20 })
 
 function setup() {
+    stats = STATS.new()
+    stats.autoLoad()
+
+    addEngineEvent(Enum.Events.Pressed.LeftClick, () => {
+        Drawing = true
+        Deleting = false
+    })
+    addEngineEvent(Enum.Events.Released.LeftClick, () => {
+        Drawing = false
+        Deleting = false
+    })
+    addEngineEvent(Enum.Events.Pressed.RightClick, () => {
+        Drawing = false
+        Deleting = true
+    })
+    addEngineEvent(Enum.Events.Released.RightClick, () => {
+        Drawing = false
+        Deleting = false
+    })
+
     const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
-    const LevelsElement = document.getElementById("Levels")
+    const LevelsElement = getElementById("Levels")
     if (LocalSaveStorage) {
         console.log("Found Save File");
         for (let i = 0; i < LocalSaveStorage.length; i++) {
@@ -42,6 +71,7 @@ function setup() {
             const LevelContainer = document.createElement("div")
             const LevelBox = document.createElement("div")
             const LevelNameElement = document.createElement("span")
+
             LevelContainer.className = "Level_Container"
             LevelBox.className = "Level"
             LevelBox.id = element.name
@@ -53,7 +83,7 @@ function setup() {
 
             LevelContainer.addEventListener("mouseup", () => {
                 const ElementData = element.data
-                const MainMenuElement = document.getElementById("MainMenu")
+                const MainMenuElement = getElementById("MainMenu")
                 LevelName = element.name
                 UIElement.style.display = "flex"
                 MainMenuElement.style.display = "none"
@@ -71,84 +101,61 @@ function setup() {
         setup()
     }
 
-    document.getElementById("CreateNew").addEventListener("mouseup", () => {
-        const MainMenuElement = document.getElementById("MainMenu")
+    getElementById("CreateNew").addEventListener("mouseup", () => {
+        const MainMenuElement = getElementById("MainMenu")
         NameOfLevelContainer.style.display = "flex"
         MainMenuElement.style.display = "none"
-        WORLD.data = levelData
-        WORLD.init(levelData)
+        WORLD.init()
     })
 }
 
 function update(deltaTime) {
-    if (ENGINE.getMouseLeftClick()) {
-        Drawing = true
-        Deleting = false
-    } else {
-        Drawing = false
-        Deleting = false
-    }
-    if (ENGINE.getMouseRightClick()) {
-        Drawing = false
-        Deleting = true
-    } else {
-        Drawing = false
-        Deleting = false
-    }
+    const Speed = 10
+    if (ENGINE.InputHandler.keys_down.w) ENGINE.VARIABLES.Cam.y += Speed // Move the Camera
+    if (ENGINE.InputHandler.keys_down.a) ENGINE.VARIABLES.Cam.x += Speed
+    if (ENGINE.InputHandler.keys_down.s) ENGINE.VARIABLES.Cam.y -= Speed
+    if (ENGINE.InputHandler.keys_down.d) ENGINE.VARIABLES.Cam.x -= Speed
 }
 
 function draw(ctx) {
     const MousePosition = ENGINE.getMousePosition()
 
-    if (ENGINE.InputHandler.keys_down.w) player._Move('w'); // Move the player
-    else player._stopMoving("w")
-    if (ENGINE.InputHandler.keys_down.a) player._Move('a');
-    else player._stopMoving("a")
-    if (ENGINE.InputHandler.keys_down.s) player._Move('s');
-    else player._stopMoving("s")
-    if (ENGINE.InputHandler.keys_down.d) player._Move('d');
-    else player._stopMoving("d")
-
     let x = 0;
     let y = 1;
 
-    for (let i = 0; i < levelData.length; i++) {
+    for (let i = 0; i < WORLD.data.length; i++) {
         x = 0;
-
-        for (let j = 0; j < levelData[i].length; j++) {
-            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, 50, 50)) {
+        for (let j = 0; j < WORLD.data[i].length; j++) {
+            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, WORLD.blockSize, WORLD.blockSize)) {
                 ctx.globalAlpha = 0.4
-                ctx.fillRect(x, y, 50, 50)
+                fillRect(x, y, WORLD.blockSize, WORLD.blockSize)
                 ctx.globalAlpha = 1
 
                 if (Drawing) {
-                    let element = new Square(true, x, y, 50, 50);
-                    levelData[i][j] = 1
+                    let element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    WORLD.data[i][j] = 1
                     WORLD.setTile({ i: i, j: j }, element);
                 }
                 else if (Deleting) {
-                    levelData[i][j] = 0
+                    WORLD.data[i][j] = 0
                     WORLD.deleteTile({ i: i, j: j })
                 }
             }
 
-            ctx.strokeRect(x, y, 50, 50)
-            x += 50;
+            strokeRect(x, y, WORLD.blockSize, WORLD.blockSize)
+            x += WORLD.blockSize;
         }
-
-        y += 50;
+        y += WORLD.blockSize;
     }
 
     // Draw where player gets spawn
-    ctx.fillStyle = "green"
     ctx.globalAlpha = 0.5
-    ctx.fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50)
+    fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50, "green")
     ctx.globalAlpha = 1
 
-    ctx.fillStyle = "black"
-    ctx.fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15)
+    fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
 
-    ctx.strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
+    strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
 }
 
 function StartGame() {
@@ -220,9 +227,8 @@ SubmitLevelName.addEventListener("mouseup", () => {
         NameOfLevelContainer.style.display = "none"
         UIElement.style.display = "flex"
         LevelName = SaveNameInput.value
-        WORLD.data = levelData
-        ENGINE._Init()
         console.log("Started game");
+        StartGame()
     }
 })
 
@@ -249,16 +255,16 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
         }
         if (FoundSave) {
             console.log(LocalSaveLevels[SaveIndex]);
-            LocalSaveLevels[SaveIndex].data = levelData
+            LocalSaveLevels[SaveIndex].data = WORLD.data
             localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         } else {
-            LocalSaveLevels.push({ name: LevelName, data: levelData })
+            LocalSaveLevels.push({ name: LevelName, data: WORLD.data })
             localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         }
     }
     else {
         console.log("Creating Save");
-        LocalSaveLevels.push({ name: LevelName, data: levelData })
+        LocalSaveLevels.push({ name: LevelName, data: WORLD.data })
         localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
     }
 })
@@ -275,7 +281,7 @@ DownloadButton.addEventListener("mouseup", () => {
                 });
             } else {
                 console.log("Downloading Current Scene");
-                download(LevelName + ".level", JSON.stringify(levelData))
+                download(LevelName + ".level", JSON.stringify(WORLD.data))
             }
         }
     } else {
@@ -308,83 +314,3 @@ RemoveUIButton.addEventListener("mouseup", () => {
         RemoveUIButton.innerHTML = "<"
     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Custom Move Code the incorporate the 's' key
-player._Move = (movement) => {
-    switch (movement) { // Make a switch statement
-        case "w":
-            player.vy = -player.speed // set the vertical velocity to jump
-            break;
-
-        case "a":
-            player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
-            break;
-
-        case "d":
-            player.vx = player.speed // Make the x velocity positive of the speed so it goes right
-            break;
-
-        case "s":
-            player.vy = player.speed
-    }
-}
-// Custom Stop Moving Code, to incorporate the 's' key and to make the 'w' key incorporate the 's' key aswell
-player._stopMoving = (movement) => {
-    switch (movement) {
-        case "w":
-            if (!ENGINE.InputHandler.keys_down.s)
-                player.vy = 0
-            else
-                player._Move("s")
-            break;
-        case "a":
-            if (!ENGINE.InputHandler.keys_down.d)
-                player.vx = 0;
-            else
-                player._Move("d")
-            break;
-
-        case "d":
-            if (!ENGINE.InputHandler.keys_down.a)
-                player.vx = 0;
-            else
-                player._Move("a")
-            break;
-
-        case "s":
-            if (!ENGINE.InputHandler.keys_down.w)
-                player.vy = 0
-            else
-                player._Move("w")
-            break
-    }
-}
-player.c = "red" // Set the colour of the player from default: black to red
-player.gravityMax = -300 // Set the gravity max, so gravity is'nt applied, is -300 because when jumping the velocity y gets set to -300, so make sure gravityMax is -300 so it does'nt affect the jumping
-player.DisableCollision() // Disable the collisions with other gameObjects (Removes it from the gameObjects Array)
-ENGINE.Config.sideScroller = true // Sets The Camera To Be Moveable
-ENGINE.Config.boundaries.left = 0 // Set the Boundaries
-ENGINE.Config.boundaries.right = ENGINE.Config.WorldSize.x - player.w
-ENGINE.Config.boundaries.top = 0
-ENGINE.Config.boundaries.bottom = ENGINE.Config.WorldSize.y - player.h
-ENGINE.Config.sideScrollerSideOffset.left = 10 // Set the camera offset on the edges
-ENGINE.Config.sideScrollerSideOffset.top = 10
-ENGINE.Config.sideScrollerSideOffset.bottom = 10
-ENGINE.Config.sideScrollerSideOffset.right = 10
-ENGINE.addPlayer(player, true) // Add the player to the game as a local player
