@@ -78,7 +78,7 @@
     Level3: new TextCreator(GAME_WIDTH / 2, 80, "40px", "Arial", 'black'),
 
     Timer: new TextCreator(GAME_WIDTH - 400, 80, "40px", "Arial", 'black'),
-    Timeleft: 30,
+    Timeleft: 10,
 
     respawn: function () {
         this.laser1.position.x = random(60, GAME_WIDTH)

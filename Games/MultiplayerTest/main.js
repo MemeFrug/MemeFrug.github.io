@@ -1,8 +1,12 @@
 
-var stats = new Stats();
-stats.autoLoad()
+var stats;
 
 let socket = { connected: false }
+
+function setup() {
+    stats = STATS.new();
+    stats.autoLoad()
+}
 
 function setupGame() {
     createCanvas(true)
