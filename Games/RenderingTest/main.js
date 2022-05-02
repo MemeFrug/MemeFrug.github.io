@@ -165,6 +165,7 @@ const scl = 1
 
 const player = new Player(false, 0, 10, 50, 50, 100, 500, -900);
 player.c = "red" // Set the colour of the player from default: black to red
+player.gravityMax = -300
 ENGINE.Config.sideScroller = true
 ENGINE.addPlayer(player, true)
 
