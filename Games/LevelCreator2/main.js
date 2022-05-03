@@ -23,6 +23,7 @@ const NameOfLevelContainer = getElementById("NameOfLevelContainer")
 const SubmitLevelName = getElementById("SubmitLevelName")
 
 const GameAssetsContainer = getElementById("GameAssetsContainer")
+const GameAssetsAscentElement = getElementById("AscentGameSelect")
 
 let stats;
 let LevelName = "" // Set Some Default Variables Used For Later On
@@ -111,7 +112,6 @@ function setup() {
         const MainMenuElement = getElementById("MainMenu")
         NameOfLevelContainer.style.display = "flex"
         MainMenuElement.style.display = "none"
-        WORLD.init()
     })
 }
 
@@ -238,10 +238,12 @@ SubmitLevelName.addEventListener("mouseup", () => {
     } else {
         SaveNameErrorElement.style.display = "none"
         NameOfLevelContainer.style.display = "none"
-        UIElement.style.display = "flex"
+        // UIElement.style.display = "flex"
         LevelName = SaveNameInput.value
-        console.log("Started game");
-        StartGame()
+
+        GameAssetsContainer.style.display = "flex"
+        // console.log("Started game");
+        // StartGame()
     }
 })
 
@@ -327,6 +329,27 @@ RemoveUIButton.addEventListener("mouseup", () => {
         RemoveUIButton.innerHTML = "<"
     }
 })
+
+
+
+//Load the assets into the side browser thingy
+function ImportAssets(assets) {
+    
+}
+
+
+
+
+// Selecting The Game for assets to use
+
+GameAssetsAscentElement.addEventListener("mouseup", () => {
+    WORLD.init()
+    ImportAssets(ASCENTASSETS)
+    StartGame()
+})
+
+
+
 
 
 

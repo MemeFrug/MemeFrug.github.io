@@ -2,6 +2,7 @@ html, body {
 	background-color: rgb(221, 221, 221);
 	margin: 0;
 	padding: 0;
+	
 }
 
 body:-moz-drag-over {
