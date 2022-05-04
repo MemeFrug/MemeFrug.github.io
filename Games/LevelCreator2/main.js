@@ -34,6 +34,8 @@ let AlreadyLoaded = false
 let UIClosed = true
 let playerSpawnPosition = { x: 0, y: 0 }
 
+let SelectedBlockAsset = ""
+
 function ChangePlayerSpawnPos(position) { //DEBUG
     if (position) {
         if (position.x && position.y) {
@@ -92,7 +94,6 @@ function setup() {
                 const ElementData = element.data
                 const MainMenuElement = getElementById("MainMenu")
                 LevelName = element.name
-                UIElement.style.display = "flex"
                 MainMenuElement.style.display = "none"
                 levelData = ElementData
                 WORLD.data = levelData
@@ -116,12 +117,6 @@ function setup() {
 }
 
 function update(deltaTime) {
-    // const Speed = 10
-    // if (ENGINE.InputHandler.keys_down.w) ENGINE.VARIABLES.Cam.y += Speed // Move the Camera
-    // if (ENGINE.InputHandler.keys_down.a) ENGINE.VARIABLES.Cam.x += Speed
-    // if (ENGINE.InputHandler.keys_down.s) ENGINE.VARIABLES.Cam.y -= Speed
-    // if (ENGINE.InputHandler.keys_down.d) ENGINE.VARIABLES.Cam.x -= Speed
-
     if (ENGINE.InputHandler.keys_down.w) player.move('w'); // Move the player
 	else player.stopMove("w")
 	if (ENGINE.InputHandler.keys_down.a) player.move('a');
@@ -146,6 +141,7 @@ function draw(ctx) {
 
                 if (Drawing) {
                     let element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    element.setImg(SelectedBlockAsset.src)
                     WORLD.data[i][j] = 1
                     WORLD.setTile({ i: i, j: j }, element);
                 }
@@ -172,6 +168,7 @@ function draw(ctx) {
 }
 
 function StartGame() {
+    UIElement.style.display = "flex"
     createCanvas(true, Enum.ResizeType.AspectRatio)
     setCanvasBackground("white")
 
@@ -238,12 +235,9 @@ SubmitLevelName.addEventListener("mouseup", () => {
     } else {
         SaveNameErrorElement.style.display = "none"
         NameOfLevelContainer.style.display = "none"
-        // UIElement.style.display = "flex"
         LevelName = SaveNameInput.value
 
         GameAssetsContainer.style.display = "flex"
-        // console.log("Started game");
-        // StartGame()
     }
 })
 
@@ -334,7 +328,32 @@ RemoveUIButton.addEventListener("mouseup", () => {
 
 //Load the assets into the side browser thingy
 function ImportAssets(assets) {
-    
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < assets.length; i++) {
+            const element = assets[i];
+            const image = new Image()
+            image.src = element.asset
+
+            const container = createElement("div")
+            container.className = "Button_container"
+            const containerButton = createElement("div")
+            containerButton.className = "Button"
+            const containerButtonIcon = createElement("img")
+            containerButtonIcon.src = element.asset
+
+            containerButton.appendChild(containerButtonIcon)
+            container.appendChild(containerButton)
+            getElementById("BlocksChoose").appendChild(container)
+
+            SelectedBlockAsset = image
+
+            container.addEventListener("mouseup", () => {
+                SelectedBlockAsset = image
+            })
+        }
+
+        resolve()
+    });
 }
 
 
@@ -342,9 +361,9 @@ function ImportAssets(assets) {
 
 // Selecting The Game for assets to use
 
-GameAssetsAscentElement.addEventListener("mouseup", () => {
+GameAssetsAscentElement.addEventListener("mouseup", async () => {
     WORLD.init()
-    ImportAssets(ASCENTASSETS)
+    await ImportAssets(ASCENTASSETS)
     StartGame()
 })
 
