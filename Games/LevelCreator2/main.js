@@ -32,23 +32,32 @@ let Drawing = false
 let Deleting = false
 let AlreadyLoaded = false
 let UIClosed = true
-let playerSpawnPosition = { x: 0, y: 0 }
+// let playerSpawnPosition = { x: 0, y: 0 }
 
-let SelectedBlockAsset = ""
+let GameChosen = undefined
 
-function ChangePlayerSpawnPos(position) { //DEBUG
-    if (position) {
-        if (position.x && position.y) {
-            playerSpawnPosition = position
-        } else {
-            console.error("Position.x and y does not Exist");
-        }
-    } else {
-        console.error("Position Does not Exist");
-    }
+let SelectedBlockAsset = undefined
+
+const GameSettings = {
+    playerSpawn: { i: 0, j: 0 },
+    playerExit: { i: 1, j: 0 },
+    worldSize: { i: 50, j: 20 },
+    tileSize: { w: 50, h: 50 }
 }
 
-ChangePlayerSpawnPos({ x: 10, y: 20 })
+// function ChangePlayerSpawnPos(position) { //DEBUG
+//     if (position) {
+//         if (position.x && position.y) {
+//             playerSpawnPosition = position
+//         } else {
+//             console.error("Position.x and y does not Exist");
+//         }
+//     } else {
+//         console.error("Position Does not Exist");
+//     }
+// }
+
+// ChangePlayerSpawnPos({ x: 10, y: 20 })
 
 function setup() {
     stats = STATS.new()
@@ -79,18 +88,23 @@ function setup() {
             const element = LocalSaveStorage[i];
             const LevelContainer = document.createElement("div")
             const LevelBox = document.createElement("div")
-            const LevelNameElement = document.createElement("span")
+            const LevelNameElement = document.createElement("p")
+            const GameNameElement = document.createElement("p")
 
             LevelContainer.className = "Level_Container"
             LevelBox.className = "Level"
             LevelBox.id = element.name
             LevelNameElement.className = "Level_Name"
             LevelNameElement.innerHTML = element.name
+            GameNameElement.className = "Level_Name"
+            GameNameElement.style.fontSize ="25px"
+            GameNameElement.innerHTML = element.usedGame
             LevelBox.appendChild(LevelNameElement)
+            LevelBox.appendChild(GameNameElement)
             LevelContainer.appendChild(LevelBox)
             LevelsElement.appendChild(LevelContainer)
 
-            LevelContainer.addEventListener("mouseup", () => {
+            LevelContainer.addEventListener("mouseup", async () => {
                 const ElementData = element.data
                 const MainMenuElement = getElementById("MainMenu")
                 LevelName = element.name
@@ -98,7 +112,10 @@ function setup() {
                 levelData = ElementData
                 WORLD.data = levelData
                 WORLD.init(levelData)
-                console.log("Started game");
+                if (element.usedGame == "Ascent") { 
+                    await ImportAssets(ASCENTASSETS)
+                    await LoadWorld(ASCENTASSETS)
+                }
                 StartGame()
             })
         }
@@ -141,8 +158,8 @@ function draw(ctx) {
 
                 if (Drawing) {
                     let element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
-                    element.setImg(SelectedBlockAsset.src)
-                    WORLD.data[i][j] = 1
+                    element.setImg(SelectedBlockAsset.img, true)
+                    WORLD.data[i][j] = SelectedBlockAsset.tileData
                     WORLD.setTile({ i: i, j: j }, element);
                 }
                 else if (Deleting) {
@@ -159,13 +176,26 @@ function draw(ctx) {
 
     // Draw where player gets spawn
     ctx.globalAlpha = 0.5
-    fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50, "green")
+    // fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50, "green")
     ctx.globalAlpha = 1
 
     fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
 
     strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function StartGame() {
     UIElement.style.display = "flex"
@@ -206,6 +236,13 @@ function StartGame() {
                     LevelName = filename.replace(".level", "") // Change the level name to the files name (Without the .level at the end)
                     levelData = JSON.parse(data) // Turn the data that was a string into proper format and set levelData to it
                     WORLD.regenerate(levelData) // Reload the WORLD with the new levelData
+
+
+                    //Add here if new assets/game
+
+                    if (GameChosen == "Ascent") LoadWorld(ASCENTASSETS)
+
+
                     console.log("Loaded WORLD");
                     return; // Leave the function (No current use for it)
                 };
@@ -222,10 +259,22 @@ function StartGame() {
     })
 }
 
+
+
+
+
+
+
+
+
+
+
 DeleteAllSavesButton.addEventListener("mouseup", () => {
     localStorage.clear()
     window.location.reload()
 })
+
+
 
 SubmitLevelName.addEventListener("mouseup", () => {
     if (SaveNameInput.value == "") {
@@ -241,13 +290,21 @@ SubmitLevelName.addEventListener("mouseup", () => {
     }
 })
 
-LocalSaveButton.addEventListener("mouseup", (e) => {
-    const LocalSaveStorage = localStorage.getItem(GameName + "Levels")
-    console.log("Inputted Name: ", LevelName);
 
-    if (!LevelName || LevelName == "") {
-        console.error("Level Name Cant Be Nothing");
-        return
+
+
+
+
+/**
+    Save The Level Locally onto Local Storage
+*/
+LocalSaveButton.addEventListener("mouseup", () => {
+    const LocalSaveStorage = localStorage.getItem(GameName + "Levels")
+
+    const createNewSave = () => {
+        console.log("Creating Save");
+        LocalSaveLevels.push({ name: LevelName, data: WORLD.data, usedGame: GameChosen, Settings: GameSettings})
+        localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
     }
 
     if (LocalSaveStorage) {
@@ -260,6 +317,7 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
             if (element.name == LevelName) {
                 FoundSave = true
                 SaveIndex = i
+                break;
             }
         }
         if (FoundSave) {
@@ -267,17 +325,21 @@ LocalSaveButton.addEventListener("mouseup", (e) => {
             LocalSaveLevels[SaveIndex].data = WORLD.data
             localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
         } else {
-            LocalSaveLevels.push({ name: LevelName, data: WORLD.data })
-            localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
+            createNewSave()
         }
     }
     else {
-        console.log("Creating Save");
-        LocalSaveLevels.push({ name: LevelName, data: WORLD.data })
-        localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
+        createNewSave()
     }
 })
 
+
+
+
+
+/**
+    Download the level into a .level that has an array with 0, and 1s
+*/
 DownloadButton.addEventListener("mouseup", () => {
     if (LevelName != "") {
         if (LocalSaveLevels) {
@@ -298,6 +360,20 @@ DownloadButton.addEventListener("mouseup", () => {
     }
 })
 
+
+
+
+
+
+
+
+
+
+
+
+/**
+    To move the UI out of the way
+*/ 
 RemoveUIButton.addEventListener("mouseup", () => {
     if (UIClosed) {
         UIClosed = false
@@ -326,29 +402,81 @@ RemoveUIButton.addEventListener("mouseup", () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function LoadWorld(key) {
+    return new Promise(async (resolve, reject) => {
+        for (let i = 0; i < key.length; i++) {
+            const element = key[i];
+            const tileValue = element.dataValue
+            const imageSrc = element.asset
+
+            let x = 0;
+            let y = 0;
+            for (let i = 0; i < WORLD.data.length; i++) {
+                x = 0;
+                for (let j = 0; j < WORLD.data[i].length; j++) {
+                    if (WORLD.data[i][j] == tileValue) {
+                        let square = new Square(true, x, y, 50, 50);
+                        await square.setImg(imageSrc)
+                        WORLD.tiles[i][j] = square;
+                    }
+                    x += WORLD.blockSize;
+                }
+                y += WORLD.blockSize;
+            }
+        }
+
+        resolve()
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Load the assets into the side browser thingy
 function ImportAssets(assets) {
     return new Promise((resolve, reject) => {
         for (let i = 0; i < assets.length; i++) {
             const element = assets[i];
-            const image = new Image()
-            image.src = element.asset
-
-            const container = createElement("div")
-            container.className = "Button_container"
-            const containerButton = createElement("div")
-            containerButton.className = "Button"
-            const containerButtonIcon = createElement("img")
-            containerButtonIcon.src = element.asset
-
-            containerButton.appendChild(containerButtonIcon)
-            container.appendChild(containerButton)
-            getElementById("BlocksChoose").appendChild(container)
-
-            SelectedBlockAsset = image
-
-            container.addEventListener("mouseup", () => {
-                SelectedBlockAsset = image
+            loadImage(element.asset).then(image => {
+                const container = createElement("div")
+                container.className = "Button_container"
+                const containerButton = createElement("div")
+                containerButton.className = "Button"
+                const containerButtonIcon = createElement("img")
+                containerButtonIcon.src = element.asset
+    
+                containerButton.appendChild(containerButtonIcon)
+                container.appendChild(containerButton)
+                getElementById("BlocksChoose").appendChild(container)
+    
+                SelectedBlockAsset = {tileData: element.dataValue, img: image}
+    
+                container.addEventListener("mouseup", () => {
+                    SelectedBlockAsset = {tileData: element.dataValue, img: image}
+                })
             })
         }
 
@@ -362,6 +490,7 @@ function ImportAssets(assets) {
 // Selecting The Game for assets to use
 
 GameAssetsAscentElement.addEventListener("mouseup", async () => {
+    GameChosen = "Ascent"
     WORLD.init()
     await ImportAssets(ASCENTASSETS)
     StartGame()

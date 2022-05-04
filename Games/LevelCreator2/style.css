@@ -134,6 +134,7 @@ input {
 
 .Level {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	background-color: grey;
@@ -145,6 +146,7 @@ input {
 	transition-duration: 0.2s;
 }
 .Level_Name {
+	margin: 0;
     word-wrap: break-word;
     width: 100%;
 }
