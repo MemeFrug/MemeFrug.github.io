@@ -1,4 +1,4 @@
-const player = new Player(false, 0, 10, 50, 50, 100, 500, -900);
+const player = new Player(false, 0, 10, 40, 90, 100, 500, -900);
 player.c = "red" // Set the colour of the player from default: black to red
 player.gravityMax = -300
 ENGINE.Config.sideScroller = true
@@ -18,6 +18,8 @@ const DeleteAllSavesButton = getElementById("deleteAllSaves");
 
 const RemoveUIButton = getElementById("Hide UI");
 const UIElement = getElementById("UI")
+
+const UIElement2 = getElementById("UI_2")
 
 const NameOfLevelContainer = getElementById("NameOfLevelContainer")
 const SubmitLevelName = getElementById("SubmitLevelName")
@@ -175,12 +177,12 @@ function draw(ctx) {
     }
 
     // Draw where player gets spawn
-    ctx.globalAlpha = 0.5
+    // ctx.globalAlpha = 0.5
     // fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50, "green")
-    ctx.globalAlpha = 1
+    // ctx.globalAlpha = 1
+
 
     fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
-
     strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
 }
 
@@ -199,6 +201,7 @@ function draw(ctx) {
 
 function StartGame() {
     UIElement.style.display = "flex"
+    UIElement2.style.display = "flex"
     createCanvas(true, Enum.ResizeType.AspectRatio)
     setCanvasBackground("white")
 
@@ -366,11 +369,6 @@ DownloadButton.addEventListener("mouseup", () => {
 
 
 
-
-
-
-
-
 /**
     To move the UI out of the way
 */ 
@@ -488,8 +486,8 @@ function ImportAssets(assets) {
 
 
 // Selecting The Game for assets to use
-
 GameAssetsAscentElement.addEventListener("mouseup", async () => {
+    GameAssetsContainer.style.display = "none"
     GameChosen = "Ascent"
     WORLD.init()
     await ImportAssets(ASCENTASSETS)

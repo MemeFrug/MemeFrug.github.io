@@ -24,6 +24,41 @@ body:-moz-drag-over {
 	right: 0;
 }
 
+
+
+
+
+
+.UI2 {
+	user-select: none;
+	font-size: 1.5vw;
+	background-color: rgba(49, 49, 49, 0.12);
+	display: none; /* Needs To Be Flex */
+	position: absolute;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 15vw;
+	height: 100%;
+
+	right: 0;
+
+	z-index: 1;
+}
+
+.UI2 div {
+	padding: 5px;
+}
+
+.UI2 div button {
+	padding: 5px;
+}
+
+
+
+
+
+
 .UI {
 	user-select: none;
 	font-size: 1.5vw;
