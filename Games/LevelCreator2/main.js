@@ -1,4 +1,4 @@
-const player = new Player(false, 0, 10, 40, 90, 100, 500, -900);
+const player = new Player(false, 0, 10, 150, 280, 100, 900, -900);
 player.c = "red" // Set the colour of the player from default: black to red
 player.gravityMax = -300
 ENGINE.Config.sideScroller = true
@@ -82,6 +82,8 @@ function setup() {
         Deleting = false
     })
 
+    WORLD.blockSize = 200
+
     const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
     const LevelsElement = getElementById("Levels")
     if (LocalSaveStorage) {
@@ -159,8 +161,11 @@ function draw(ctx) {
                 ctx.globalAlpha = 1
 
                 if (Drawing) {
-                    let element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    const element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
                     element.setImg(SelectedBlockAsset.img, true)
+
+                    if (SelectedBlockAsset.noCollision) element.DisableCollision()
+
                     WORLD.data[i][j] = SelectedBlockAsset.tileData
                     WORLD.setTile({ i: i, j: j }, element);
                 }
@@ -182,8 +187,16 @@ function draw(ctx) {
     // ctx.globalAlpha = 1
 
 
-    fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
     strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
+}
+
+function afterDraw(ctx) {
+    const MousePosition = ENGINE.getMousePosition()
+
+    //Draw The Player TEST
+    player.Draw(ctx)
+
+    fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
 }
 
 
@@ -427,8 +440,11 @@ function LoadWorld(key) {
                 x = 0;
                 for (let j = 0; j < WORLD.data[i].length; j++) {
                     if (WORLD.data[i][j] == tileValue) {
-                        let square = new Square(true, x, y, 50, 50);
+                        let square = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
                         await square.setImg(imageSrc)
+
+                        if (element.noCollision) square.DisableCollision()
+
                         WORLD.tiles[i][j] = square;
                     }
                     x += WORLD.blockSize;
@@ -470,10 +486,10 @@ function ImportAssets(assets) {
                 container.appendChild(containerButton)
                 getElementById("BlocksChoose").appendChild(container)
     
-                SelectedBlockAsset = {tileData: element.dataValue, img: image}
+                SelectedBlockAsset = {tileData: element.dataValue, img: image, noCollision: element.noCollision}
     
                 container.addEventListener("mouseup", () => {
-                    SelectedBlockAsset = {tileData: element.dataValue, img: image}
+                    SelectedBlockAsset = {tileData: element.dataValue, img: image, noCollision: element.noCollision}
                 })
             })
         }
@@ -506,7 +522,46 @@ GameAssetsAscentElement.addEventListener("mouseup", async () => {
 
 
 
+function stoppoop() {
+    ENGINE.Config.g = 2500
+    player.gravityMax = 10000
+    player.move = (movement) => {
+        switch (movement) { // Make a switch statement
+            case "w":
+                if (player.isOnGround) { // Check if on the ground
+                    player.vy = player.jump_strength // set the Vertical velocity to jump
+                    player.isOnGround = false
+                }
+                break;
 
+            case "a":
+                player.vx = -player.speed // Make the speed negative to it goes the opposite way (-x)
+                break;
+
+            case "d":
+                player.vx = player.speed // Make the x velocity positive of the speed so it goes right
+                break;
+        }
+    }
+
+    player.stopMove = (movement) => {
+        switch (movement) {
+            case "a":
+                if (!ENGINE.InputHandler.keys_down.d)
+                player.vx = 0;
+                else
+                    player.move("d")
+                break;
+
+            case "d":
+                if (!ENGINE.InputHandler.keys_down.a)
+                player.vx = 0;
+                else
+                player.move("a")
+                break;
+        }
+    }
+}
 
 
 
