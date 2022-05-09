@@ -1,4 +1,4 @@
-const player = new Player(false, 0, 10, 150, 280, 100, 900, -900);
+const player = new Player(false, 0, 10, 150, 280, 100, 900, -1000);
 player.c = "red" // Set the colour of the player from default: black to red
 player.gravityMax = -300
 ENGINE.Config.sideScroller = true
