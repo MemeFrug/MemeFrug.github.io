@@ -1,18 +1,21 @@
-const player = new Player(false, 10, 10, 100, 100)
+const player = new Player(false, 0, 10, 150, 280);
 
 let x = 100
 
 function setup() {
+    STATS.new().autoLoad()
+
     createCanvas(true,)
     setCanvasBackground("white")
 
     player.gravityMax = -1000
+    player.jump_strength = -1000
     player.speed = 1000
+    
+    ENGINE.Config.sideScroller = true
+    ENGINE.Config.cameraScale = 1
+    ENGINE.addPlayer(player, true)
 }
-
-setInterval(() => {
-    new Square(true, x, 200)
-}, 10)
 
 function update(deltaTime) {
     if (ENGINE.InputHandler.keys_down.w) player.move('w'); // Move the player
@@ -21,10 +24,6 @@ function update(deltaTime) {
 	else player.stopMove("a")
 	if (ENGINE.InputHandler.keys_down.d) player.move('d');
 	else player.stopMove("d")
-
-    ENGINE.VARIABLES.Cam.x -= 10
-
-    x += 100
 }
 
 
