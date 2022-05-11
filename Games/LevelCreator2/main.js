@@ -34,6 +34,7 @@ let Drawing = false
 let Deleting = false
 let AlreadyLoaded = false
 let UIClosed = true
+let backgroundBlock = undefined
 // let playerSpawnPosition = { x: 0, y: 0 }
 
 let GameChosen = undefined
@@ -82,7 +83,7 @@ function setup() {
         Deleting = false
     })
 
-    WORLD.blockSize = 200
+    WORLD.blockSize = 100
 
     const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
     const LevelsElement = getElementById("Levels")
@@ -101,7 +102,7 @@ function setup() {
             LevelNameElement.className = "Level_Name"
             LevelNameElement.innerHTML = element.name
             GameNameElement.className = "Level_Name"
-            GameNameElement.style.fontSize ="25px"
+            GameNameElement.style.fontSize = "25px"
             GameNameElement.innerHTML = element.usedGame
             LevelBox.appendChild(LevelNameElement)
             LevelBox.appendChild(GameNameElement)
@@ -116,11 +117,14 @@ function setup() {
                 levelData = ElementData
                 WORLD.data = levelData
                 WORLD.init(levelData)
-                if (element.usedGame == "Ascent") { 
+                
+                document.getElementById("Loading").style.display = "flex"
+                if (element.usedGame == "Ascent") {
                     await ImportAssets(ASCENTASSETS)
                     await LoadWorld(ASCENTASSETS)
                 }
                 StartGame()
+                document.getElementById("Loading").style.display = "none"
             })
         }
     }
@@ -139,11 +143,11 @@ function setup() {
 
 function update(deltaTime) {
     if (ENGINE.InputHandler.keys_down.w) player.move('w'); // Move the player
-	else player.stopMove("w")
-	if (ENGINE.InputHandler.keys_down.a) player.move('a');
-	else player.stopMove("a")
-	if (ENGINE.InputHandler.keys_down.d) player.move('d');
-	else player.stopMove("d")
+    else player.stopMove("w")
+    if (ENGINE.InputHandler.keys_down.a) player.move('a');
+    else player.stopMove("a")
+    if (ENGINE.InputHandler.keys_down.d) player.move('d');
+    else player.stopMove("d")
 }
 
 function draw(ctx) {
@@ -170,8 +174,17 @@ function draw(ctx) {
                     WORLD.setTile({ i: i, j: j }, element);
                 }
                 else if (Deleting) {
-                    WORLD.data[i][j] = 0
-                    WORLD.deleteTile({ i: i, j: j })
+                    if (!backgroundBlock ){
+                        WORLD.data[i][j] = 0
+                        WORLD.deleteTile({ i: i, j: j })
+                        return;
+                    }
+                    
+                    const element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    element.setImg(backgroundBlock.img, true)
+                    element.DisableCollision()
+                    WORLD.data[i][j] = backgroundBlock.tileData
+                    WORLD.setTile({ i: i, j: j }, element);
                 }
             }
 
@@ -187,7 +200,7 @@ function draw(ctx) {
     // ctx.globalAlpha = 1
 
 
-    strokeRect(0, 0, ENGINE.Config.WorldSize.x, ENGINE.Config.WorldSize.y)
+    strokeRect(0, 0, WORLD.size.w, WORLD.size.h)
 }
 
 function afterDraw(ctx) {
@@ -319,7 +332,7 @@ LocalSaveButton.addEventListener("mouseup", () => {
 
     const createNewSave = () => {
         console.log("Creating Save");
-        LocalSaveLevels.push({ name: LevelName, data: WORLD.data, usedGame: GameChosen, Settings: GameSettings})
+        LocalSaveLevels.push({ name: LevelName, data: WORLD.data, usedGame: GameChosen, Settings: GameSettings })
         localStorage.setItem(GameName + "Levels", JSON.stringify(LocalSaveLevels))
     }
 
@@ -384,7 +397,7 @@ DownloadButton.addEventListener("mouseup", () => {
 
 /**
     To move the UI out of the way
-*/ 
+*/
 RemoveUIButton.addEventListener("mouseup", () => {
     if (UIClosed) {
         UIClosed = false
@@ -418,6 +431,36 @@ RemoveUIButton.addEventListener("mouseup", () => {
 
 
 
+function SetBackgroundBlock(key) {
+    return new Promise(async (resolve, reject) => {
+        for (let i = 0; i < key.length; i++) {
+            const element = key[i];
+            const imageSrc = element.asset
+            let x = 0;
+            let y = 0;
+
+            if (element.name != "background") {
+                continue;
+            }
+
+            for (let i = 0; i < WORLD.data.length; i++) {
+                x = 0;
+                for (let j = 0; j < WORLD.data[i].length; j++) {
+                    let square = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    await square.setImg(imageSrc)
+                    square.DisableCollision()
+
+                    WORLD.data[i][j] = element.dataValue
+                    WORLD.tiles[i][j] = square;
+                    x += WORLD.blockSize;
+                }
+                y += WORLD.blockSize;
+            }
+        }
+
+        resolve()
+    });
+}
 
 
 
@@ -481,15 +524,17 @@ function ImportAssets(assets) {
                 containerButton.className = "Button"
                 const containerButtonIcon = createElement("img")
                 containerButtonIcon.src = element.asset
-    
+
                 containerButton.appendChild(containerButtonIcon)
                 container.appendChild(containerButton)
                 getElementById("BlocksChoose").appendChild(container)
-    
-                SelectedBlockAsset = {tileData: element.dataValue, img: image, noCollision: element.noCollision}
-    
+
+                SelectedBlockAsset = { tileData: element.dataValue, img: image, noCollision: element.noCollision }
+                
+                if (element.name == "background") backgroundBlock = { img: image, tileData: element.dataValue }
+
                 container.addEventListener("mouseup", () => {
-                    SelectedBlockAsset = {tileData: element.dataValue, img: image, noCollision: element.noCollision}
+                    SelectedBlockAsset = { tileData: element.dataValue, img: image, noCollision: element.noCollision }
                 })
             })
         }
@@ -506,7 +551,10 @@ GameAssetsAscentElement.addEventListener("mouseup", async () => {
     GameAssetsContainer.style.display = "none"
     GameChosen = "Ascent"
     WORLD.init()
+    document.getElementById("Loading").style.display = "flex"
     await ImportAssets(ASCENTASSETS)
+    await SetBackgroundBlock(ASCENTASSETS)
+    document.getElementById("Loading").style.display = "none"
     StartGame()
 })
 
@@ -548,16 +596,16 @@ function stoppoop() {
         switch (movement) {
             case "a":
                 if (!ENGINE.InputHandler.keys_down.d)
-                player.vx = 0;
+                    player.vx = 0;
                 else
                     player.move("d")
                 break;
 
             case "d":
                 if (!ENGINE.InputHandler.keys_down.a)
-                player.vx = 0;
+                    player.vx = 0;
                 else
-                player.move("a")
+                    player.move("a")
                 break;
         }
     }
