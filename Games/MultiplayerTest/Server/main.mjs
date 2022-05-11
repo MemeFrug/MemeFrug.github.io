@@ -1,11 +1,17 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-const httpServer = createServer();
+import { readFileSync } from "fs";
+
+const httpServer = createServer({
+    key: readFileSync("./Certificate/openssl.key"),
+    cert: readFileSync("./Certificate/openssl.crt")
+});
+
 const io = new Server(httpServer, {
     serveClient: false,
     cors: {
         // origin: "http://127.0.0.1:3000", // Used For Testing
-        origin: "http://memefrug.github.io/" // Used For Production
+        origin: "https://memefrug.github.io/" // Used For Production
     }
 });
 

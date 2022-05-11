@@ -16,7 +16,9 @@ function setupGame() {
 function connectTo(ip) {
     document.getElementById("ConnectingScreen").style.display = "flex"
     document.getElementById("ConnectingToIpElement").innerHTML = ip
-    socket = io(ip);
+    socket = io(ip, {
+        ca: fs.readFileSync('./Certificate/openssl.crt')
+    });
     socket.once("connect_error", (error) => {
         console.log("Failed To Connect:", error);
         document.getElementById("ConnectingScreen").innerHTML = "Connection Failed: " + error
