@@ -307,8 +307,6 @@ class Character {
     _Update(deltaTime, inputhandler) {
         if (!deltaTime) return;
 
-        this.speedmax = 500
-
         this.x += this.vleft * deltaTime;
         this.x += this.vright * deltaTime;
 
