@@ -66,17 +66,19 @@ function setup() {
     stats = STATS.new()
     stats.autoLoad()
 
+    document.oncontextmenu = () => false;
+
     addEngineEvent(Enum.Events.Pressed.LeftClick, () => {
         Drawing = true
-        Deleting = false
-    })
-    addEngineEvent(Enum.Events.Released.LeftClick, () => {
-        Drawing = false
         Deleting = false
     })
     addEngineEvent(Enum.Events.Pressed.RightClick, () => {
         Drawing = false
         Deleting = true
+    })
+    addEngineEvent(Enum.Events.Released.LeftClick, () => {
+        Drawing = false
+        Deleting = false
     })
     addEngineEvent(Enum.Events.Released.RightClick, () => {
         Drawing = false
@@ -122,6 +124,7 @@ function setup() {
                 if (element.usedGame == "Ascent") {
                     await ImportAssets(ASCENTASSETS)
                     await LoadWorld(ASCENTASSETS)
+                    await SetBackgroundBlock("Ascent")
                 }
                 StartGame()
                 document.getElementById("Loading").style.display = "none"
@@ -150,8 +153,10 @@ function update(deltaTime) {
     else player.stopMove("d")
 }
 
-function draw(ctx) {
+function afterDraw(ctx) {
     const MousePosition = ENGINE.getMousePosition()
+
+    ctx.fillStyle = "black"
 
     let x = 0;
     let y = 1;
@@ -164,16 +169,17 @@ function draw(ctx) {
                 fillRect(x, y, WORLD.blockSize, WORLD.blockSize)
                 ctx.globalAlpha = 1
 
-                if (Drawing) {
+                if (Drawing && WORLD.checkTile({i:i, j:j}).img != SelectedBlockAsset.img) {
+
                     const element = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
                     element.setImg(SelectedBlockAsset.img, true)
 
                     if (SelectedBlockAsset.noCollision) element.DisableCollision()
-
+                    
                     WORLD.data[i][j] = SelectedBlockAsset.tileData
                     WORLD.setTile({ i: i, j: j }, element);
                 }
-                else if (Deleting) {
+                else if (Deleting && WORLD.checkTile({i:i, j:j}).img != backgroundBlock.img) {
                     if (!backgroundBlock ){
                         WORLD.data[i][j] = 0
                         WORLD.deleteTile({ i: i, j: j })
@@ -194,6 +200,7 @@ function draw(ctx) {
         y += WORLD.blockSize;
     }
 
+
     // Draw where player gets spawn
     // ctx.globalAlpha = 0.5
     // fillRect(playerSpawnPosition.x, playerSpawnPosition.y, 50, 50, "green")
@@ -201,10 +208,6 @@ function draw(ctx) {
 
 
     strokeRect(0, 0, WORLD.size.w, WORLD.size.h)
-}
-
-function afterDraw(ctx) {
-    const MousePosition = ENGINE.getMousePosition()
 
     //Draw The Player TEST
     player.Draw(ctx)
@@ -450,8 +453,8 @@ function SetBackgroundBlock(key) {
                     await square.setImg(imageSrc)
                     square.DisableCollision()
 
+                    WORLD.setTile({i:i,j:j}, square)
                     WORLD.data[i][j] = element.dataValue
-                    WORLD.tiles[i][j] = square;
                     x += WORLD.blockSize;
                 }
                 y += WORLD.blockSize;
@@ -559,6 +562,22 @@ GameAssetsAscentElement.addEventListener("mouseup", async () => {
 })
 
 
+
+
+
+getElementById("widthOfWorld").addEventListener("blur", () => {
+    const element = getElementById("widthOfWorld")
+    if (element.value <= 50) element.value = 50
+
+    WORLD.ChangeWorldSize(element.value, getElementById("heightOfWorld").value)
+})
+
+getElementById("heightOfWorld").addEventListener("blur", () => {
+    const element = getElementById("heightOfWorld")
+    if (element.value <= 50) element.value = 50
+
+    WORLD.ChangeWorldSize(getElementById("widthOfWorld".value), element.value)
+})
 
 
 

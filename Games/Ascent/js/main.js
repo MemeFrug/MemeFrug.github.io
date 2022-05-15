@@ -33,12 +33,15 @@ function update(deltaTime) {
 }
 
 function draw(ctx) {
-    const MousePosition = ENGINE.getMousePosition()
-
-    let x = 0;
-    let y = 1;
-
     strokeRect(0, 0, WORLD.size.w, WORLD.size.h)
+}
+
+function afterDraw(ctx) {
+    const player = ENGINE.GetLocalPlayer()   
+    
+    //Draw The Player TEST
+    player.Draw(ctx)
+
 }
 
 function startGame() {
