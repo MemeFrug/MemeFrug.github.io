@@ -178,6 +178,11 @@ function afterDraw(ctx) {
                     
                     WORLD.data[i][j] = SelectedBlockAsset.tileData
                     WORLD.setTile({ i: i, j: j }, element);
+
+                    
+                    window.onbeforeunload = function() {
+                        return true;
+                    };
                 }
                 else if (Deleting && WORLD.checkTile({i:i, j:j}).img != backgroundBlock.img) {
                     if (!backgroundBlock ){
@@ -191,6 +196,11 @@ function afterDraw(ctx) {
                     element.DisableCollision()
                     WORLD.data[i][j] = backgroundBlock.tileData
                     WORLD.setTile({ i: i, j: j }, element);
+
+                    
+                    window.onbeforeunload = function() {
+                        return true;
+                    };
                 }
             }
 
@@ -331,6 +341,8 @@ SubmitLevelName.addEventListener("mouseup", () => {
     Save The Level Locally onto Local Storage
 */
 LocalSaveButton.addEventListener("mouseup", () => {
+    window.onbeforeunload = null;
+    
     const LocalSaveStorage = localStorage.getItem(GameName + "Levels")
 
     const createNewSave = () => {
