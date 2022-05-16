@@ -14,8 +14,6 @@ const SaveNameErrorElement = getElementById("SaveNameError")
 const LocalSaveButton = getElementById("SaveLocallyButton");
 const DownloadButton = getElementById("DownloadSaveButton");
 
-const DeleteAllSavesButton = getElementById("deleteAllSaves");
-
 const RemoveUIButton = getElementById("Hide UI");
 const UIElement = getElementById("UI")
 
@@ -86,6 +84,7 @@ function setup() {
     })
 
     WORLD.blockSize = 100
+    ENGINE.Config.chunkSize = 400
 
     const LocalSaveStorage = JSON.parse(localStorage.getItem(GameName + "Levels"))
     const LevelsElement = getElementById("Levels")
@@ -115,6 +114,7 @@ function setup() {
                 const ElementData = element.data
                 const MainMenuElement = getElementById("MainMenu")
                 LevelName = element.name
+                GameChosen = element.usedGame
                 MainMenuElement.style.display = "none"
                 levelData = ElementData
                 WORLD.data = levelData
@@ -124,7 +124,7 @@ function setup() {
                 if (element.usedGame == "Ascent") {
                     await ImportAssets(ASCENTASSETS)
                     await LoadWorld(ASCENTASSETS)
-                    await SetBackgroundBlock("Ascent")
+                    await SetBackgroundBlock(ASCENTASSETS) // Issue
                 }
                 StartGame()
                 document.getElementById("Loading").style.display = "none"
@@ -164,7 +164,7 @@ function afterDraw(ctx) {
     for (let i = 0; i < WORLD.data.length; i++) {
         x = 0;
         for (let j = 0; j < WORLD.data[i].length; j++) {
-            if (_rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, WORLD.blockSize, WORLD.blockSize)) {
+            if (rectIntersect(MousePosition.x, MousePosition.y, 0, 0, x, y, WORLD.blockSize, WORLD.blockSize)) {
                 ctx.globalAlpha = 0.4
                 fillRect(x, y, WORLD.blockSize, WORLD.blockSize)
                 ctx.globalAlpha = 1
@@ -277,12 +277,14 @@ function StartGame() {
                     const data = event.target.result // Store the data inside the file
                     LevelName = filename.replace(".level", "") // Change the level name to the files name (Without the .level at the end)
                     levelData = JSON.parse(data) // Turn the data that was a string into proper format and set levelData to it
-                    WORLD.regenerate(levelData) // Reload the WORLD with the new levelData
 
 
                     //Add here if new assets/game
 
-                    if (GameChosen == "Ascent") LoadWorld(ASCENTASSETS)
+                    if (GameChosen == "Ascent") {
+                        regenerate(ASCENTASSETS)
+                        LoadWorld(ASCENTASSETS)
+                    }
 
 
                     console.log("Loaded WORLD");
@@ -302,19 +304,6 @@ function StartGame() {
 }
 
 
-
-
-
-
-
-
-
-
-
-DeleteAllSavesButton.addEventListener("mouseup", () => {
-    localStorage.clear()
-    window.location.reload()
-})
 
 
 
@@ -440,11 +429,49 @@ RemoveUIButton.addEventListener("mouseup", () => {
 })
 
 
+function regenerate(key) {
+    return new Promise(async (resolve) => {
+        for (let i = 0; i < WORLD.tiles.length; i++) {
+            const element = WORLD.tiles[i];
+            for (let j = 0; j < element.length; j++) {
+                if (WORLD.tiles[i][j]) {
+                    WORLD.tiles[i][j].Destroy()
+                    WORLD.tiles[i][j] = undefined
+                }
+            }
+        }
+        WORLD.init()
+        for (let i = 0; i < key.length; i++) {
+            const element = key[i];
+            const imageSrc = element.asset
+            const dataValue = element.dataValue
+            let x = 0;
+            let y = 0;
 
+            for (let i = 0; i < WORLD.data.length; i++) {
+                x = 0;
+                for (let j = 0; j < WORLD.data[i].length; j++) {
+                    const elementData = WORLD.data[i][j]
+                    if (elementData != dataValue && !(element.name == "background" && elementData == 0)) {
+                        continue;
+                    }
 
+                    let square = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
+                    await square.setImg(imageSrc)
+                    if (element.noCollision) square.DisableCollision()
 
+                    WORLD.setTile({i:i,j:j}, square)
+                    WORLD.data[i][j] = element.dataValue
+                    x += WORLD.blockSize;
+                }
+                y += WORLD.blockSize;
+            }
+        }
 
-
+        alert("Atm you should save, and refresh the page and go back into the level, cuz atm its broken if u dont do that")
+        resolve()
+    });
+}
 
 function SetBackgroundBlock(key) {
     return new Promise(async (resolve, reject) => {
@@ -481,10 +508,6 @@ function SetBackgroundBlock(key) {
 
 
 
-
-
-
-
 function LoadWorld(key) {
     return new Promise(async (resolve, reject) => {
         for (let i = 0; i < key.length; i++) {
@@ -514,12 +537,6 @@ function LoadWorld(key) {
         resolve()
     });
 }
-
-
-
-
-
-
 
 
 
@@ -577,18 +594,25 @@ GameAssetsAscentElement.addEventListener("mouseup", async () => {
 
 
 
-getElementById("widthOfWorld").addEventListener("blur", () => {
+getElementById("widthOfWorld").addEventListener("blur", async () => {
     const element = getElementById("widthOfWorld")
-    if (element.value <= 50) element.value = 50
+    if (element.value <= 1) element.value = 1
 
-    WORLD.ChangeWorldSize(element.value, getElementById("heightOfWorld").value)
+    await WORLD.ChangeWorldSize(element.value, getElementById("heightOfWorld").value)
+    if (GameChosen == "Ascent") regenerate(ASCENTASSETS)
+
+    
+    ENGINE.generateChunks() 
 })
 
-getElementById("heightOfWorld").addEventListener("blur", () => {
+getElementById("heightOfWorld").addEventListener("blur", async () => {
     const element = getElementById("heightOfWorld")
-    if (element.value <= 50) element.value = 50
+    if (element.value <= 1) element.value = 1
 
-    WORLD.ChangeWorldSize(getElementById("widthOfWorld".value), element.value)
+    await WORLD.ChangeWorldSize(getElementById("widthOfWorld").value, element.value);
+    if (GameChosen == "Ascent") regenerate(ASCENTASSETS)
+    
+    ENGINE.generateChunks()
 })
 
 
