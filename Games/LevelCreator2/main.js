@@ -1,9 +1,3 @@
-const player = new Player(false, 0, 10, 150, 280, 100, 900, -1000);
-player.c = "red" // Set the colour of the player from default: black to red
-player.gravityMax = -300
-ENGINE.Config.sideScroller = true
-ENGINE.addPlayer(player, true)
-
 //Define The ENGINE
 const GameName = "StoryGameLevelCreator2" // Set The ENGINE Name
 ENGINE.NameOfGame = GameName
@@ -25,6 +19,8 @@ const SubmitLevelName = getElementById("SubmitLevelName")
 const GameAssetsContainer = getElementById("GameAssetsContainer")
 const GameAssetsAscentElement = getElementById("AscentGameSelect")
 
+const player = new Player(false, 0, 10, 150, 280, 100, 900, -1000);
+
 let stats;
 let LevelName = "" // Set Some Default Variables Used For Later On
 let LocalSaveLevels = []
@@ -42,7 +38,6 @@ let SelectedBlockAsset = undefined
 const GameSettings = {
     playerSpawn: { i: 0, j: 0 },
     playerExit: { i: 1, j: 0 },
-    worldSize: { i: 50, j: 20 },
     tileSize: { w: 50, h: 50 }
 }
 
@@ -63,6 +58,13 @@ const GameSettings = {
 function setup() {
     stats = STATS.new()
     stats.autoLoad()
+
+    player.c = "red" // Set the colour of the player from default: black to red
+    player.gravityMax = -300
+
+    ENGINE.Config.sideScroller = true
+    ENGINE.addPlayer(player, true)
+
 
     document.oncontextmenu = () => false;
 
@@ -97,6 +99,8 @@ function setup() {
             const LevelNameElement = document.createElement("p")
             const GameNameElement = document.createElement("p")
 
+            console.log(LocalSaveStorage[i]);
+
             LevelContainer.className = "Level_Container"
             LevelBox.className = "Level"
             LevelBox.id = element.name
@@ -124,7 +128,6 @@ function setup() {
                 if (element.usedGame == "Ascent") {
                     await ImportAssets(ASCENTASSETS)
                     await LoadWorld(ASCENTASSETS)
-                    await SetBackgroundBlock(ASCENTASSETS) // Issue
                 }
                 StartGame()
                 document.getElementById("Loading").style.display = "none"
