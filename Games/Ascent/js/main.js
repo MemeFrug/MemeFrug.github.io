@@ -1,6 +1,7 @@
 let currentLevelIndex = 0
 let showingYouDieScreen = false
 let textShowing = ""
+let nameShowing = "???"
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -9,6 +10,14 @@ function sound(src) {
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
+    this.changeSource = function(src) {
+        this.sound.src = src;
+        console.log(this.sound);
+        console.log(this.sound.loop);
+    }
+    this.changeVolume = (volume) => {
+        this.sound.volume = volume;
+    }
     this.play = function(){
       this.sound.play();
     }
@@ -17,10 +26,12 @@ function sound(src) {
     }
     this.loop = function(){
         this.sound.loop = !this.sound.loop
+        console.log(this.sound.loop);
     }
   }
 
 const music = new sound("./assets/background1.mp3")
+music.changeVolume(0.5)
 music.loop()
 
 function setup() {
@@ -37,6 +48,7 @@ function setup() {
     ENGINE.Config.sideScroller = true
     ENGINE.Config.cameraScale = 1
     ENGINE.addPlayer(player, true)
+    ENGINE.drawLoop.splice(ENGINE.drawLoop.indexOf(player), 1)
 
     // addEngineEvent(Enum.Events.Pressed.)
 
@@ -53,13 +65,23 @@ function setup() {
         setCanvasBackground("white")
         music.play()
 
-        await showText("I love giving head to all men across the world, worldwide, and in my basement.")
-        await showText("Woah, WHere am i?")
+        await showText("???", "Woah, Where am i?")
+        await sleep(100)
+        await showText("David", "Oh... I did'nt see you there, my names David!")
+        await sleep(100)
+        await showText("David", "Whats yours??")
+        await sleep(500)
+        await showText("David", "....")
+        await sleep(100)
+        await showText("David", "Not very talkative huh?")
+        await sleep(100)
+        await showText("David", "I have a feeling that we need to reach the top of this tower.")
     }
 }
 
-function showText(text) {
+function showText(name, text) {
     return new Promise(async (resolve, reject) => {
+        nameShowing = name
         textShowing = ""
         for (let i = 0; i < text.length; i++) {
             const element = text[i];
@@ -107,7 +129,6 @@ function update(deltaTime) {
 }
 
 function draw(ctx) {
-    strokeRect(0, 0, WORLD.size.w, WORLD.size.h)
 }
 
 function afterDraw(ctx) {
@@ -115,6 +136,9 @@ function afterDraw(ctx) {
     
     //Draw The Player TEST
     player.Draw(ctx)
+    ctx.strokeStyle = "red"
+    ctx.lineWidth = 10
+    ctx.strokeRect(-ENGINE.VARIABLES.Cam.x, -ENGINE.VARIABLES.Cam.y, ENGINE.Config.nativeWidth, ENGINE.Config.nativeHeight);
 }
 
 function drawUI(ctx) {
@@ -134,7 +158,7 @@ function drawUI(ctx) {
     // ctx.strokeRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.6, ENGINE.Config.nativeWidth / 2, 300)
     ctx.fillStyle = "rgb(216, 216, 216)"
     ctx.font = "40px DTM-Sans"
-    fillText("David: ", 550, ENGINE.Config.nativeHeight / 1.2)
+    fillText(nameShowing + ": ", 550, ENGINE.Config.nativeHeight / 1.2)
     fillText(textShowing, 760, ENGINE.Config.nativeHeight / 1.2, 650, 40)
 }
 
@@ -179,6 +203,7 @@ function loadLevel(levelData) {
                 x = 0;
                 for (let j = 0; j < WORLD.data[i].length; j++) {
                     if (WORLD.data[i][j] == tileValue) {
+                        // resolve();
                         let square = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
                         await square.setImg(imageSrc)
 
