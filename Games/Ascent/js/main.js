@@ -7,8 +7,15 @@ function sound(src) {
     this.sound = document.createElement("audio");
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
+    // this.sound.setAttribute("controls", "none");
+    // this.sound.style.display = "none";
+    this.sound.style.cssText = `
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    `
+    this.sound.controls = true;
     document.body.appendChild(this.sound);
     this.changeSource = function(src) {
         this.sound.src = src;
@@ -27,6 +34,9 @@ function sound(src) {
     this.loop = function(){
         this.sound.loop = !this.sound.loop
         console.log(this.sound.loop);
+    }
+    this.changePlaybackRate = function(rate) {
+        this.sound.playbackRate = rate
     }
   }
 
@@ -128,17 +138,11 @@ function update(deltaTime) {
     }
 }
 
-function draw(ctx) {
-}
-
 function afterDraw(ctx) {
     const player = ENGINE.GetLocalPlayer()   
     
     //Draw The Player TEST
     player.Draw(ctx)
-    ctx.strokeStyle = "red"
-    ctx.lineWidth = 10
-    ctx.strokeRect(-ENGINE.VARIABLES.Cam.x, -ENGINE.VARIABLES.Cam.y, ENGINE.Config.nativeWidth, ENGINE.Config.nativeHeight);
 }
 
 function drawUI(ctx) {
