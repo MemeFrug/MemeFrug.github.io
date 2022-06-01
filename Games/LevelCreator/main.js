@@ -99,8 +99,6 @@ function setup() {
             const LevelNameElement = document.createElement("p")
             const GameNameElement = document.createElement("p")
 
-            console.log(LocalSaveStorage[i]);
-
             LevelContainer.className = "Level_Container"
             LevelBox.className = "Level"
             LevelBox.id = element.name

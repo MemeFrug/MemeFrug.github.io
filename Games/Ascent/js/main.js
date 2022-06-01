@@ -7,14 +7,8 @@ function sound(src) {
     this.sound = document.createElement("audio");
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
-    // this.sound.setAttribute("controls", "none");
-    // this.sound.style.display = "none";
-    this.sound.style.cssText = `
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    `
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
     this.sound.controls = true;
     document.body.appendChild(this.sound);
     this.changeSource = function(src) {
@@ -143,6 +137,10 @@ function afterDraw(ctx) {
     
     //Draw The Player TEST
     player.Draw(ctx)
+
+    const mousepos = ENGINE.getMousePosition()
+
+    ctx.fillRect(mousepos.x, mousepos.y, 5, 5)
 }
 
 function drawUI(ctx) {
