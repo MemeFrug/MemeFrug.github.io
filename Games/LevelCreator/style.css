@@ -1,17 +1,15 @@
-* {
+html, body {
+	background-color: rgb(221, 221, 221);
 	margin: 0;
 	padding: 0;
-}
-
-body {
-	background-color: rgb(221, 221, 221);
+	
 }
 
 body:-moz-drag-over {
 	background-color: aqua;
 }
 
-canvas {
+#canvas {
 	cursor: none;
 	display: none;
 	background-color: white;
@@ -26,9 +24,51 @@ canvas {
 	right: 0;
 }
 
+
+
+.Loading {
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.UI2 {
+	color: white;
+	user-select: none;
+	font-size: 1.5vw;
+	background-color: rgba(56, 56, 56, 0.5);
+	display: none; /* Needs To Be Flex */
+	position: absolute;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 15vw;
+	height: 100%;
+
+	right: 0;
+
+	z-index: 1;
+}
+
+.UI2 div {
+	padding: 5px;
+}
+
+.UI2 div button {
+	padding: 5px;
+}
+
+
+
+
+
+
 .UI {
-	/* left: -13%; */
-	user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+	user-select: none;
 	font-size: 1.5vw;
 	background-color: rgba(49, 49, 49, 0.164);
 	display: none; /* Needs To Be Flex */
@@ -38,6 +78,7 @@ canvas {
 	flex-direction: column;
 	width: 15vw;
 	height: 100%;
+	z-index: 1;
 }
 
 .UI div {
@@ -74,6 +115,12 @@ canvas {
 	transition-duration: 0.2s;
 	width: 8vw;
 	height: 8vw;
+	text-align: center;
+}
+
+.Button img {
+	width: 100%;
+	height: 100%;
 }
 
 .Button_container {
@@ -130,6 +177,7 @@ input {
 
 .Level {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	background-color: grey;
@@ -141,6 +189,7 @@ input {
 	transition-duration: 0.2s;
 }
 .Level_Name {
+	margin: 0;
     word-wrap: break-word;
     width: 100%;
 }
@@ -199,21 +248,4 @@ input {
 }
 .HideUI:active {
 	background-color: darkgrey;
-}
-
-.Notes_Container {
-	/* position: absolute; */
-	
-	/* right: 0; */
-	padding: 2vw;
-	/* width: 15%; */
-	/* height: 50%; */
-	overflow-y: auto;
-	font-size: 1.5vw;
-}
-
-.Notes_Container .Notes {
-	background-color: darkgrey;
-	width: 100%;
-	height: 100%;
 }
