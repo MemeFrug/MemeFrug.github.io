@@ -137,10 +137,6 @@ function afterDraw(ctx) {
     
     //Draw The Player TEST
     player.Draw(ctx)
-
-    const mousepos = ENGINE.getMousePosition()
-
-    ctx.fillRect(mousepos.x, mousepos.y, 5, 5)
 }
 
 function drawUI(ctx) {
@@ -187,7 +183,7 @@ function loadLevel(levelData) {
         const key = [
             {name: "background", asset: "./assets/backgroundBrick.png", dataValue: 1, noCollision: true},
             {name: "brick", asset: "./assets/brick.png", dataValue: 2},
-            {name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true},
+            {name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true, willKill: true},
             {name: "stairs", asset: "./assets/stairs.png", dataValue: 4, noCollision: true},
             {name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5, noCollision: true},
             {name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6, noCollision: true},
@@ -198,6 +194,7 @@ function loadLevel(levelData) {
             const element = key[i];
             const tileValue = element.dataValue
             const imageSrc = element.asset
+            const willKill = element.willKill
 
             let x = 0;
             let y = 0;
@@ -209,9 +206,16 @@ function loadLevel(levelData) {
                         let square = new Square(true, x, y, WORLD.blockSize, WORLD.blockSize);
                         await square.setImg(imageSrc)
 
-                        if (element.noCollision) square.DisableCollision()
-
                         WORLD.tiles[i][j] = square;
+
+                        if (willKill) {
+                            square.customCollision = (obj) => {
+                                
+                            }
+                        } else {
+                            
+                            if (element.noCollision) square.DisableCollision()
+                        }
                     }
                     x += WORLD.blockSize;
                 }
