@@ -185,13 +185,13 @@ function loadLevel(levelData) {
         WORLD.init(levelData)
     
         const key = [
-            {name: "background", asset: "./Assets/backgroundBrick.png", dataValue: 1, noCollision: true},
-            {name: "brick", asset: "./Assets/brick.png", dataValue: 2},
-            {name: "spike1", asset: "./Assets/spike1.png", dataValue: 3, noCollision: true},
-            {name: "stairs", asset: "./Assets/stairs.png", dataValue: 4, noCollision: true},
-            {name: "stairsReversed", asset: "./Assets/stairsReversed.png", dataValue: 5, noCollision: true},
-            {name: "stairsUpsidedown", asset: "./Assets/stairsUpsidedown.png", dataValue: 6, noCollision: true},
-            {name: "stairsUpsidedownReversed", asset: "./Assets/stairsUpsidedownReversed.png", dataValue: 7, noCollision: true},
+            {name: "background", asset: "./assets/backgroundBrick.png", dataValue: 1, noCollision: true},
+            {name: "brick", asset: "./assets/brick.png", dataValue: 2},
+            {name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true},
+            {name: "stairs", asset: "./assets/stairs.png", dataValue: 4, noCollision: true},
+            {name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5, noCollision: true},
+            {name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6, noCollision: true},
+            {name: "stairsUpsidedownReversed", asset: "./assets/stairsUpsidedownReversed.png", dataValue: 7, noCollision: true},
         ]
     
         for (let i = 0; i < key.length; i++) {
