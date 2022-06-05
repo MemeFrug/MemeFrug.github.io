@@ -19,7 +19,7 @@ const SubmitLevelName = getElementById("SubmitLevelName")
 const GameAssetsContainer = getElementById("GameAssetsContainer")
 const GameAssetsAscentElement = getElementById("AscentGameSelect")
 
-const player = new Player(false, 0, 10, 150, 280, 100, 900, -1000);
+const player = new Player(false, 0, 50, 90, 190);
 
 let stats;
 let LevelName = "" // Set Some Default Variables Used For Later On
@@ -61,6 +61,9 @@ function setup() {
 
     player.c = "red" // Set the colour of the player from default: black to red
     player.gravityMax = -300
+    player.jump_strength = -1250
+    player.speed = 500
+    player.DisableCollision()
 
     ENGINE.Config.sideScroller = true
     ENGINE.addPlayer(player, true)

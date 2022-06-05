@@ -39,12 +39,12 @@ music.changeVolume(0.5)
 music.loop()
 
 function setup() {
-    const player = new Player(false, 0, 10, 90, 190)
+    const player = new Player(false, 0, 50, 90, 190)
     player.c = "red"
     // player.setImg("./assets/evil nuthead.gif", false);
 
     // player.gravityMax = -1000
-    player.jump_strength = -860
+    player.jump_strength = -1250
     player.speed = 500
     
     ENGINE.Config.cameraFollowSpeed = 10
@@ -184,10 +184,10 @@ function loadLevel(levelData) {
             {name: "background", asset: "./assets/backgroundBrick.png", dataValue: 1, noCollision: true},
             {name: "brick", asset: "./assets/brick.png", dataValue: 2},
             {name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true, willKill: true},
-            {name: "stairs", asset: "./assets/stairs.png", dataValue: 4, noCollision: true},
-            {name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5, noCollision: true},
-            {name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6, noCollision: true},
-            {name: "stairsUpsidedownReversed", asset: "./assets/stairsUpsidedownReversed.png", dataValue: 7, noCollision: true},
+            {name: "stairs", asset: "./assets/stairs.png", dataValue: 4},
+            {name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5},
+            {name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6},
+            {name: "stairsUpsidedownReversed", asset: "./assets/stairsUpsidedownReversed.png", dataValue: 7},
         ]
     
         for (let i = 0; i < key.length; i++) {
@@ -210,7 +210,9 @@ function loadLevel(levelData) {
 
                         if (willKill) {
                             square.customCollision = (obj) => {
-                                
+                                if (obj instanceof Player) {
+                                    console.log("yes");
+                                }
                             }
                         } else {
                             
