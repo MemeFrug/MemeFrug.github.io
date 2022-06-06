@@ -1,7 +1,9 @@
 let currentLevelIndex = 0
 let showingYouDieScreen = false
+let showingText = false
 let textShowing = ""
-let nameShowing = "???"
+let nameShowing = ""
+
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -80,11 +82,14 @@ function setup() {
         await showText("David", "Not very talkative huh?")
         await sleep(100)
         await showText("David", "I have a feeling that we need to reach the top of this tower.")
+        
+        hideText();
     }
 }
 
 function showText(name, text) {
     return new Promise(async (resolve, reject) => {
+        showingText = true
         nameShowing = name
         textShowing = ""
         for (let i = 0; i < text.length; i++) {
@@ -107,6 +112,12 @@ function showText(name, text) {
         }
         resolve()
     });
+}
+
+function hideText() {
+    showingText = false
+    nameShowing = ""
+    textShowing = ""
 }
 
 //TODO Add event listeners uwu
@@ -148,16 +159,18 @@ function drawUI(ctx) {
     }
 
 
-    ctx.globalAlpha = 0.8
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.3, ENGINE.Config.nativeWidth / 2, 200)
-    // ctx.strokeStyle = "white"
-    // ctx.lineWidth = 9
-    // ctx.strokeRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.6, ENGINE.Config.nativeWidth / 2, 300)
-    ctx.fillStyle = "rgb(216, 216, 216)"
-    ctx.font = "40px DTM-Sans"
-    fillText(nameShowing + ": ", 550, ENGINE.Config.nativeHeight / 1.2)
-    fillText(textShowing, 760, ENGINE.Config.nativeHeight / 1.2, 650, 40)
+    if (showingText) {
+        ctx.globalAlpha = 0.8
+        ctx.fillStyle = "rgba(0, 0, 0, 1)"
+        ctx.fillRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.3, ENGINE.Config.nativeWidth / 2, 200)
+        // ctx.strokeStyle = "white"
+        // ctx.lineWidth = 9
+        // ctx.strokeRect(ENGINE.Config.nativeWidth / 4, ENGINE.Config.nativeHeight / 1.6, ENGINE.Config.nativeWidth / 2, 300)
+        ctx.fillStyle = "rgb(216, 216, 216)"
+        ctx.font = "40px DTM-Sans"
+        fillText(nameShowing + ": ", 550, ENGINE.Config.nativeHeight / 1.2)
+        fillText(textShowing, 760, ENGINE.Config.nativeHeight / 1.2, 650, 40)
+    }
 }
 
 function deleteLevel() {
