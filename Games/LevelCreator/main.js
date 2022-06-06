@@ -19,7 +19,7 @@ const SubmitLevelName = getElementById("SubmitLevelName")
 const GameAssetsContainer = getElementById("GameAssetsContainer")
 const GameAssetsAscentElement = getElementById("AscentGameSelect")
 
-const player = new Player(false, 0, 50, 90, 190);
+const player = new Player(false, 0, 50, 1, 1);
 
 let stats;
 let LevelName = "" // Set Some Default Variables Used For Later On
@@ -223,8 +223,7 @@ function afterDraw(ctx) {
 
     strokeRect(0, 0, WORLD.size.w, WORLD.size.h)
 
-    //Draw The Player TEST
-    player.Draw(ctx)
+    fillRect(player.x, player.y, 100, 200, "red")
 
     fillRect(MousePosition.x - 15 / 2, MousePosition.y - 15 / 2, 15, 15, "black")
 }

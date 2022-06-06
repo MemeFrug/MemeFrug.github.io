@@ -13,7 +13,7 @@ function sound(src) {
     this.sound.style.display = "none";
     this.sound.controls = true;
     document.body.appendChild(this.sound);
-    this.changeSource = function(src) {
+    this.changeSource = function (src) {
         this.sound.src = src;
         console.log(this.sound);
         console.log(this.sound.loop);
@@ -21,20 +21,20 @@ function sound(src) {
     this.changeVolume = (volume) => {
         this.sound.volume = volume;
     }
-    this.play = function(){
-      this.sound.play();
+    this.play = function () {
+        this.sound.play();
     }
-    this.stop = function(){
-      this.sound.pause();
+    this.stop = function () {
+        this.sound.pause();
     }
-    this.loop = function(){
+    this.loop = function () {
         this.sound.loop = !this.sound.loop
         console.log(this.sound.loop);
     }
-    this.changePlaybackRate = function(rate) {
+    this.changePlaybackRate = function (rate) {
         this.sound.playbackRate = rate
     }
-  }
+}
 
 const music = new sound("./assets/background1.mp3")
 music.changeVolume(0.5)
@@ -48,7 +48,7 @@ function setup() {
     // player.gravityMax = -1000
     player.jump_strength = -1250
     player.speed = 500
-    
+
     ENGINE.Config.cameraFollowSpeed = 10
     ENGINE.Config.gravity = 3500
     ENGINE.Config.sideScroller = true
@@ -65,7 +65,7 @@ function setup() {
     getElementById("playButton").onclick = async () => {
         getElementById("MainMenu").style.display = "none"
         getElementById("LoadingScreen").style.display = "flex"
-        await loadLevel(Levels[0])
+        await loadLevel(Levels[currentLevelIndex])
         getElementById("LoadingScreen").style.display = "none"
         createCanvas(true)
         setCanvasBackground("white")
@@ -79,10 +79,8 @@ function setup() {
         await sleep(500)
         await showText("David", "....")
         await sleep(100)
-        await showText("David", "Not very talkative huh?")
-        await sleep(100)
         await showText("David", "I have a feeling that we need to reach the top of this tower.")
-        
+
         hideText();
     }
 }
@@ -106,7 +104,7 @@ function showText(name, text) {
                 await sleep(300)
             } else if (element == ".") {
                 await sleep(700)
-            }else {
+            } else {
                 await sleep(40)
             }
         }
@@ -124,18 +122,18 @@ function hideText() {
 function update(deltaTime) {
     const player = ENGINE.GetLocalPlayer()
     if (ENGINE.InputHandler.keys_down.w) player.move('w'); // Move the player
-	else player.stopMove("w")
-	if (ENGINE.InputHandler.keys_down.a) player.move('a');
-	else player.stopMove("a")
-	if (ENGINE.InputHandler.keys_down.d) player.move('d');
-	else player.stopMove("d")
+    else player.stopMove("w")
+    if (ENGINE.InputHandler.keys_down.a) player.move('a');
+    else player.stopMove("a")
+    if (ENGINE.InputHandler.keys_down.d) player.move('d');
+    else player.stopMove("d")
 
     // if (ENGINE.InputHandler.keys_down.W) player.move('w'); // Move the player
-	// else player.stopMove("w")
-	// if (ENGINE.InputHandler.keys_down.A) player.move('a');
-	// else player.stopMove("a")
-	// if (ENGINE.InputHandler.keys_down.D) player.move('d');
-	// else player.stopMove("d")
+    // else player.stopMove("w")
+    // if (ENGINE.InputHandler.keys_down.A) player.move('a');
+    // else player.stopMove("a")
+    // if (ENGINE.InputHandler.keys_down.D) player.move('d');
+    // else player.stopMove("d")
 
     if (player.y > Levels[currentLevelIndex].length * WORLD.blockSize - 3000) {
         console.log("u die");
@@ -144,8 +142,8 @@ function update(deltaTime) {
 }
 
 function afterDraw(ctx) {
-    const player = ENGINE.GetLocalPlayer()   
-    
+    const player = ENGINE.GetLocalPlayer()
+
     //Draw The Player TEST
     player.Draw(ctx)
 }
@@ -180,7 +178,7 @@ function deleteLevel() {
         for (let i = 0; i < WORLD.tiles.length; i++) {
             const element = WORLD.tiles[i];
             for (let j = 0; j < element.length; j++) {
-                WORLD.deleteTile({i:i,j:j})
+                WORLD.deleteTile({ i: i, j: j })
             }
         }
 
@@ -192,17 +190,17 @@ function loadLevel(levelData) {
     return new Promise(async (resolve, reject) => {
         console.log("Loading Level");
         WORLD.init(levelData)
-    
+
         const key = [
-            {name: "background", asset: "./assets/backgroundBrick.png", dataValue: 1, noCollision: true},
-            {name: "brick", asset: "./assets/brick.png", dataValue: 2},
-            {name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true, willKill: true},
-            {name: "stairs", asset: "./assets/stairs.png", dataValue: 4},
-            {name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5},
-            {name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6},
-            {name: "stairsUpsidedownReversed", asset: "./assets/stairsUpsidedownReversed.png", dataValue: 7},
+            { name: "background", asset: "./assets/backgroundBrick.png", dataValue: 1, noCollision: true },
+            { name: "brick", asset: "./assets/brick.png", dataValue: 2 },
+            { name: "spike1", asset: "./assets/spike1.png", dataValue: 3, noCollision: true, willKill: true },
+            { name: "stairs", asset: "./assets/stairs.png", dataValue: 4 },
+            { name: "stairsReversed", asset: "./assets/stairsReversed.png", dataValue: 5 },
+            { name: "stairsUpsidedown", asset: "./assets/stairsUpsidedown.png", dataValue: 6 },
+            { name: "stairsUpsidedownReversed", asset: "./assets/stairsUpsidedownReversed.png", dataValue: 7 },
         ]
-    
+
         for (let i = 0; i < key.length; i++) {
             const element = key[i];
             const tileValue = element.dataValue
@@ -228,7 +226,7 @@ function loadLevel(levelData) {
                                 }
                             }
                         } else {
-                            
+
                             if (element.noCollision) square.DisableCollision()
                         }
                     }
