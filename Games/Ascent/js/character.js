@@ -25,42 +25,42 @@ class Player extends Square {
         this.animationsgif = [
             {//Idle
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveIdle.gif",
+                gifLink: "./assets/characterSprites/steveIdle.gif",
                 Name: "Idle",
             },
             {//Idle reverted
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveIdleRev.gif",
+                gifLink: "./assets//characterSprites/steveIdleRev.gif",
                 Name: "IdleLeft",
             },
             {//Run
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveRun.gif",
+                gifLink: "./assets/characterSprites/steveRun.gif",
                 Name: "Run",
             },
             {//Run Left
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveRunRev.gif",
+                gifLink: "./assets/characterSprites/steveRunRev.gif",
                 Name: "RunLeft",
             },
             {//Jump
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveJump.gif",
+                gifLink: "./assets/characterSprites/steveJump.gif",
                 Name: "Jump",
             },
             {//Jump reverted
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveJumpRev.gif",
+                gifLink: "./assets/characterSprites/steveJumpRev.gif",
                 Name: "JumpLeft",
             },
             {//Falling
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveFalling.gif",
+                gifLink: "./assets/characterSprites/steveFalling.gif",
                 Name: "Falling",
             },
             {//Falling reverted
                 gif: GIF(),
-                gifLink: "./Assets/characterSprites/steveFallingRev.gif",
+                gifLink: "./assets/characterSprites/steveFallingRev.gif",
                 Name: "FallingLeft",
             }
         ]
