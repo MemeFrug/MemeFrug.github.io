@@ -43,9 +43,7 @@ music.loop()
 function setup() {
     const player = new Player(false, 0, 50, 90, 190)
     player.c = "red"
-    // player.setImg("./assets/evil nuthead.gif", false);
 
-    // player.gravityMax = -1000
     player.jump_strength = -1250
     player.speed = 500
 
@@ -55,8 +53,6 @@ function setup() {
     ENGINE.Config.cameraScale = 1
     ENGINE.addPlayer(player, true)
     ENGINE.drawLoop.splice(ENGINE.drawLoop.indexOf(player), 1)
-
-    // addEngineEvent(Enum.Events.Pressed.)
 
     WORLD.blockSize = 100
 
@@ -153,7 +149,7 @@ function drawUI(ctx) {
         fillRect(0, 0, ENGINE.Config.nativeWidth, ENGINE.Config.nativeHeight, "black")
         ctx.fillStyle = "red"
         ctx.font = "100px Arial";
-        fillText("u dye", ENGINE.Config.nativeWidth / 2 - 150, ENGINE.Config.nativeHeight / 2)
+        fillText("Wrong Way Idiot.", ENGINE.Config.nativeHeight / 2, ENGINE.Config.nativeHeight / 2)
     }
 
 
