@@ -42,12 +42,11 @@ music.loop()
 
 function setup() {
     const player = new Player(false, 0, 50, 90, 190)
+    const stopWatch = new Stopwatch()
     player.c = "red"
-    // player.setImg("./assets/evil nuthead.gif", false);
 
-    // player.gravityMax = -1000
     player.jump_strength = -1250
-    player.speed = 500
+    player.speed = 600
 
     ENGINE.Config.cameraFollowSpeed = 10
     ENGINE.Config.gravity = 3500
@@ -55,8 +54,6 @@ function setup() {
     ENGINE.Config.cameraScale = 1
     ENGINE.addPlayer(player, true)
     ENGINE.drawLoop.splice(ENGINE.drawLoop.indexOf(player), 1)
-
-    // addEngineEvent(Enum.Events.Pressed.)
 
     WORLD.blockSize = 100
 
@@ -70,6 +67,7 @@ function setup() {
         createCanvas(true)
         setCanvasBackground("white")
         music.play()
+        stopWatch.start()
 
         await showText("???", "Woah, Where am i?")
         await sleep(100)
@@ -153,7 +151,7 @@ function drawUI(ctx) {
         fillRect(0, 0, ENGINE.Config.nativeWidth, ENGINE.Config.nativeHeight, "black")
         ctx.fillStyle = "red"
         ctx.font = "100px Arial";
-        fillText("u dye", ENGINE.Config.nativeWidth / 2 - 150, ENGINE.Config.nativeHeight / 2)
+        fillText("Wrong Way Idiot.", ENGINE.Config.nativeHeight / 2, ENGINE.Config.nativeHeight / 2)
     }
 
 
@@ -169,6 +167,15 @@ function drawUI(ctx) {
         fillText(nameShowing + ": ", 550, ENGINE.Config.nativeHeight / 1.2)
         fillText(textShowing, 760, ENGINE.Config.nativeHeight / 1.2, 650, 40)
     }
+
+    // Draw the Timer
+    ctx.fillStyle = "black"
+    ctx.globalAlpha = 0.5
+    ctx.fillRect(70,0, 190, 110)
+
+    ctx.fillStyle = "white"
+	ctx.font = "40px Arial"
+	ctx.fillText(Time, 80, 90)
 }
 
 function deleteLevel() {

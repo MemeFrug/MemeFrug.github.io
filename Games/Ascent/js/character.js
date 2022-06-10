@@ -165,9 +165,9 @@ class Player extends Square {
         let runOffsetY = 21
 
         //Testing
-        ctx.globalAlpha = 0.3
-        ctx.fillRect(this.x, this.y, this.w, this.h)
-        ctx.globalAlpha = 1
+        // ctx.globalAlpha = 0.3
+        // ctx.fillRect(this.x, this.y, this.w, this.h)
+        // ctx.globalAlpha = 1
 
         //Draw The Gifs
         if (this.vy < 0) {
