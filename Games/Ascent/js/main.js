@@ -42,10 +42,11 @@ music.loop()
 
 function setup() {
     const player = new Player(false, 0, 50, 90, 190)
+    const stopWatch = new Stopwatch()
     player.c = "red"
 
     player.jump_strength = -1250
-    player.speed = 500
+    player.speed = 600
 
     ENGINE.Config.cameraFollowSpeed = 10
     ENGINE.Config.gravity = 3500
@@ -66,6 +67,7 @@ function setup() {
         createCanvas(true)
         setCanvasBackground("white")
         music.play()
+        stopWatch.start()
 
         await showText("???", "Woah, Where am i?")
         await sleep(100)
@@ -165,6 +167,15 @@ function drawUI(ctx) {
         fillText(nameShowing + ": ", 550, ENGINE.Config.nativeHeight / 1.2)
         fillText(textShowing, 760, ENGINE.Config.nativeHeight / 1.2, 650, 40)
     }
+
+    // Draw the Timer
+    ctx.fillStyle = "black"
+    ctx.globalAlpha = 0.5
+    ctx.fillRect(70,0, 190, 110)
+
+    ctx.fillStyle = "white"
+	ctx.font = "40px Arial"
+	ctx.fillText(Time, 80, 90)
 }
 
 function deleteLevel() {
