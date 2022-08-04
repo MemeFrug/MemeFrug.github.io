@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GTFO Lobby MEMEFRUG</title>
+    <link href="./style.css" rel="stylesheet">
+
+    <link href="../selectr.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="time_remaining">TIME_REMAINING</div>
+    <h1>GTFO Game</h1>
+    <button id="back_button" class="hidden"><-- Back</button>
+
+    <button id="teams_window_button" class="hidden">TEAMS</button>
+    <button id="character_window_button" class="hidden">CHARACTER</button>
+
+    <div class="middle_frame_container">
+        <div class="gtfo_grid_container" id="teams_container"></div>
+
+
+        <div class="team_players_container hidden" id="team_players_container"></div>
+
+        <div class="grid_item_selector_container hidden" id="loadout_container"></div>
+    </div>
+    <button class="hidden" id="ready_btn">READY</button>
+    <button id="join_team_btn">Join Team</button>
+
+    <script src="../selectr.min.js" type="text/javascript"></script>
+    <script src="./lobby.js" type="text/javascript"></script>
+</body>
+</html>

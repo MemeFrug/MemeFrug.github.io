@@ -1,0 +1,2 @@
+Make the page move with the mouse on the team selection screen
+For more than 4 people make it horizontally scroll
