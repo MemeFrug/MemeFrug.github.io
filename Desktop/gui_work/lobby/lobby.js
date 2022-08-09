@@ -338,6 +338,24 @@ Events.Subscribe("AddLoadoutSelector", function (loadout_part, loadout_slot_json
     });
 })
 
+mousePosition = {
+    createEvents() {
+        document.onmousemove = handleMouseMove;
+        function handleMouseMove(event) {
+            const mouseOffset = {x:0,y:0}
+            const mouseIntensity = {x:-0.01,y:-0.01}
+
+            const mousePos = {
+                x: event.pageX * mouseIntensity.x + mouseOffset.x,
+                y: event.pageY * mouseIntensity.y + mouseOffset.y
+            };
+
+            document.getElementById("body").style.marginLeft = `${mousePos.x}px`
+            document.getElementById("body").style.marginTop = `${mousePos.y}px`
+            console.log(mousePos);
+        }
+    }
+}
 
 //Smooth Horizontal Scrolling
 function horizontalWheel(container) {
@@ -391,7 +409,7 @@ window.addEventListener('load', () => {
     horizontalWheel(list);
 });
 
-
+mousePosition.createEvents()
 
 
 
