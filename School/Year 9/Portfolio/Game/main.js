@@ -56,17 +56,17 @@ function StartGame() {
     player = {
         y: 0,
         vy: 0,
-        jumpHeight: -9,
+        jumpHeight: -1400,
         needToJump: false,
         update(deltaTime) {
-            this.y += this.vy
-            this.vy += g * deltaTime
+            this.vy += g
+            this.y += this.vy * deltaTime
             
             if (this.y + 300 >= ViewportY) {
                 this.y = ViewportY - 300
                 this.vy = 0
                 if (this.needToJump) this.Jump()
-                return
+                return;
             }
             this.needToJump = false
         },
