@@ -34,7 +34,7 @@ body {
 
 .TitleOfPage {
     margin: 0;
-    padding: 20px;
+    padding: 2w;
 }
 
 .GameContainer {
@@ -87,7 +87,7 @@ pre code {
     color: white;
     background-color: rgba(0, 0, 0, 0.219);
     text-shadow: 20px;
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */
     margin-bottom: 20px;
     font-size: 2.5vw;
 }
