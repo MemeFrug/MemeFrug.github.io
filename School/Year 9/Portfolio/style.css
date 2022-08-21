@@ -1,0 +1,234 @@
+::-webkit-scrollbar {
+    width: 10px;
+    height: 8px;
+    background-color: rgb(160, 189, 182);
+    /* or add it to the track */
+}
+
+/* Add a thumb */
+::-webkit-scrollbar-thumb {
+    background: rgb(137, 235, 248);
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    height: 100%;
+    width: 100%;
+
+    font-size: 0.5vw;
+
+    /* Background Attributes */
+    background-color: rgb(184, 248, 218);
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-image: url("https://ml8ygptwlcsq.i.optimole.com/WWPmFhQ.THK2~1cd60/w:auto/h:auto/q:mauto/https://www.gaming.net/wp-content/uploads/2020/08/sage-valorant.jpg"); */
+}
+
+.TitleOfPage a {
+    text-decoration: none;
+    color: white;
+}
+
+.TitleOfPage {
+    margin: 0;
+    padding: 20px;
+}
+
+.GameContainer {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    /* width: 100%;
+    height: 100%; */
+    background-color: white;
+    border: 5px solid black;
+}
+
+/* Easy Multiple Use Classes */
+
+pre code {
+    background-color: grey;
+    border: 1px solid #999;
+    border-radius: 12px;
+    display: block;
+    padding: 20px;
+    width: auto;
+}
+
+.img {
+    width: 60%;
+    border-radius: 20px;
+}
+
+/* Bars */
+
+.BarContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    font-size: 4em;
+}
+
+.TopBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 20%;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.219);
+    text-shadow: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 2.5vw;
+}
+
+.MiddleBar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    color: black;
+    /* align-items: center; */
+    justify-content: center;
+    overflow: auto;
+}
+
+.FooterBar {
+    display: flex;
+    width: 100%;
+    height: 10%;
+    font-size: 1.2vh;
+    /* bottom: 0; */
+    background-color: rgb(131, 233, 216);
+    /* justify-content: center; */
+    align-items: center;
+}
+
+/* ------- */
+
+/* TextBox */
+.TextBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: rgba(128, 128, 128, 0.1);
+    height: min-content;
+    width: 60%;
+
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.TextBox h1 {
+    text-align: center;
+}
+
+/* Horizontal Lists */
+.TopBar ul {
+    display: flex;
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #62dabc;
+}
+
+.TopBar ul li {
+    width: 100%;
+    float: left;
+}
+
+.TopBar ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    /* padding-top: 6px;
+    padding-bottom: 6px; */
+}
+
+.TopBar ul li a:hover {
+    background-color: #111111;
+}
+
+/* Contact Us Box */
+* {
+    box-sizing: border-box;
+}
+
+/* Style inputs */
+input[type=text],
+select,
+textarea {
+    width: 100%;
+    font-size: 1vw !important;
+    padding: 52px;
+    border: 1px solid #ccc;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+input[type=submit] {
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3vw;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+/* Style the container/contact section */
+.container {
+
+    font-size: vw;
+    display: flex;
+    flex-direction: column;
+    
+
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+/* Create two columns that float next to eachother */
+.column {
+    /* float: left; */
+    width: 50%;
+    margin-top: 6px;
+    margin-left: calc(50% / 2);
+    padding: 20px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+
+    .column,
+    input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}

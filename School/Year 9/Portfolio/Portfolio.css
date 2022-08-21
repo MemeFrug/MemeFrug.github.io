@@ -1,0 +1,40 @@
+.TextBox {
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.TextBox h1 {
+    text-align: center;
+}
+
+/* Horizontal Lists */
+
+.TextBox ul {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 90%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+  
+.TextBox ul li {
+    padding-top: 10px;
+    /* width:100%;
+    float: left; */
+}
+  
+.TextBox ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    background-color: #62dabc;
+}
+
+.TextBox ul li a:hover {
+    background-color: #111111;
+}
