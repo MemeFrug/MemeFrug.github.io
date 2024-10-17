@@ -30,7 +30,7 @@ class Player extends Square {
             },
             {//Idle reverted
                 gif: GIF(),
-                gifLink: "./assets//characterSprites/steveIdleRev.gif",
+                gifLink: "./assets/characterSprites/steveIdleRev.gif",
                 Name: "IdleLeft",
             },
             {//Run
