@@ -145,13 +145,14 @@ function placePiece() {
 }
 
 function rayCastDownPartReturn(part, offset=[0,1]) {
+    console.log(Game.world[part.coordinates[1]+offset[1]]);
     if (Game.world[part.coordinates[1]+offset[1]] == undefined) {
-        return true;
+        return {coordinates: [part.coordinates[0], Game.settings.height-1]};
     }
     const belowLinkedSelected = Game.world[part.coordinates[1] + offset[1]][part.coordinates[0]+offset[0]]
     if (Game.selectedPiece.linkedParts.indexOf(belowLinkedSelected) == -1) {
         if (belowLinkedSelected instanceof Piece) {
-            return true;
+            return belowLinkedSelected;
         }
     }
     return false;
@@ -177,37 +178,53 @@ function rayCastDown() {
 
     // Project it down
     // Create a new part
-    const projectedPart = new Piece(Game.selectedPiece.coordinates)
+    const projectedPart = new Piece([...Game.selectedPiece.coordinates])
 
     projectedPart.linkedParts = Game.selectedPiece.returnLinkedPieces()
     let projectedYCoords = 0
 
-    let j = 1
+    let j = Game.settings.height - projectedPart.coordinates[1]
 
-    while (projectedYCoords <= 0 || Game.settings.height - j >= Game.settings.height) {
-        for (let i = 0; i < projectedPart.linkedParts.length; i++) {
-            const part = projectedPart.linkedParts[i];
-            // Ray cast down
-            let rayCastProject = rayCastDownPartReturn(part, [0, j])
-            // Hit something
-            if (rayCastProject) {
-                // Stop the loop and move all other linked blocks that far down
-                projectedYCoords = j
-                console.log("found one");
-                break;
-            }
+    // console.log(projectedPart.coordinates[1]);
+    // For Every Column past the selected part
+    for (let i = 1; i < j; i++) {
+
+        // Ray cast down
+        let rayCastProject = rayCastDownPartReturn(projectedPart, [0, i])
+        if (rayCastProject) {
+            // console.log(rayCastProject.coordinates[1] + projectedPart.coordinates[1]);
+            projectedPart.coordinates[1] = projectedPart.coordinates[1]+1
         }
-        console.log(Game.settings.height, j, projectedYCoords);
-        j++
     }
 
-    for (let i = 0; i < projectedPart.linkedParts.length; i++) {
-        const part = projectedPart.linkedParts[i];
-        // part.coordinates[1] += j
-        Game.projectedPieces.push(part.coordinates)
-    }
+    // while (projectedYCoords <= 0 || Game.settings.height - j >= Game.settings.height) {
+    //     for (let i = 0; i < projectedPart.linkedParts.length; i++) {
+    //         const part = projectedPart.linkedParts[i];
+    //         // Ray cast down
+    //         let rayCastProject = rayCastDownPartReturn(part, [0, j])
+    //         // Hit something
+    //         if (rayCastProject) {
+    //             // Stop the loop and move all other linked blocks that far down
+    //             projectedYCoords = j
+    //             console.log("found one");
+    //             break;
+    //         }
+    //     }
+    //     console.log(Game.settings.height, j, projectedYCoords);
+    //     j++
+    // }
+
+    // for (let i = 0; i < projectedPart.linkedParts.length; i++) {
+    //     const part = projectedPart.linkedParts[i];
+    //     console.log(j);
+    //     if (j > 2) {
+    //         part.coordinates[1] += j
+    //         Game.projectedPieces.push(part.coordinates)
+    //     }
+    // }
 
     //Draw the linked parts
+
     // Draw the main parts
     Game.projectedPieces.push(projectedPart.coordinates)
 
@@ -217,7 +234,7 @@ function rayCastDown() {
         placePiece()
     }
 }
-console.log("HUak Tua");
+
 function draw(deltaTime = undefined) {
     let ctx = Game.context
     Game.context.clearRect(0,0, Game.canvas.width, Game.canvas.height)
