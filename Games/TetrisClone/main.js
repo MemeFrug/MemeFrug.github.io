@@ -20,6 +20,22 @@
 // IN THE SOFTWARE.
 // ============================================================================
 
+// MODIFIED BY @MemeFrug
+// Issues,
+/*
+  - After render refactor, shadow sometimes flickers over animated tetrinome
+  - Weird issue with stack overcalled??? when hard dropping need more testing
+*/
+
+// Changes,
+// - Removed mobile functionality (just wanted to simplify)
+// - Added mobile compatability screen
+// - Improved user interface w/ See next UI element
+// - Increasing Level
+// - Win at Level 255
+// - Each level increases speed
+// - Checkpoints???
+
 var TETRIS = new function () { // namespacing
 	
     function random_det(seed) {
@@ -72,7 +88,11 @@ var TETRIS = new function () { // namespacing
         return curPerm[which];
       };
     }
-    
+    let currentLinesCleared = 0
+    let level = 0
+
+    let moveDownSpeed = 300 // milliseconds
+
     var board = [];
     var i=0;
     for (i=0;i<240;i++) {
@@ -86,72 +106,57 @@ var TETRIS = new function () { // namespacing
     var bordersize = 2;
     // white, red, green, blue, purple, yellow, orange, cyan
     // None,  Z,   S,     J,    T,      O,      L,      I
-    var colors = ["#999","#F00","#0F0",
+    var colors = ["#FFFFFF","#F00","#0F0",
                   "#22F","#F0F", "#FF0",
                   "#F70","#0EE"];
-    function drawBox(position, value, context) {
-      var i = position % 10;
-      var j = (position-i) / 10;
-      drawBox2(i,j,value,context);
-    }
-    function drawBox2(posX,posY,value,context) {
+    
+    function drawTetrinome(posX,posY,value,context) {
       context.fillStyle = colors[value];
       context.fillRect(xoff + posX*(xsize+gapsize), yoff+posY*(ysize+gapsize),xsize,ysize);
     }
-    function drawSingleBlock(x,y,context) {
-      context.fillRect(x,y,xsize,ysize);
-    }
     function drawBoard(boardArr, context) {
       var i;
-      context.fillStyle = "#000";
-      context.fillRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);
-      context.clearRect(xoff-bordersize,yoff-bordersize,(xsize+gapsize)*10-gapsize+bordersize*2,(ysize+gapsize)*24-gapsize+bordersize*2);
-      context.strokeRect(xoff-.5,yoff-.5,(xsize+gapsize)*10-gapsize+1,(ysize+gapsize)*24-gapsize+1);
-      context.fillStyle = "#888";
+      // context.fillStyle = "#000";
+      // context.fillRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);
+      context.clearRect(0,0,(xsize+gapsize)*11,(ysize+gapsize)*25);
+      // context.strokeRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);
+      context.fillStyle = "rgba(0,0,0,0.2)";
       context.fillRect(xoff,yoff,(xsize+gapsize)*10-gapsize,(ysize+gapsize)*24-gapsize);
-      for(i=0;i<240;i++){
-        drawBox(i,board[i],context);
+      for(position=0;position<240;position++){
+        var i = position % 10;
+        var j = (position-i) / 10;
+        drawTetrinome(i,j,board[position],context);
       }
     }
-    var positionFromLeft = 0;
     function updateSizing() {
       xsize = ysize = Math.floor((window.innerHeight - 25 - yoff*2 - 24*gapsize) / 24.0);
       //gapsize = Math.floor((window.innerHeight - 150) / 300);
       var bc = document.getElementById('board_canvas');
-      var ac = document.getElementById('animated_canvas');
-      var sc = document.getElementById('shadow_canvas');
-      //var ph = document.getElementById('placeholder');
-      var score_el = document.getElementById('score').parentNode;
-      bc.width = ac.width = sc.width = (xoff*2 + xsize*10 + gapsize*9);
-      bc.height = ac.height = sc.height = (yoff*2 + ysize*24 + gapsize*23);
-      //ph.style.height = (yoff*2+ysize*24+gapsize*23)+"px";
-      //ph.style.width = ((xoff*2 + xsize*10 + gapsize*9)+180)+"px";
-      
-      
-        document.getElementById('instructions').style.marginLeft = (bc.width)+"px";
-        document.getElementById('instr').ontouchmove = function (e) { // prevent touchmove default scroll behavior on all but the instr text section
-            e.stopPropagation(); 
-        }
-        
-      
-      
-      // this is to set the absolute positioning in the center of the window.
-      // note -- window.innerWidth/Height not supported by IE
-      positionFromLeft = 10;//Math.floor((window.innerWidth - (xoff*2 + xsize*10 + gapsize*9) - 20)/2.0);
-      bc.style.left = ac.style.left = sc.style.left = positionFromLeft + "px"; 
-      
-      score_el.style.left = positionFromLeft+bc.width+10+"px";
-    
-        document.getElementById('instructions').style.top = score_el.clientHeight + "px";
-      
-      
-      var ctx1 = document.getElementById('board_canvas').getContext('2d');
-      drawBoard(board,ctx1);
-      updatePiece();
-      updateShadow();
-      if (paused) drawPaused();
+      bc.width = (xoff*2 + xsize*10 + gapsize*9);
+      bc.height = (yoff*2 + ysize*24 + gapsize*23);
     }
     
+    function determineLevel(clearedLines = 0) {
+      // const linesRequired = level * 2 // Not official
+      // document.getElementById("linesToClear").textContent = linesRequired
+      // if (linesRequired<=currentLinesCleared + clearedLines) {
+      //   level = level + 1;
+      //   console.log(currentLinesCleared, linesRequired);
+      //   currentLinesCleared = Math.max(currentLinesCleared-linesRequired, 0) 
+      //   document.getElementById("level").textContent = level
+        
+      //   // Update the level's down speed
+      //   moveDownSpeed = level*-2 + 300
+
+
+      //   determineLevel() // Check for left overs
+      //   return true
+      // }
+      // //Add to current lines cleared
+      // document.getElementById("linesToClear").textContent = linesRequired-currentLinesCleared
+      // return false
+    }
+
     function clearRowCheck(startrow, numrowsdown) {
       var i;
       var numRowsCleared = 0;
@@ -163,10 +168,26 @@ var TETRIS = new function () { // namespacing
         }
         if (full) { numRowsCleared++; shiftDown(startrow+i);  var ctx1 = document.getElementById('board_canvas').getContext('2d'); drawBoard(board,ctx1);}
       }
-      if (numRowsCleared == 1) {applyScore(100);}
-      else if (numRowsCleared == 2) {applyScore(200);}
-      else if (numRowsCleared == 3) {applyScore(400);}
-      else if (numRowsCleared == 4) {applyScore(1000);}
+      
+      // Determine level with how many rows cleared
+      if (numRowsCleared >0) {
+        console.log(numRowsCleared*numRowsCleared);
+        determineLevel(numRowsCleared*numRowsCleared)
+      }
+
+      if (numRowsCleared == 1) {
+        applyScore(100);
+        
+      }
+      else if (numRowsCleared == 2) {
+        applyScore(200);
+      }
+      else if (numRowsCleared == 3) {
+        applyScore(400);
+      }
+      else if (numRowsCleared == 4) {
+        applyScore(1000);
+      }
     }
     // row is full
     function shiftDown(row) {
@@ -179,20 +200,36 @@ var TETRIS = new function () { // namespacing
       }
     }
     
+  
+    let mainCanvasContext = undefined
+
     var autoMoveDownInterval = "";
-    var animationUpdateInterval = "";
+    var animationUpdateInterval = false;
     var mouseControlInterval = "";
     function moveDownIntervalFunc () {
       moves[7]();
-      updatePiece();
     } 
-    function animationUpdateIntervalFunc() {
-        // move animPositions closer to their targets (piece positions)
-        animPositionX += (pieceX - animPositionX)*.3;
-        animPositionY += (pieceY - animPositionY)*.3;
-        // move animRotation closer to zero
-        animRotation -= animRotation * 0.3;
-        updatePiece();
+    let lastTime = 0
+    function animationUpdateIntervalFunc(totalTime) {
+      const dt = totalTime-lastTime
+      lastTime = totalTime
+
+      if (!mainCanvasContext) {
+        const mainCanvas = document.getElementById('board_canvas')
+        mainCanvasContext = mainCanvas.getContext('2d')
+      }
+
+      // Redraw the board
+      drawBoard(board, mainCanvasContext);
+      updateShadow();
+
+      // move animPositions closer to their targets (piece positions)
+      animPositionX += (pieceX - animPositionX)*.01*dt;
+      animPositionY += (pieceY - animPositionY)*.01*dt;
+      // move animRotation closer to zero
+      animRotation -= animRotation * 0.015 * dt;
+      drawPiece(mainCanvasContext);
+      if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)
     }
     function mouseControlFunc() {}
     var isMouseControl = false;
@@ -200,15 +237,9 @@ var TETRIS = new function () { // namespacing
     function toggleMouseControl () {
       if (isMouseControl) { mouseControlFunc = function () {}; document.oncontextmenu = null; } 
       else {mouseControlFunc = function () {
-        //var posIn = posx-positionFromLeft; 
-        //if (posIn > xoff && posIn < (xoff + xsize*10 + gapsize*9))
-        //{
           mouseControlX = (posx / window.innerWidth)*11.5-2.5;
-          //document.title = off;
           if (pieceX > mouseControlX+.5) moves[0](); 
           if (pieceX < mouseControlX-.5) moves[2]();
-          
-        //} else {  }
       };
       document.oncontextmenu = function () { return false; };  
       }
@@ -220,167 +251,41 @@ var TETRIS = new function () { // namespacing
         return paused;
     }
     
-    
-    function drawPaused() {
-      var ctx = document.getElementById("animated_canvas").getContext('2d');
-      var offset = xoff;
-      var size = (xsize +gapsize*.9)*2.05;
-      var yoffset = yoff + (xsize+gapsize)*10;
-      ctx.strokeStyle = "#FFF";
-      ctx.strokeText("PAUSED",offset,yoffset,size,160);
-      ctx.strokeStyle = "#000";
-      ctx.strokeText("PAUSED",offset,yoffset,size,100);
-    }
     var setPause = function(isendgame) {
       //console.log("setPause invoked", paused);
       if (paused) return;
       clearInterval(autoMoveDownInterval); 
       autoMoveDownInterval = "";
-      clearInterval(animationUpdateInterval);
-      animationUpdateInterval = "";
+      animationUpdateInterval = false;
       clearInterval(mouseControlInterval);
       mouseControlInterval = "";
-      //document.title = "Tetris! GAME OVER";
-      if (!isendgame) { drawPaused(); document.title="Tetris! PAUSED";
-      }
+
       paused = true;
       pausedBecauseLostFocus = false; // default this to false
        
+      document.getElementById("pauseText").textContent = "Paused"
     }
     
     
     function unPause() {
       if (!paused) return;
       if (autoMoveDownInterval == "") {
-        autoMoveDownInterval = setInterval(moveDownIntervalFunc,300);
+        autoMoveDownInterval = setInterval(moveDownIntervalFunc,moveDownSpeed);
       }
-      if (animationUpdateInterval == "") {
-          animationUpdateInterval = setInterval(animationUpdateIntervalFunc,16);
+      if (animationUpdateInterval == false) {
+          animationUpdateInterval = true
+          requestAnimationFrame(animationUpdateIntervalFunc)
       }
       if (mouseControlInterval == "") {
         mouseControlInterval = setInterval(mouseControlFunc,100); //function indirection
       }
       paused = false;
       pausedBecauseLostFocus = false; // default this to false
-      document.title = "Tetris!"; 
-      // chrome doesn't seem to update titlebar correctly sometimes. similar thing in safari.
-      // Can't figure out a way to force it. Works great in FF.
+      //Clear pause text
+      document.getElementById("pauseText").textContent = ""
     }
     
-    var control_accum = [-1,-1];
-    
-    var xMoveThreshold = 30;
-    var yMoveThreshold = 30;
-    
-    var hardDropYDistanceThreshold = 35; // 150 px seems reasonable
-    var hardDropGestureTime = 300; 
-    var hardDropYAccAtPreviousTimes = []; // stores path
-    
-    function hardDropTest(x,y) {
-        // only when user lifts control finger and the parameter thresholds are met
-        // will the hard drop command be sent. 
-        if (hardDropYAccAtPreviousTimes.length > 2) {
-            var now = new Date().getTime();
-            if (now - lastFixTime > hardDropGestureTime) {
-                for (var i = hardDropYAccAtPreviousTimes.length-1; i >= 0; --i) {
-                    if ((now - hardDropYAccAtPreviousTimes[i][1]) < hardDropGestureTime) {
-                        if ((y - hardDropYAccAtPreviousTimes[i][0]) > hardDropYDistanceThreshold) {
-                            moves[6]();
-                            return;
-                        } //else { console.log("not enough dist "+(y - hardDropYAccAtPreviousTimes[i][0])); }
-                    } //else { console.log("too much time "+(now - hardDropYAccAtPreviousTimes[i][1])); }
-                }
-                //console.log("Not quite enough for hard drop: "+ flatten(hardDropYAccAtPreviousTimes)+" timediff = "+ (now-hardDropYAccAtPreviousTimes[0][1]) +" y = "+y);
-            }
-        }
-        hardDropYAccAtPreviousTimes = [];
-    }
-    
-    // all of the control finger data has been handled for us in touchevent callbacks
-    // and this function is called only when necessary (control finger moved)
-    function Control(newpos) {
-    
-        if (paused) return;
-    
-        var cl = control_location;
-        var delta = [newpos[0]-cl[0],newpos[1]-cl[1]];
-        control_accum = [control_accum[0]+delta[0],control_accum[1]+delta[1]];
-    
-        var thresh_sq = 50; // square of pixels travel which is to cancel tap. 
-        if (touchlist.length == 1 && control_accum[0]*control_accum[0]+control_accum[1]*control_accum[1] > thresh_sq) {
-            lastTouchStartTime = 0; // cancel the tap "gesture"
-        }
-        // game control logic 
-        while (control_accum[0] > xMoveThreshold) { control_accum[0] -= xMoveThreshold; moves[2](); hardDropYAccAtPreviousTimes = []; }
-        while (control_accum[0] <-xMoveThreshold) { control_accum[0] += xMoveThreshold; moves[0](); hardDropYAccAtPreviousTimes = []; }
-    
-        while (control_accum[1] > yMoveThreshold) { control_accum[1] -= yMoveThreshold; moves[3](); }
-        
-        hardDropYAccAtPreviousTimes.push([newpos[1], new Date().getTime()]);
-    
-        control_location[0] = newpos[0];
-        control_location[1] = newpos[1];
-    }
-    
-    var actually_draw_touches = false;
-    
-    
-    function drawTouches() { // Not really drawing so much as managing and moving a list of DOM elems so they match touchlist -- it *functions* like drawing
-        // This function serves to transparently create and manage the
-        // touch visualization elements requiring only trivial processing
-        // of events in a separate part of code
-    
-        if (!actually_draw_touches) return;
-    
-        var indicator_container = document.getElementById('indicatorcontainer');
-    
-            // removes any DOM indicator which is not (no longer) in touchlist
-        for (var i = 0; i < indicator_container.childNodes.length; i++) {
-            var found = false;
-            for (var j=0;j<touchlist.length;++j) {
-                if (touchlist[j].identifier == indicator_container.childNodes[i].innerHTML.replace(/^(.*)@.*$/,'$1')) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                indicator_container.removeChild(indicator_container.childNodes[i]); i--;
-                //console.log("removed finger child #"+(i+1));
-            }
-        }
-    
-        // updates the remaining DOM indicators with updated positioning
-        for (var i=0; i < touchlist.length; ++i) { 
-            // the touchlist caches the quickly updated data 
-            // TODO: store efficient touchlist
-            var found = false;
-            for (var j=0;j<indicator_container.childNodes.length;j++) {
-                var thisf = indicator_container.childNodes[j];
-                //console.log(thisf.innerHTML.replace(/(.*)@.*/,'$1'))
-                if (thisf.innerHTML.replace(/^(.*)@.*$/,'$1') == touchlist[i].identifier) {
-                    thisf.style.webkitTransform = 'translate('+touchlist[i].clientX+'px, '+touchlist[i].clientY+'px)';
-                    thisf.innerHTML = touchlist[i].identifier + "@ " + touchlist[i].clientX +", "+ touchlist[i].clientY;
-                    found = true;
-                    if (touchlist[i].identifier == control_finger_id) {
-                        thisf.setAttribute('class', 'finger-indicator control');
-                    }
-                }
-                
-            }
-            // creates new DOM indicators if there are new fingers
-            if (!found) {
-                var new_indicator = document.createElement('span'); 
-                new_indicator.innerHTML = touchlist[i].identifier + "@ " + touchlist[i].clientX +", "+ touchlist[i].clientY;
-                new_indicator.style.webkitTransform = 'translate('+touchlist[i].clientX+'px, '+touchlist[i].clientY+'px)';
-                new_indicator.setAttribute('class','finger-indicator');
-                if (touchlist[i].identifier == control_finger_id) {
-                    new_indicator.setAttribute('class', 'finger-indicator control');
-                }
-                indicator_container.appendChild(new_indicator);
-                //console.log("adding finger child #"+(indicator_container.childNodes.length-1));
-            }
-        }
-        
-    }
+
     window.onload = function () { win_onload(); }; 
     
     function win_onload() {
@@ -388,17 +293,6 @@ var TETRIS = new function () { // namespacing
       applyScore(0); // to init
       setPause(false);
       unPause();
-      
-      var animCtx = document.getElementById('animated_canvas').getContext('2d');
-      set_textRenderContext(animCtx);
-      if (check_textRenderContext(animCtx)) {
-        
-      } else {
-        //alert("No text available"); 
-      }
-        
-      // required to make the range actually settable 
-      document.getElementById('sens_range').ontouchmove = function (e) { e.stopPropagation(); }
       updateSizing();  
     }
     
@@ -435,16 +329,16 @@ var TETRIS = new function () { // namespacing
     var curRotation=0;
     
     
-    function drawMessage(messageString, size) {
-      var ctx = document.getElementById("animated_canvas").getContext('2d');
-      var offset = xoff;
-      var size = (xsize +gapsize*.9)*size;
-      var yoffset = yoff + (xsize+gapsize)*10;
-      ctx.strokeStyle = "#FFF";
-      ctx.strokeText(messageString,offset,yoffset,size,160);
-      ctx.strokeStyle = "#000";
-      ctx.strokeText(messageString,offset,yoffset,size,100);
-    }
+    // function drawMessage(messageString, size) {
+    //   var ctx = document.getElementById("board_canvas").getContext('2d');
+    //   var offset = xoff;
+    //   var size = (xsize +gapsize*.9)*size;
+    //   var yoffset = yoff + (xsize+gapsize)*10;
+    //   ctx.strokeStyle = "#FFF";
+    //   ctx.strokeText(messageString,offset,yoffset,size,160);
+    //   ctx.strokeStyle = "#000";
+    //   ctx.strokeText(messageString,offset,yoffset,size,100);
+    // }
     
     function clearContext(ctx, width, height) {
         // Store the current transformation matrix
@@ -459,18 +353,14 @@ var TETRIS = new function () { // namespacing
     }
     
     function gameWin() {
-      var sc = document.getElementById('shadow_canvas');
-      clearContext(sc.getContext('2d'),sc.width,sc.height);
-      var ac = document.getElementById('animated_canvas');
-      clearContext(ac.getContext('2d'),ac.width,ac.height);
-      drawMessage("You Win!", 1.45);
+      // drawMessage("You Win!", 1.45);
       setPause(true);
     }
     function gameOver() {
-      drawMessage("Game Over", 1.45);
+      // drawMessage("Game Over", 1.45);
       setPause(true);
       //Cleanup
-    
+      
     }
     
     var objPos = {x:0, y:0};
@@ -486,7 +376,7 @@ var TETRIS = new function () { // namespacing
       if (kick()) {
         gameOver();
       }
-      updateShadow();
+      // updateShadow();
     }
     
     
@@ -536,11 +426,11 @@ var TETRIS = new function () { // namespacing
     }
     moves = [
       // left
-      function () {if (freezeInteraction) return; pieceX -= 1; if (isPieceInside()) pieceX += 1; shiftright = 0; updateShadow(); clearLockTimer();},
+      function () {if (freezeInteraction) return; pieceX -= 1; if (isPieceInside()) pieceX += 1; shiftright = 0; clearLockTimer();},
       // up direction movement is a cheat in standard tetris
       function () {if (freezeInteraction) return; pieceY -= 1; if (isPieceInside()) pieceY += 1; clearLockTimer();},
       // right
-      function () {if (freezeInteraction) return; pieceX += 1; if (isPieceInside()) pieceX -= 1; shiftright = 1; updateShadow(); clearLockTimer();},
+      function () {if (freezeInteraction) return; pieceX += 1; if (isPieceInside()) pieceX -= 1; shiftright = 1; clearLockTimer();},
       // down key calls this -- moves stuff down, if at bottom, locks it
       function () {
         if (freezeInteraction) return;
@@ -557,7 +447,6 @@ var TETRIS = new function () { // namespacing
         curRotation = (curRotation+1)%(tetrominos[curPiece].length);
         if (kick()) curRotation = oldrot; 
         else animRotation = -Math.PI/2.0;
-        updateShadow();
         clearLockTimer();
       },
       // rotate ccw
@@ -568,7 +457,6 @@ var TETRIS = new function () { // namespacing
         curRotation = (curRotation-1+len)%len;
         if (kick()) curRotation = oldrot;
         else animRotation = Math.PI/2.0;
-        updateShadow();
         clearLockTimer();
       },
       // hard drop
@@ -659,15 +547,9 @@ var TETRIS = new function () { // namespacing
       return 1; // return failure
     }
     
-    function updatePiece() {
-      var ctx = document.getElementById('animated_canvas').getContext('2d');
-      drawPiece(ctx);
-    }
-    
-    // Does not need to be called every frame like updatePiece is.
     // will be called from left and right moves, also 
     function updateShadow() {
-      var ctx = document.getElementById('shadow_canvas').getContext('2d');
+      var ctx = document.getElementById('board_canvas').getContext('2d');
       drawShadow(ctx);
     }
     
@@ -732,9 +614,6 @@ var TETRIS = new function () { // namespacing
           }
         }
       }
-    
-      //document.getElementById('msg').innerHTML = "last key pressed: "+ keynum + "inside:"+isPieceInside();
-      updatePiece();
     }
     
     function keyupfunc(e) {
@@ -761,25 +640,7 @@ var TETRIS = new function () { // namespacing
     var animPositionX=3;
     var animPositionY=0;
     var animRotation=0;
-    
-    /*
-    function drawPieceOld(context) {
-      var i,j;
-      var tetk = tetrominos[curPiece][curRotation];
-      for (j=0;j<tetk.length;j++) {
-        var tetkj = tetk[j];
-        for (i=0;i<tetkj.length;i++) {
-          var tetkji = tetkj[i];
-          if (tetkji) {
-            context.save();
-            context.rotate(10.0*3.1415926/180.0);
-            drawBox2(animPositionX+i,animPositionY+j,tetkji,context);
-            context.restore();
-          }
-        }
-      }
-    }
-    */
+
     var drawIndicators = false;
     function drawPiece(context) {
       var i,j;
@@ -787,7 +648,6 @@ var TETRIS = new function () { // namespacing
       var tetk = tetrominos[curPiece][curRotation];
       // translating (canvas origin) to the center, 
       // rotating there, then drawing the boxes
-      context.clearRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);  
       if (isMouseControl && drawIndicators) {
         context.save();
         context.translate(xoff + (xsize+gapsize) * (mouseControlX+1.5),yoff);
@@ -839,6 +699,8 @@ var TETRIS = new function () { // namespacing
       // I am modifying critical program state
       // when it is not necessary.
       // This is done to increase code reuse
+
+      // Agreed.. scary
       pieceY = origY; 
       shadowY = curY;
       if (!count) return;
@@ -847,7 +709,7 @@ var TETRIS = new function () { // namespacing
     
     function drawShadowPieceAt(context, gridX, gridY) {
       tetk = tetrominos[curPiece][curRotation];
-      context.clearRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);  
+      // context.clearRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);  
       context.save();
       context.fillStyle = "#777";
       context.translate(xoff+gridX*(xsize+gapsize),yoff+gridY*(ysize+gapsize));
@@ -877,21 +739,6 @@ var TETRIS = new function () { // namespacing
             posy = e.clientY + document.body.scrollTop
                 + document.documentElement.scrollTop;
         }
-      /*if (!e) e = event;
-      if (e.pageX || e.pageY) {
-        posx = e.pageX;
-        posy = e.pageY;
-      }
-      else if (e.clientX || e.clientY) {
-        posx = e.clientX + document.body.scrollLeft
-          + document.documentElement.scrollLeft;
-        posy = e.clientY + document.body.scrollTop
-          + document.documentElement.scrollTop;
-      } */
-    
-      //if (!(Math.floor((posx/5-100-(xsize+gapsize)*pieceX)/(xsize+gapsize)) <= 0)) moves[2]();
-      //if (Math.floor((posx/5-100-(xsize+gapsize)*pieceX)/(xsize+gapsize))< 0) moves[0]();
-      //updatePiece();
       if (!paused)
         mouseControlFunc();
     }
@@ -917,30 +764,14 @@ var TETRIS = new function () { // namespacing
       }
       }
     }
-    var score = 1000;
-    var isScoreIncreasing = false;
+    var score = 0;
     
     var scoreCallback = function (val) {}; // I get called when score changes. 
     
     function applyScore(amount) {
-        if (isScoreIncreasing) {
-            increaseScore(amount);
-        } else {
-            subtractScore(amount);
-        }
-        scoreCallback(score);
-    }
-    function increaseScore(amount) {
-        score += amount;
-        document.getElementById('score').innerHTML = score;
-    }
-    function subtractScore(amount) {
-        score -= amount; 
-        if (score <= 0) { // reached zero 
-            gameWin();
-            score = 0;
-        }
+      score += amount;
       document.getElementById('score').innerHTML = score;
+      scoreCallback(score);
     }
     
     document.onkeydown = function (e) { keydownfunc(e); };
@@ -950,110 +781,6 @@ var TETRIS = new function () { // namespacing
     window.onfocus = function () {gainfocusfunc(); };
     document.onmousedown = function (e) {mousedownfunc(e); };
     
-    // for iOS preventing default scroll
-    document.ontouchmove = function (e) { doc_otm(e); };
-    
-    function doc_otm(e) {
-    
-        drawTouches(); // presumably some fingers need to be updated
-        if (control_finger_id != -1) { // control finger active
-            for (var i=0;i<e.changedTouches.length;++i) { // search moved fingers for control finger
-                if (e.changedTouches[i].identifier == control_finger_id) { // found it
-                    // verify a past position exists (it should) 
-                    if (control_location[0] < 0 || control_location[1] < 0) {
-                        alert("control_location not set!");
-                    }
-                    Control([e.changedTouches[i].clientX,e.changedTouches[i].clientY]);
-                }
-            }
-        }
-        e.preventDefault();
-    
-    };
-    
-    var touchlist = [];
-    
-    var lastTouchID = -1; // used for tracking potential taps 
-    var lastTouchStartTime = 0;
-    
-    document.ontouchstart = function (e) { doc_ots(e); };
-    
-    function doc_ots(e) {
-        touchlist = (e.touches);
-    //	for (var i =0;i<touchlist.length;++i) { 
-    //		console.log(i+": "+touchlist[i].identifier+" at "+touchlist[i].clientX+","+touchlist[i].clientY);
-    //	}
-    
-        if (e.touches.length == 1) { // set this finger as control
-            control_finger_id = e.touches[0].identifier;
-            // initialize control_location 
-            control_location = [e.touches[0].clientX,e.touches[0].clientY];
-            // initialize control_accum
-            control_accum = [0,0];
-        }
-    
-        if (e.changedTouches.length == 1) {
-            lastTouchID = e.changedTouches[0].identifier;
-            lastTouchStartTime = new Date().getTime();
-        }
-    
-        drawTouches();
-    
-    };
-    
-    var control_finger_id = -1;
-    var control_location = [-1,-1]; // last location: -1 indicates undefined
-    
-    document.ontouchend = function (e) { doc_ote(e); }; 
-    function doc_ote(e) {
-        touchlist = e.touches;
-        for (var i = 0; i < e.changedTouches.length; i++) { 
-            if (e.changedTouches[i].identifier == control_finger_id) {
-                // Easy way out: defer control to first of remaining fingers
-                if (e.touches.length > 0) { 
-                    control_finger_id = e.touches[0].identifier; 
-                    control_location = [e.touches[0].clientX,e.touches[0].clientY]; 
-                } else { 
-                    control_finger_id = -1; control_location = control_accum = [-1,-1]; 
-                }
-                //break;
-                //entry point for hard drop 
-                   hardDropTest(e.changedTouches[i].clientX,e.changedTouches[i].clientY);	
-            }
-            if (!paused && e.changedTouches[i].identifier == lastTouchID && new Date().getTime() - lastTouchStartTime < 300) {
-                moves[4]();
-            }
-        }
-        drawTouches();
-    };
-    
-    
-    // document.ontouchend  document.ontouch
-    
-    function flatten(obj, levels) {
-        if (levels == 0) return '';
-        var empty = true;
-        if (obj instanceof Array) {
-            str = '[';
-            empty = true;
-            for (var i=0;i<obj.length;i++) {
-                empty = false;
-                str += flatten(obj[i],levels-1)+', ';
-            }
-            return (empty?str:str.slice(0,-2))+']';
-        } else if (obj instanceof Object) {
-            str = '{'; 
-            empty = true;
-            for (i in obj) { 
-                empty = false;
-                str += i+'->'+flatten(obj[i],levels-1)+', '; 
-            } 
-            return (empty?str:str.slice(0,-2))+'}';
-        } else {
-            return obj; // not an obj, don't stringify me
-        }
-    }
-    
     window.onselectstart = function(e) { return false; }
     // no IE
     window.onresize = function () { win_onresize(); };
@@ -1062,18 +789,11 @@ var TETRIS = new function () { // namespacing
       updateSizing();
     };
     
-    
     // HERE IS THE API
     
     this.isPaused = function () { return isPaused(); }; 
     this.setPause = function () { setPause(false); };
     this.unPause = function () { unPause(); }; 
-    this.setTouchSensitivity = function (value) {
-        yMoveThreshold = xMoveThreshold = 30.0/value;
-    }
-    // returns touch_draw setting
-    this.toggle_touch_draw = function () { actually_draw_touches = !actually_draw_touches;   return actually_draw_touches; }; 
-    this.setScoreIncreasing = function () { isScoreIncreasing = true; score = 0; };
     this.scoreChangeCallback = function (cb) { scoreCallback = cb; };
     
     }; // end TETRIS namespace (this module system is some weirdness I don't yet fully understand but it works and that's all that matters)
