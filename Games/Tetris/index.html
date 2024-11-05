@@ -1,7 +1,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<title>Tetris! By Steven Lu</title>
+	<title>Tetris!</title>
 
 	<link rel="stylesheet" href="style.css" type="text/css" />
 
@@ -12,20 +12,29 @@
 
 <body>
 	<div class="canvasContainer">
+		<div class="ui left">
+			<div>
+				Hold:
+			</div>
+			<div>
+				<canvas class="previewCanvas" id="PreviewCanvas"></canvas>
+			</div>
+		</div>
 		<canvas id="board_canvas" width="120" height="250" style="z-index:1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
 		<div class="overlayUI">
 			<span id="pauseText"></span>
 		</div>
-	</div>
-	<div class="ui"> 
-		<div>
-			<span>Score: <span class="value" id="score">0</span></span>
-		</div>
-		<div>
-			<span>Level: <span class="value" id="level">1</span>/255</span>
-			<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
+		<div class="ui">
+			<div>
+				<span>Score: <span class="value" id="score">0</span></span>
+			</div>
+			<div>
+				<span>Level: <span class="value" id="level">1</span>/255</span>
+				<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
+				<span class="smaller">Drop: <span id="DropSpeed">310</span>ms</span>
+			</div>
 		</div>
 	</div>
 

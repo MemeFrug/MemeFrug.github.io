@@ -23,18 +23,17 @@
 // MODIFIED BY @MemeFrug
 // Issues,
 /*
-  - After render refactor, shadow sometimes flickers over animated tetrinome
-  - Weird issue with stack overcalled??? when hard dropping need more testing
+  - 
 */
 
 // Changes,
 // - Removed mobile functionality (just wanted to simplify)
-// - Added mobile compatability screen
 // - Improved user interface w/ See next UI element
 // - Increasing Level
-// - Win at Level 255
 // - Each level increases speed
-// - Checkpoints???
+// - Added mobile compatability screen TODO
+// - Win at Level 255 TODO
+// - Local storage TODO
 
 var TETRIS = new function () { // namespacing
 	
@@ -88,8 +87,8 @@ var TETRIS = new function () { // namespacing
         return curPerm[which];
       };
     }
-    let currentLinesCleared = 0
-    let level = 0
+    let linesRequired = 1 // TO level up
+    let level = 1 // Current level
 
     let moveDownSpeed = 300 // milliseconds
 
@@ -98,11 +97,11 @@ var TETRIS = new function () { // namespacing
     for (i=0;i<240;i++) {
         board[i] = 0;
     }
-    var xoff = 8;
-    var yoff = 8;
+    var xoff = 0;
+    var yoff = 0;
     var xsize = 15;
     var ysize = 15;
-    var gapsize = 2;
+    var gapsize = 0;
     var bordersize = 2;
     // white, red, green, blue, purple, yellow, orange, cyan
     // None,  Z,   S,     J,    T,      O,      L,      I
@@ -112,15 +111,16 @@ var TETRIS = new function () { // namespacing
     
     function drawTetrinome(posX,posY,value,context) {
       context.fillStyle = colors[value];
+      // context.strokeRect(xoff + posX*(xsize+gapsize), yoff+posY*(ysize+gapsize),xsize,ysize)
       context.fillRect(xoff + posX*(xsize+gapsize), yoff+posY*(ysize+gapsize),xsize,ysize);
     }
-    function drawBoard(boardArr, context) {
+    function drawBoard(context) {
       var i;
       // context.fillStyle = "#000";
       // context.fillRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);
       context.clearRect(0,0,(xsize+gapsize)*11,(ysize+gapsize)*25);
-      // context.strokeRect(0,0,xoff*2 + xsize*10 + gapsize*9,yoff*2+ysize*24+gapsize*23);
-      context.fillStyle = "rgba(0,0,0,0.2)";
+      // context.strokeRect(xoff,yoff,(xsize+gapsize)*10-gapsize,(ysize+gapsize)*24-gapsize);
+      context.fillStyle = "rgba(0,0,0,0)";
       context.fillRect(xoff,yoff,(xsize+gapsize)*10-gapsize,(ysize+gapsize)*24-gapsize);
       for(position=0;position<240;position++){
         var i = position % 10;
@@ -137,24 +137,28 @@ var TETRIS = new function () { // namespacing
     }
     
     function determineLevel(clearedLines = 0) {
-      // const linesRequired = level * 2 // Not official
-      // document.getElementById("linesToClear").textContent = linesRequired
-      // if (linesRequired<=currentLinesCleared + clearedLines) {
-      //   level = level + 1;
-      //   console.log(currentLinesCleared, linesRequired);
-      //   currentLinesCleared = Math.max(currentLinesCleared-linesRequired, 0) 
-      //   document.getElementById("level").textContent = level
+      linesRequired -= clearedLines
+      //Add to current lines cleared
+      document.getElementById("linesToClear").textContent = Math.round(linesRequired)
+      if (linesRequired <= 0) {
+        // Update the level
+        level = level + 1;
+        document.getElementById("level").textContent = level
         
-      //   // Update the level's down speed
-      //   moveDownSpeed = level*-2 + 300
+        // Update the level's down speed
+        console.log("Drop speed decreased by ", moveDownSpeed-(-((level**3)+(10*(level**2))-31000000)/100000));
+        moveDownSpeed = -((level**3)+(10*(level**2))-31000000)/100000
+        document.getElementById("DropSpeed").textContent =  Math.round(moveDownSpeed)
 
+        //Left over cleared lines ensure it is the absolute value
+        leftOverClears = Math.abs(linesRequired)
 
-      //   determineLevel() // Check for left overs
-      //   return true
-      // }
-      // //Add to current lines cleared
-      // document.getElementById("linesToClear").textContent = linesRequired-currentLinesCleared
-      // return false
+        //Update lines required
+        linesRequired = level*(1/4)
+        determineLevel(leftOverClears) // Check for left overs
+        return true
+      }
+      return false
     }
 
     function clearRowCheck(startrow, numrowsdown) {
@@ -166,7 +170,7 @@ var TETRIS = new function () { // namespacing
         for (j=0;j<10;j++) {
           if (!board[(startrow+i)*10+j]) full = false;
         }
-        if (full) { numRowsCleared++; shiftDown(startrow+i);  var ctx1 = document.getElementById('board_canvas').getContext('2d'); drawBoard(board,ctx1);}
+        if (full) { numRowsCleared++; shiftDown(startrow+i);  var ctx1 = document.getElementById('board_canvas').getContext('2d'); drawBoard(ctx1);}
       }
       
       // Determine level with how many rows cleared
@@ -220,7 +224,7 @@ var TETRIS = new function () { // namespacing
       }
 
       // Redraw the board
-      drawBoard(board, mainCanvasContext);
+      drawBoard(mainCanvasContext);
       updateShadow();
 
       // move animPositions closer to their targets (piece positions)
@@ -328,18 +332,6 @@ var TETRIS = new function () { // namespacing
     var curPiece=0;
     var curRotation=0;
     
-    
-    // function drawMessage(messageString, size) {
-    //   var ctx = document.getElementById("board_canvas").getContext('2d');
-    //   var offset = xoff;
-    //   var size = (xsize +gapsize*.9)*size;
-    //   var yoffset = yoff + (xsize+gapsize)*10;
-    //   ctx.strokeStyle = "#FFF";
-    //   ctx.strokeText(messageString,offset,yoffset,size,160);
-    //   ctx.strokeStyle = "#000";
-    //   ctx.strokeText(messageString,offset,yoffset,size,100);
-    // }
-    
     function clearContext(ctx, width, height) {
         // Store the current transformation matrix
         ctx.save();
@@ -363,10 +355,14 @@ var TETRIS = new function () { // namespacing
       
     }
     
-    var objPos = {x:0, y:0};
+    let heldPiece = undefined
+    let alreadyHeld = false
+
     var lockTimer = "";
     var generator = random_perm_single(Math.floor((new Date()).getTime() / 1000));
     function next() {
+      alreadyHeld = false
+
       pieceX = 3;
       pieceY = 0;
       animPositionX = pieceX;
@@ -376,9 +372,46 @@ var TETRIS = new function () { // namespacing
       if (kick()) {
         gameOver();
       }
-      // updateShadow();
     }
     
+
+    function holdFunc() {
+      alreadyHeld = true
+      // console.log(curPiece);
+      if (curPiece != undefined) {
+        // console.log(heldPiece);
+        const currentHeldPiece = heldPiece
+        if (currentHeldPiece) {
+          heldPiece = curPiece
+          curPiece = currentHeldPiece
+
+
+          //Reset its position
+          pieceX = 3;
+          pieceY = 0;
+          animPositionX = pieceX;
+          animPositionY = pieceY;
+          curRotation = 0;
+        } else {
+          heldPiece = curPiece
+          curPiece = generator()
+        }
+
+        //Draw The held piece in preview
+        const PreviewCanvas = document.getElementById("PreviewCanvas")
+        const context = PreviewCanvas.getContext('2d')
+        clearContext(context, 1000, 1000)
+          for (let i = 0; i < tetrominos[heldPiece][0].length; i++) {
+            const element = tetrominos[heldPiece][0][i];
+            for (let j = 0; j < element.length; j++) {
+              const color = element[j];
+              console.log(color);
+              context.fillRect(j*10 + 100, i*10 + 100, 10, 10)
+            }
+          }
+        // console.log(curPiece);
+      }
+    }
     
     var lastFixTime = 0;
     
@@ -398,7 +431,7 @@ var TETRIS = new function () { // namespacing
           }
         }
       }
-      drawBoard(board,document.getElementById('board_canvas').getContext('2d'));
+      drawBoard(document.getElementById('board_canvas').getContext('2d'));
       // will hardcode this behavior for now
       clearRowCheck(pieceY,tetrominos[curPiece][curRotation].length);
       next();
@@ -602,6 +635,10 @@ var TETRIS = new function () { // namespacing
       }
       if (paused) return;
       
+      if (keynum == 16) { // Left Shift
+        if (!alreadyHeld) holdFunc();
+      }
+
       var i;
       for (i=0;i<buttonList.length;i++) {
         var j;
@@ -671,7 +708,7 @@ var TETRIS = new function () { // namespacing
         for (i=0;i<tetkj.length;i++) {
           var tetkji = tetkj[i];
           if (tetkji) {
-            context.fillRect(i*(xsize+gapsize),j*(ysize+gapsize),xsize,ysize);
+            context.fillRect(i*(xsize),j*(ysize),xsize,ysize);
           }
         }
       }
@@ -796,5 +833,7 @@ var TETRIS = new function () { // namespacing
     this.unPause = function () { unPause(); }; 
     this.scoreChangeCallback = function (cb) { scoreCallback = cb; };
     
+    this.determineLevel = (x) => {determineLevel(x)}
+
     }; // end TETRIS namespace (this module system is some weirdness I don't yet fully understand but it works and that's all that matters)
     
