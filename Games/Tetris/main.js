@@ -209,7 +209,6 @@ var TETRIS = new function () { // namespacing
 
     var autoMoveDownInterval = "";
     var animationUpdateInterval = false;
-    var mouseControlInterval = "";
     function moveDownIntervalFunc () {
       moves[7]();
     } 
@@ -222,11 +221,9 @@ var TETRIS = new function () { // namespacing
         const mainCanvas = document.getElementById('board_canvas')
         mainCanvasContext = mainCanvas.getContext('2d')
       }
-
       // Redraw the board
       drawBoard(mainCanvasContext);
       updateShadow();
-
       // move animPositions closer to their targets (piece positions)
       animPositionX += (pieceX - animPositionX)*.01*dt;
       animPositionY += (pieceY - animPositionY)*.01*dt;
@@ -234,20 +231,6 @@ var TETRIS = new function () { // namespacing
       animRotation -= animRotation * 0.015 * dt;
       drawPiece(mainCanvasContext);
       if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)
-    }
-    function mouseControlFunc() {}
-    var isMouseControl = false;
-    var mouseControlX = 0; // use this to draw helper arrow
-    function toggleMouseControl () {
-      if (isMouseControl) { mouseControlFunc = function () {}; document.oncontextmenu = null; } 
-      else {mouseControlFunc = function () {
-          mouseControlX = (posx / window.innerWidth)*11.5-2.5;
-          if (pieceX > mouseControlX+.5) moves[0](); 
-          if (pieceX < mouseControlX-.5) moves[2]();
-      };
-      document.oncontextmenu = function () { return false; };  
-      }
-      isMouseControl = !isMouseControl;
     }
     
     var paused = false;
@@ -261,8 +244,6 @@ var TETRIS = new function () { // namespacing
       clearInterval(autoMoveDownInterval); 
       autoMoveDownInterval = "";
       animationUpdateInterval = false;
-      clearInterval(mouseControlInterval);
-      mouseControlInterval = "";
 
       paused = true;
       pausedBecauseLostFocus = false; // default this to false
@@ -279,9 +260,6 @@ var TETRIS = new function () { // namespacing
       if (animationUpdateInterval == false) {
           animationUpdateInterval = true
           requestAnimationFrame(animationUpdateIntervalFunc)
-      }
-      if (mouseControlInterval == "") {
-        mouseControlInterval = setInterval(mouseControlFunc,100); //function indirection
       }
       paused = false;
       pausedBecauseLostFocus = false; // default this to false
@@ -315,7 +293,7 @@ var TETRIS = new function () { // namespacing
     var tetromino_T = [[[0,4],[4,4,4]],[[0,4],[0,4,4],[0,4]],[[],[4,4,4],[0,4]],[[0,4],[4,4],[0,4]]];
     var tetromino_O = [[[5,5],[5,5]]];
     var tetromino_L = [[[0,0,6],[6,6,6]],[[0,6],[0,6],[0,6,6]],[[],[6,6,6],[6]],[[6,6],[0,6],[0,6]]];
-    var tetromino_I = [[[],[7,7,7,7]],[[0,0,7],[0,0,7],[0,0,7],[0,0,7]],[[],[],[7,7,7,7]],[[0,7],[0,7],[0,7],[0,7]]];
+    var tetromino_I = [[[7,7,7,7]],[[0,0,7],[0,0,7],[0,0,7],[0,0,7]],[[],[],[7,7,7,7]],[[0,7],[0,7],[0,7],[0,7]]];
     // tetromino geometry data
     var tetrominos = [tetromino_Z,tetromino_S,tetromino_J,tetromino_T,tetromino_O,tetromino_L,tetromino_I];
     // this is for the rotation animation -- must know where in local
@@ -377,21 +355,21 @@ var TETRIS = new function () { // namespacing
 
     function holdFunc() {
       alreadyHeld = true
+
+      //Reset its position
+      pieceX = 3;
+      pieceY = 0;
+      animPositionX = pieceX;
+      animPositionY = pieceY;
+      curRotation = 0;
+
       // console.log(curPiece);
       if (curPiece != undefined) {
-        // console.log(heldPiece);
+      // console.log(heldPiece);
         const currentHeldPiece = heldPiece
-        if (currentHeldPiece) {
+        if (currentHeldPiece != undefined) {
           heldPiece = curPiece
           curPiece = currentHeldPiece
-
-
-          //Reset its position
-          pieceX = 3;
-          pieceY = 0;
-          animPositionX = pieceX;
-          animPositionY = pieceY;
-          curRotation = 0;
         } else {
           heldPiece = curPiece
           curPiece = generator()
@@ -400,16 +378,27 @@ var TETRIS = new function () { // namespacing
         //Draw The held piece in preview
         const PreviewCanvas = document.getElementById("PreviewCanvas")
         const context = PreviewCanvas.getContext('2d')
-        clearContext(context, 1000, 1000)
-          for (let i = 0; i < tetrominos[heldPiece][0].length; i++) {
-            const element = tetrominos[heldPiece][0][i];
-            for (let j = 0; j < element.length; j++) {
-              const color = element[j];
-              console.log(color);
-              context.fillRect(j*10 + 100, i*10 + 100, 10, 10)
-            }
+
+        PreviewCanvas.width = 100
+        PreviewCanvas.height = 100
+
+        clearContext(context, PreviewCanvas.width, PreviewCanvas.height)
+        for (let i = 0; i < tetrominos[heldPiece][0].length; i++) {
+          const element = tetrominos[heldPiece][0][i];
+          for (let j = 0; j < element.length; j++) {
+            const color = element[j];
+
+            // Note 20px is the size of the grid in preview window
+
+            // To get the center of the preview canvas
+            const lengthOfLongestSide = tetrominos[heldPiece][0][tetrominos[heldPiece][0].length - 1].length * 20
+            const lengthOfHeight = tetrominos[heldPiece][0].length * 20
+
+            // Draw the tetrinome with correct colors and centered
+            context.fillStyle = colors[color]
+            context.fillRect(j * 20 + (PreviewCanvas.width - lengthOfLongestSide) / 2, i * 20 + (PreviewCanvas.height - lengthOfHeight) / 2, 20, 20)
           }
-        // console.log(curPiece);
+        }
       }
     }
     
@@ -518,16 +507,6 @@ var TETRIS = new function () { // namespacing
           }
         }
       },
-      // hold feature
-      function () {
-        //alert("hold unimplemented.");
-      }, 
-      function () {
-        toggleMouseControl();
-      },
-      function () {
-        drawIndicators = !drawIndicators;
-      }
     ];
     function clearLockTimer() {
       if (lockTimer != "") {
@@ -614,20 +593,12 @@ var TETRIS = new function () { // namespacing
     var buttonList = [[37,74],[],[39,76],[40,75],[38,73,88,82],[90,84],[68,32],[],[67],[77],[78]];
     var buttonStates = new Array(buttonList.length); for (i=0;i<buttonList.length;++i) buttonStates[i] = 0;
     
-    //var directionalButtonStates = [0,0,0,0]; // left up right down
-    //var rotationButtonStates = [0,0] // cw, ccw
-    //var dropButtonState = 0;
-    //var holdButtonState = 0; 
-    // these variables keep track of button state in order to customize
-    // key repeat rates
-    
     function keydownfunc(e) {   
       var keynum;
       if (!(e.which)) keynum = e.keyCode;
       else if (e.which) keynum = e.which;
       else return;
       var keychar = String.fromCharCode(keynum);
-      //document.title = keynum;
       
       if (keychar == 'P') { 
         if (paused) unPause();
@@ -677,22 +648,12 @@ var TETRIS = new function () { // namespacing
     var animPositionX=3;
     var animPositionY=0;
     var animRotation=0;
-
-    var drawIndicators = false;
     function drawPiece(context) {
       var i,j;
       // drawing using geometry of current rotation 
       var tetk = tetrominos[curPiece][curRotation];
       // translating (canvas origin) to the center, 
       // rotating there, then drawing the boxes
-      if (isMouseControl && drawIndicators) {
-        context.save();
-        context.translate(xoff + (xsize+gapsize) * (mouseControlX+1.5),yoff);
-        
-        context.fillStyle = "rgba(0,0,255,"+(Math.abs((mouseControlX) - Math.floor(mouseControlX+0.5)) * 0.2 + 0.2)+")";
-        context.fillRect(-xsize/4,0,xsize/2,ysize*24 + gapsize*23);
-        context.restore();
-      }
       context.save();
       context.fillStyle = colors[curPiece+1];
       var centerX = tet_center_rot[curPiece][0]*(xsize+gapsize)+xsize/2+(!tet_center_rot[curPiece][2])*(xsize/2+gapsize);
@@ -713,14 +674,6 @@ var TETRIS = new function () { // namespacing
         }
       }
       context.restore();
-      if (isMouseControl && drawIndicators) {
-          context.save();
-          context.translate(xoff+(animPositionX+1.5)*(xsize+gapsize),yoff);
-          context.fillStyle = "rgba(255,0,0,0.3)";
-          context.fillRect(-xsize/4,0,xsize/2,ysize*24+gapsize*23);
-          context.restore();
-      }
-      
     }
     
     var shadowY = 0;
@@ -762,24 +715,6 @@ var TETRIS = new function () { // namespacing
       context.restore();
     }
     
-    var posx=0;
-    var posy=0;
-    function mousemovefunc(e) {
-        if (!e) var e = window.event;
-        if (e.pageX || e.pageY) 	{
-            posx = e.pageX;
-            posy = e.pageY;
-        }
-        else if (e.clientX || e.clientY) 	{
-            posx = e.clientX + document.body.scrollLeft
-                + document.documentElement.scrollLeft;
-            posy = e.clientY + document.body.scrollTop
-                + document.documentElement.scrollTop;
-        }
-      if (!paused)
-        mouseControlFunc();
-    }
-    
     var pausedBecauseLostFocus = false;
     function losefocusfunc() {
       if (paused) return;
@@ -789,16 +724,6 @@ var TETRIS = new function () { // namespacing
     function gainfocusfunc() {
       if (paused && pausedBecauseLostFocus) {
         unPause();
-      }
-    }
-    function mousedownfunc(e) { 
-      if (isMouseControl) {
-      if (e.which == 1) {
-        moves[4]();
-      }
-      else if (e.which == 3) {
-        moves[6]();
-      }
       }
     }
     var score = 0;
@@ -813,10 +738,8 @@ var TETRIS = new function () { // namespacing
     
     document.onkeydown = function (e) { keydownfunc(e); };
     document.onkeyup = function (e) { keyupfunc(e); };
-    document.onmousemove = function (e) { mousemovefunc(e); };
     window.onblur = function () {losefocusfunc(); };
     window.onfocus = function () {gainfocusfunc(); };
-    document.onmousedown = function (e) {mousedownfunc(e); };
     
     window.onselectstart = function(e) { return false; }
     // no IE

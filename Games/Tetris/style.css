@@ -1,14 +1,14 @@
 body, html {
     margin: 0;
     padding: 0;
-    background-color: rgb(0, 0, 0);
+    background-color: #121212;
 }
 
 canvas {
     height: 90%;
     margin-top: 5%;
     border-radius: 15px;
-    border: 2.5px solid rgba(255, 255, 255, 0.628);
+    /* border: 2.5px solid rgba(255, 255, 255, 0.628); */
 }
 
 #pauseText {
