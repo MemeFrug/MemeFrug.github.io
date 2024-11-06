@@ -31,6 +31,7 @@
 // - Improved user interface w/ See next UI element
 // - Increasing Level
 // - Each level increases speed
+// - Holding tetrinomes
 // - Added mobile compatability screen TODO
 // - Win at Level 255 TODO
 // - Local storage TODO
@@ -147,8 +148,7 @@ var TETRIS = new function () { // namespacing
         
         // Update the level's down speed
         console.log("Drop speed decreased by ", moveDownSpeed-(-((level**3)+(10*(level**2))-31000000)/100000));
-        moveDownSpeed = -((level**3)+(10*(level**2))-31000000)/100000
-        document.getElementById("DropSpeed").textContent =  Math.round(moveDownSpeed)
+        moveDownSpeed = -(level**2)*1/140+500
 
         //Left over cleared lines ensure it is the absolute value
         leftOverClears = Math.abs(linesRequired)
@@ -156,9 +156,13 @@ var TETRIS = new function () { // namespacing
         //Update lines required
         linesRequired = level*(1/4)
         determineLevel(leftOverClears) // Check for left overs
-        return true
       }
-      return false
+      
+      
+      //Check winning state
+      if (level >= 255) {
+        gameWin()
+      }
     }
 
     function clearRowCheck(startrow, numrowsdown) {
@@ -217,6 +221,12 @@ var TETRIS = new function () { // namespacing
       const dt = totalTime-lastTime
       lastTime = totalTime
 
+      if (!dt || dt > 400) {
+        console.warn("Ignoring Frame Too large.", dt);
+        if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)   
+        return; // Ignore frame if spiked or not exist
+      }
+
       if (!mainCanvasContext) {
         const mainCanvas = document.getElementById('board_canvas')
         mainCanvasContext = mainCanvas.getContext('2d')
@@ -230,6 +240,7 @@ var TETRIS = new function () { // namespacing
       // move animRotation closer to zero
       animRotation -= animRotation * 0.015 * dt;
       drawPiece(mainCanvasContext);
+      document.getElementById("DropSpeed").textContent =  Math.round(moveDownSpeed)
       if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)
     }
     
@@ -238,7 +249,7 @@ var TETRIS = new function () { // namespacing
         return paused;
     }
     
-    var setPause = function(isendgame) {
+    var setPause = function(isendgame, customText = "Paused") {
       //console.log("setPause invoked", paused);
       if (paused) return;
       clearInterval(autoMoveDownInterval); 
@@ -248,7 +259,7 @@ var TETRIS = new function () { // namespacing
       paused = true;
       pausedBecauseLostFocus = false; // default this to false
        
-      document.getElementById("pauseText").textContent = "Paused"
+      document.getElementById("pauseText").textContent = customText
     }
     
     
@@ -323,13 +334,11 @@ var TETRIS = new function () { // namespacing
     }
     
     function gameWin() {
-      // drawMessage("You Win!", 1.45);
       setPause(true);
     }
     function gameOver() {
-      // drawMessage("Game Over", 1.45);
       setPause(true);
-      //Cleanup
+      //Cleanup TODO
       
     }
     
@@ -354,6 +363,8 @@ var TETRIS = new function () { // namespacing
     
 
     function holdFunc() {
+      if (freezeInteraction) return; // Fix Spawning Tetrinomes inside one another
+
       alreadyHeld = true
 
       //Reset its position

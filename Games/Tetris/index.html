@@ -14,7 +14,7 @@
 	<div class="canvasContainer">
 		<div class="ui left">
 			<div>
-				Held:
+				Held: (L-Shift)
 			</div>
 			<div>
 				<canvas class="previewCanvas" id="PreviewCanvas"></canvas>
@@ -26,15 +26,20 @@
 		<div class="overlayUI">
 			<span id="pauseText"></span>
 		</div>
-		<div class="ui">
-			<div>
-				<span>Score: <span class="value" id="score">0</span></span>
+		<div class="uiContainer">
+			<div class="ui">
+				<div>
+					<span>Score: <span class="value" id="score">0</span></span>
+				</div>
+				<div>
+					<span>Level: <span class="value" id="level">1</span>/255</span>
+					<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
+					<span class="smaller">Drop: <span id="DropSpeed">500</span>ms</span>
+				</div>
 			</div>
-			<div>
-				<span>Level: <span class="value" id="level">1</span>/255</span>
-				<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
-				<span class="smaller">Drop: <span id="DropSpeed">310</span>ms</span>
-			</div>
+			<!-- <div class="ui"> TODO ABILITY TOO SEE NEXT TETRINOMES
+				<span>Next:</span>
+			</div> -->
 		</div>
 	</div>
 
