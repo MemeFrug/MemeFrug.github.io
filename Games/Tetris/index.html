@@ -11,38 +11,50 @@
 
 
 <body>
+	<canvas id="backgroundCanvas" class="backgroundCanvas">
+
+	</canvas>
 	<div class="canvasContainer">
-		<div class="ui left">
-			<div>
-				Held: (L-Shift)
-			</div>
-			<div>
-				<canvas class="previewCanvas" id="PreviewCanvas"></canvas>
-			</div>
-		</div>
-		<canvas id="board_canvas" width="120" height="250" style="z-index:1">
-			Your browser does not support HTML5 Canvas.
-		</canvas>
-		<div class="overlayUI">
-			<span id="pauseText"></span>
-		</div>
-		<div class="uiContainer">
-			<div class="ui">
+		<div class="column">
+			<div class="ui left">
 				<div>
-					<span>Score: <span class="value" id="score">0</span></span>
+					Held: (L-Shift)
 				</div>
 				<div>
-					<span>Level: <span class="value" id="level">1</span>/255</span>
-					<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
-					<span class="smaller">Drop: <span id="DropSpeed">500</span>ms</span>
+					<canvas class="previewCanvas" id="PreviewCanvas"></canvas>
 				</div>
 			</div>
-			<!-- <div class="ui"> TODO ABILITY TOO SEE NEXT TETRINOMES
-				<span>Next:</span>
-			</div> -->
+		</div>
+		<div class="column" style="width: auto; margin-left: 2vh; margin-right: 2vh;">
+			<canvas id="board_canvas" width="120" height="250" style="z-index:1">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+		<div class="column">
+			<div class="uiContainer">
+				<div class="ui">
+					<div>
+						<span>Score: <span class="value" id="score">0</span></span>
+					</div>
+					<div>
+						<span>Level: <span class="value" id="level">1</span>/255</span>
+						<span class="smaller"><span class="value" id="linesToClear">2</span> Lines Left</span>
+						<span class="smaller">Drop: <span id="DropSpeed">500</span>ms</span>
+					</div>
+				</div>
+				<div class="ui">
+					<div>Queue</div>
+					<div>
+						<canvas id="queueCanvas"></canvas>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
+	<div class="overlayUI">
+		<span id="pauseText"></span>
+	</div>
 </body>
 
 </html>

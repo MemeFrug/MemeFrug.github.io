@@ -1,4 +1,6 @@
-body, html {
+body {
+    display: flex;
+    align-items: center;
     margin: 0;
     padding: 0;
     background-color: #121212;
@@ -6,8 +8,7 @@ body, html {
 
 canvas {
     height: 90%;
-    margin-top: 5%;
-    border-radius: 15px;
+    border-radius: 1.5vh;
     /* border: 2.5px solid rgba(255, 255, 255, 0.628); */
 }
 
@@ -21,8 +22,8 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-width: 100%;
-height: 100%;
+    width: 100%;
+    /* height: 100%; */
 }
 
 .uiContainer {
@@ -32,9 +33,10 @@ height: 100%;
     justify-content: center;
     align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: x-large;
-    margin: 3%;
-    margin-top: 6%;
+}
+
+.column {
+    width: 20%;
 }
 
 .ui {
@@ -44,21 +46,31 @@ height: 100%;
     justify-content: center;
     align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: x-large;
-    padding: 2vh;
-    margin: 4%;
-    margin-top: 10%;
+    font-size: 3vh;
+    margin-top: 2vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+    width: 100%;
 
     background-color: #ffffff;
-    border-radius: 20px;
-    /* border: 1.5px solid rgb(255, 255, 255); */
+    border-radius: 3vh;
+    
     color: rgb(0, 0, 0);
+}
+
+#queueCanvas {
+    padding: 0;
+    z-index: 2;
+    width: 20vh;
+    height: 60vh;
+    border: 2px solid black;
 }
 
 .left {
     left: 5%;
-    width: 25vh;
-    height: 25vh;
+    /* width: 25vh; */
+    height: auto;
     right: auto;
 }
 
@@ -85,6 +97,14 @@ height: 100%;
     align-items: center;
 }
 
+#pauseText {
+    display: none;
+    border-radius: 1vh;
+    padding: 1vh;
+    background-color: white;
+    border: 2px dotted black;
+}
+
 .overlayUI {
     z-index: 2;
     display: flex;
@@ -95,4 +115,13 @@ height: 100%;
     top: 0;
     width: 100%;
     height: 100%;
+}
+
+.backgroundCanvas {
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
 }

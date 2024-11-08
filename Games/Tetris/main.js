@@ -208,7 +208,23 @@ var TETRIS = new function () { // namespacing
       }
     }
     
-  
+    let particles = []
+
+    function backgroundUpdate(deltaTime) {
+      const canvas = document.getElementById("backgroundCanvas")
+      const ctx = canvas.getContext('2d')
+
+      canvas.width = 1920
+      canvas.height = 1080
+
+      // Update the background
+      
+      // Draw the background
+      ctx.fillStyle = "red"
+      ctx.fillRect(0, 100, 50, 50)
+    }
+
+
     let mainCanvasContext = undefined
 
     var autoMoveDownInterval = "";
@@ -231,6 +247,9 @@ var TETRIS = new function () { // namespacing
         const mainCanvas = document.getElementById('board_canvas')
         mainCanvasContext = mainCanvas.getContext('2d')
       }
+
+      backgroundUpdate(dt)
+
       // Redraw the board
       drawBoard(mainCanvasContext);
       updateShadow();
@@ -258,7 +277,7 @@ var TETRIS = new function () { // namespacing
 
       paused = true;
       pausedBecauseLostFocus = false; // default this to false
-       
+      document.getElementById("pauseText").style.display = "block"
       document.getElementById("pauseText").textContent = customText
     }
     
@@ -274,7 +293,8 @@ var TETRIS = new function () { // namespacing
       }
       paused = false;
       pausedBecauseLostFocus = false; // default this to false
-      //Clear pause text
+      //Clear pause text and hide it
+      document.getElementById("pauseText").style.display = "none"
       document.getElementById("pauseText").textContent = ""
     }
     
@@ -334,10 +354,10 @@ var TETRIS = new function () { // namespacing
     }
     
     function gameWin() {
-      setPause(true);
+      setPause(true, "Won!");
     }
     function gameOver() {
-      setPause(true);
+      setPause(true, "Game Over...");
       //Cleanup TODO
       
     }
