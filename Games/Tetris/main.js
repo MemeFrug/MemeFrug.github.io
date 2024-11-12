@@ -23,18 +23,20 @@
 // MODIFIED BY @MemeFrug
 // Issues,
 /*
-  - 
+  - Game freezes with an exception error seemingly when holding when about to lose (possibly spawns a block inside another...)
 */
 
 // Changes,
 // - Removed mobile functionality (just wanted to simplify)
-// - Improved user interface w/ See next UI element
+// - Added mobile compatability screen TODO
+// - Improved user interface
 // - Increasing Level
 // - Each level increases speed
 // - Holding tetrinomes
-// - Added mobile compatability screen TODO
-// - Win at Level 255 TODO
+// - Win at Level 255
 // - Local storage TODO
+// - Queue System
+// - Improved Particle Based Background
 
 var TETRIS = new function () { // namespacing
 	
@@ -91,7 +93,7 @@ var TETRIS = new function () { // namespacing
     let linesRequired = 1 // TO level up
     let level = 1 // Current level
 
-    let moveDownSpeed = 300 // milliseconds
+    let moveDownSpeed = 500 // milliseconds
 
     var board = [];
     var i=0;
@@ -144,11 +146,12 @@ var TETRIS = new function () { // namespacing
       if (linesRequired <= 0) {
         // Update the level
         level = level + 1;
+        tempNewParticles += 1000
         document.getElementById("level").textContent = level
         
         // Update the level's down speed
         console.log("Drop speed decreased by ", moveDownSpeed-(-((level**3)+(10*(level**2))-31000000)/100000));
-        moveDownSpeed = -(level**2)*1/140+500
+        moveDownSpeed = (1000000)/(level**2+2000)
 
         //Left over cleared lines ensure it is the absolute value
         leftOverClears = Math.abs(linesRequired)
@@ -208,7 +211,17 @@ var TETRIS = new function () { // namespacing
       }
     }
     
+    // Returns a random number between two values (inclusive)
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+    function randFloat(min, max) {
+      return (Math.random() * (max - min)) + min
+    }
+
     let particles = []
+    let maxParticleNum = 250 // Ovverided when temp particles are added
+    let tempNewParticles = 0
 
     function backgroundUpdate(deltaTime) {
       const canvas = document.getElementById("backgroundCanvas")
@@ -217,11 +230,49 @@ var TETRIS = new function () { // namespacing
       canvas.width = 1920
       canvas.height = 1080
 
-      // Update the background
-      
-      // Draw the background
-      ctx.fillStyle = "red"
-      ctx.fillRect(0, 100, 50, 50)
+      // Generate new Particles
+      if (particles.length < maxParticleNum + tempNewParticles) {
+        // console.log("Generation new particles:", maxParticleNum - particles.length);
+        for (let i = 0; i < maxParticleNum - particles.length + tempNewParticles; i++) {
+          let newParticle = {}
+          newParticle.c = colors[randInt(0, colors.length-1)]
+          newParticle.w = randInt(1, 20)
+          newParticle.h = randInt(1, 20)
+          newParticle.x = randInt(0, canvas.width-newParticle.w)
+          newParticle.y = canvas.height - randInt(-300, 400)
+          newParticle.o = 1
+          newParticle.vo = randFloat(0.9, 0.99) // Rate of change of opacity
+          //Particle's velocity
+          newParticle.vx = randInt(-10, 10)
+          newParticle.vy = randInt(-1, -5)
+          particles.push(newParticle)
+          if (tempNewParticles>0) tempNewParticles -= 2
+        }
+      }
+
+      // Update particle's position + Draw the background
+      particles.forEach(particle => {
+        // Delete if out of view
+        if (particle.y+particle.h < -300 || particle.x+particle.w <0 || particle.x-particle.w > canvas.width) { // Above viewport...
+          // Delete the particle from the array
+          particles.splice(particles.indexOf(particle), 1)
+          return
+        }
+        // Add the particle's velocity to its corodinates
+        particle.x += particle.vx
+        particle.vx = particle.vx*0.99 // Slow it down
+        particle.y += particle.vy
+        particle.vy = particle.vy*1.02 // Speed it up
+        particle.o = particle.o*particle.vo
+        //Draw
+        ctx.save()
+        ctx.rotate(0.2)
+        ctx.fillStyle = particle.c
+        ctx.globalAlpha = particle.o
+        // ctx.fillStyle = "red"
+        ctx.fillRect(particle.x, particle.y, particle.w, particle.h)
+        ctx.restore()
+      });
     }
 
 
@@ -253,6 +304,8 @@ var TETRIS = new function () { // namespacing
       // Redraw the board
       drawBoard(mainCanvasContext);
       updateShadow();
+      //Draw the queue system
+      drawQueue(mainCanvasContext);
       // move animPositions closer to their targets (piece positions)
       animPositionX += (pieceX - animPositionX)*.01*dt;
       animPositionY += (pieceY - animPositionY)*.01*dt;
@@ -302,7 +355,8 @@ var TETRIS = new function () { // namespacing
     window.onload = function () { win_onload(); }; 
     
     function win_onload() {
-      next();
+      generateQueue(); // Generate the queue of tetrinomes
+      next(); // Pick the next one in the queue
       applyScore(0); // to init
       setPause(false);
       unPause();
@@ -362,11 +416,57 @@ var TETRIS = new function () { // namespacing
       
     }
     
+    //Queue system
+    let queueLength = 5
+    let tetrinomeQueue = []
+    var generator = random_perm_single(Math.floor((new Date()).getTime() / 1000));
+
+    function generateQueue() {
+      for (let i = 0; i < queueLength; i++) {
+        tetrinomeQueue.push(generator())
+      }
+      console.log(tetrinomeQueue);
+    }
+
+    function getNextTetrinome() {
+      tetrinomeQueue.push(generator())
+      return tetrinomeQueue.shift()
+    }
+
+    function drawQueue(ctx) {
+      //Draw The held piece in preview
+      const QueueCanvas = document.getElementById("queueCanvas")
+      const context = QueueCanvas.getContext('2d')
+
+      const tileSize = 60
+      console.log(QueueCanvas.clientWidth/tileSize);
+      QueueCanvas.width = QueueCanvas.clientWidth *2
+      QueueCanvas.height = QueueCanvas.clientHeight*2//tiles long
+
+      clearContext(context, QueueCanvas.width, QueueCanvas.height)
+      for (let yposition = 0; yposition < tetrinomeQueue.length; yposition++) {
+        const tetrinomeIdentifier = tetrinomeQueue[yposition];
+        for (let i = 0; i < tetrominos[tetrinomeIdentifier][0].length; i++) {
+          const element = tetrominos[tetrinomeIdentifier][0][i];
+          for (let j = 0; j < element.length; j++) {
+            const color = element[j];
+            
+            // To get the center of the preview canvas
+            const lengthOfLongestSide = tetrominos[tetrinomeIdentifier][0][tetrominos[tetrinomeIdentifier][0].length - 1].length * 20
+            const lengthOfHeight = tetrominos[tetrinomeIdentifier][0].length * 20
+            
+            context.fillStyle = colors[color]
+            context.fillRect(j * tileSize + QueueCanvas.width/2 - lengthOfLongestSide*1.5, i * tileSize + yposition*QueueCanvas.height/queueLength + tileSize, tileSize, tileSize)
+          }
+        }
+      }
+    }
+
     let heldPiece = undefined
     let alreadyHeld = false
 
     var lockTimer = "";
-    var generator = random_perm_single(Math.floor((new Date()).getTime() / 1000));
+    
     function next() {
       alreadyHeld = false
 
@@ -375,7 +475,7 @@ var TETRIS = new function () { // namespacing
       animPositionX = pieceX;
       animPositionY = pieceY;
       curRotation = 0;
-      curPiece = generator();
+      curPiece = getNextTetrinome();
       if (kick()) {
         gameOver();
       }
@@ -403,7 +503,7 @@ var TETRIS = new function () { // namespacing
           curPiece = currentHeldPiece
         } else {
           heldPiece = curPiece
-          curPiece = generator()
+          curPiece = getNextTetrinome()
         }
 
         //Draw The held piece in preview
@@ -552,6 +652,7 @@ var TETRIS = new function () { // namespacing
     function dropPiece () {
       if (hardDropTimeout != "") return; 
       freezeInteraction = true;
+      tempNewParticles += 200;
       hardDropTimeout = setTimeout(function () {freezeInteraction = false; fixPiece(); clearLockTimer(); hardDropTimeout = "";},100);
     }
     
