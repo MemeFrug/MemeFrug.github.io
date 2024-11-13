@@ -94,6 +94,7 @@ var TETRIS = new function () { // namespacing
     let level = 1 // Current level
 
     let moveDownSpeed = 500 // milliseconds
+    let levelsEachDrop = 1
 
     var board = [];
     var i=0;
@@ -152,6 +153,9 @@ var TETRIS = new function () { // namespacing
         // Update the level's down speed
         console.log("Drop speed decreased by ", moveDownSpeed-(-((level**3)+(10*(level**2))-31000000)/100000));
         moveDownSpeed = (1000000)/(level**2+2000)
+        if (moveDownSpeed <=400) {
+          levelsEachDrop = 2
+        }
 
         //Left over cleared lines ensure it is the absolute value
         leftOverClears = Math.abs(linesRequired)
@@ -220,15 +224,19 @@ var TETRIS = new function () { // namespacing
     }
 
     let particles = []
-    let maxParticleNum = 250 // Ovverided when temp particles are added
+    let maxParticleNum = 200 // Overided when temp particles are added
     let tempNewParticles = 0
 
-    function backgroundUpdate(deltaTime) {
+    function backgroundUpdate(dt) {
       const canvas = document.getElementById("backgroundCanvas")
       const ctx = canvas.getContext('2d')
 
       canvas.width = 1920
       canvas.height = 1080
+
+      // if (particles.length > maxParticleNum*2 - tempNewParticles) {
+      //   tempNewParticles = 0
+      // }
 
       // Generate new Particles
       if (particles.length < maxParticleNum + tempNewParticles) {
@@ -239,29 +247,29 @@ var TETRIS = new function () { // namespacing
           newParticle.w = randInt(1, 20)
           newParticle.h = randInt(1, 20)
           newParticle.x = randInt(0, canvas.width-newParticle.w)
-          newParticle.y = canvas.height - randInt(-300, 400)
+          newParticle.y = canvas.height + randInt(0, 400)
           newParticle.o = 1
           newParticle.vo = randFloat(0.9, 0.99) // Rate of change of opacity
           //Particle's velocity
-          newParticle.vx = randInt(-10, 10)
-          newParticle.vy = randInt(-1, -5)
+          newParticle.vx = randFloat(-1, 1)
+          newParticle.vy = randFloat(0.1, -0.5)
+          tempNewParticles -= 1
           particles.push(newParticle)
-          if (tempNewParticles>0) tempNewParticles -= 2
         }
       }
 
       // Update particle's position + Draw the background
       particles.forEach(particle => {
         // Delete if out of view
-        if (particle.y+particle.h < -300 || particle.x+particle.w <0 || particle.x-particle.w > canvas.width) { // Above viewport...
+        if (particle.y+particle.h < -300 || particle.x+particle.w <0 || particle.x-particle.w > canvas.width || particle.o < 0.1) { // Above viewport...
           // Delete the particle from the array
           particles.splice(particles.indexOf(particle), 1)
           return
         }
         // Add the particle's velocity to its corodinates
-        particle.x += particle.vx
-        particle.vx = particle.vx*0.99 // Slow it down
-        particle.y += particle.vy
+        particle.x += particle.vx * dt
+        particle.vx = particle.vx*randFloat(-0.99, 1.01) // Slow it down
+        particle.y += particle.vy * dt
         particle.vy = particle.vy*1.02 // Speed it up
         particle.o = particle.o*particle.vo
         //Draw
@@ -284,6 +292,9 @@ var TETRIS = new function () { // namespacing
       moves[7]();
     } 
     let lastTime = 0
+
+    let frameSkipInterval = 0
+
     function animationUpdateIntervalFunc(totalTime) {
       const dt = totalTime-lastTime
       lastTime = totalTime
@@ -299,13 +310,21 @@ var TETRIS = new function () { // namespacing
         mainCanvasContext = mainCanvas.getContext('2d')
       }
 
-      backgroundUpdate(dt)
+      // if (frameSkipInterval > 0) {
+        //Draw the background
+        backgroundUpdate(dt)
+
+        //Draw the queue system
+        drawQueue(mainCanvasContext);
+      //   frameSkipInterval = 0
+      // } else {
+      //   frameSkipInterval += dt
+      // }
+
 
       // Redraw the board
       drawBoard(mainCanvasContext);
       updateShadow();
-      //Draw the queue system
-      drawQueue(mainCanvasContext);
       // move animPositions closer to their targets (piece positions)
       animPositionX += (pieceX - animPositionX)*.01*dt;
       animPositionY += (pieceY - animPositionY)*.01*dt;
@@ -439,7 +458,6 @@ var TETRIS = new function () { // namespacing
       const context = QueueCanvas.getContext('2d')
 
       const tileSize = 60
-      console.log(QueueCanvas.clientWidth/tileSize);
       QueueCanvas.width = QueueCanvas.clientWidth *2
       QueueCanvas.height = QueueCanvas.clientHeight*2//tiles long
 
@@ -453,7 +471,7 @@ var TETRIS = new function () { // namespacing
             
             // To get the center of the preview canvas
             const lengthOfLongestSide = tetrominos[tetrinomeIdentifier][0][tetrominos[tetrinomeIdentifier][0].length - 1].length * 20
-            const lengthOfHeight = tetrominos[tetrinomeIdentifier][0].length * 20
+            // const lengthOfHeight = tetrominos[tetrinomeIdentifier][0].length * 20
             
             context.fillStyle = colors[color]
             context.fillRect(j * tileSize + QueueCanvas.width/2 - lengthOfLongestSide*1.5, i * tileSize + yposition*QueueCanvas.height/queueLength + tileSize, tileSize, tileSize)
@@ -587,8 +605,8 @@ var TETRIS = new function () { // namespacing
       // down key calls this -- moves stuff down, if at bottom, locks it
       function () {
         if (freezeInteraction) return;
-        pieceY += 1; if (isPieceInside()) { 
-          pieceY -= 1;
+        pieceY += levelsEachDrop; if (isPieceInside()) { 
+          pieceY -= levelsEachDrop;
           fixPiece();	  
         }
         clearLockTimer();
@@ -630,9 +648,9 @@ var TETRIS = new function () { // namespacing
       // timer based down
       function () {
         if (freezeInteraction) return;
-        pieceY += 1; 
+        pieceY += levelsEachDrop; 
         if (isPieceInside()) { 
-          pieceY -= 1; 
+          pieceY -= levelsEachDrop; 
           if (lockTimer == "") {
             lockTimer = setTimeout(function(){moves[3]();},600);
           }
