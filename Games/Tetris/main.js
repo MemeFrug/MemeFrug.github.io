@@ -158,7 +158,7 @@ var TETRIS = new function () { // namespacing
         leftOverClears = Math.abs(linesRequired)
 
         //Update lines required
-        linesRequired = Math.round(level*(1/4) + 1)
+        linesRequired = Math.round(level*(1/7) + 1)
         console.log(linesRequired);
         determineLevel(leftOverClears) // Check for left overs
       }
