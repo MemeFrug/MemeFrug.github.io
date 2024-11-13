@@ -147,21 +147,19 @@ var TETRIS = new function () { // namespacing
       if (linesRequired <= 0) {
         // Update the level
         level = level + 1;
-        tempNewParticles += 1000
+        tempNewParticles += 650
         document.getElementById("level").textContent = level
         
         // Update the level's down speed
         console.log("Drop speed decreased by ", moveDownSpeed-(-((level**3)+(10*(level**2))-31000000)/100000));
         moveDownSpeed = (1000000)/(level**2+2000)
-        if (moveDownSpeed <=400) {
-          levelsEachDrop = 2
-        }
 
         //Left over cleared lines ensure it is the absolute value
         leftOverClears = Math.abs(linesRequired)
 
         //Update lines required
-        linesRequired = level*(1/4)
+        linesRequired = Math.round(level*(1/4) + 1)
+        console.log(linesRequired);
         determineLevel(leftOverClears) // Check for left overs
       }
       
@@ -243,17 +241,18 @@ var TETRIS = new function () { // namespacing
         // console.log("Generation new particles:", maxParticleNum - particles.length);
         for (let i = 0; i < maxParticleNum - particles.length + tempNewParticles; i++) {
           let newParticle = {}
+          // newParticle.c = "grey"
           newParticle.c = colors[randInt(0, colors.length-1)]
-          newParticle.w = randInt(1, 20)
-          newParticle.h = randInt(1, 20)
-          newParticle.x = randInt(0, canvas.width-newParticle.w)
+          newParticle.w = randInt(4, 15)
+          newParticle.h = newParticle.w+randInt(-1, 2)
+          newParticle.x = randInt(0, canvas.width-newParticle.w+130)
           newParticle.y = canvas.height + randInt(0, 400)
           newParticle.o = 1
           newParticle.vo = randFloat(0.9, 0.99) // Rate of change of opacity
           //Particle's velocity
           newParticle.vx = randFloat(-1, 1)
-          newParticle.vy = randFloat(0.1, -0.5)
-          tempNewParticles -= 1
+          newParticle.vy = randFloat(-0.4, -0.5)
+          if (tempNewParticles > 0) tempNewParticles -= 1
           particles.push(newParticle)
         }
       }
@@ -261,7 +260,7 @@ var TETRIS = new function () { // namespacing
       // Update particle's position + Draw the background
       particles.forEach(particle => {
         // Delete if out of view
-        if (particle.y+particle.h < -300 || particle.x+particle.w <0 || particle.x-particle.w > canvas.width || particle.o < 0.1) { // Above viewport...
+        if (particle.y+particle.h < -300 || particle.x < -100 || particle.x > canvas.width +100 || particle.o < 0.1) { // Above viewport...
           // Delete the particle from the array
           particles.splice(particles.indexOf(particle), 1)
           return
@@ -283,6 +282,39 @@ var TETRIS = new function () { // namespacing
       });
     }
 
+    let camera = {
+      x: 0,
+      y: 0,
+      xoffset: 0,
+      yoffset: 0,
+      yvel: 0,
+      xvel: 0
+    }
+
+    let cameraMovementTime = 0
+
+    function cameraMovement(dt) {
+      const mainContainer = document.getElementById("mainContainer");
+
+      cameraMovementTime += 1
+      
+      camera.xoffset += camera.xvel
+      camera.yoffset += camera.yvel
+
+      camera.xvel *= 0.9
+      camera.yvel *= 0.9
+
+      camera.xoffset *= 0.7
+      camera.yoffset *= 0.7
+
+      // Camera shake plus any offset
+      camera.x = (0.2*Math.cos(1/50*cameraMovementTime) + camera.xoffset) *dt
+      camera.y = (0.1*Math.sin(1/50*cameraMovementTime) + camera.yoffset) *dt
+
+      mainContainer.style.position = "absolute"
+      mainContainer.style.top = `${camera.y+13}px`
+      mainContainer.style.left = `${camera.x}px`
+    }
 
     let mainCanvasContext = undefined
 
@@ -293,13 +325,11 @@ var TETRIS = new function () { // namespacing
     } 
     let lastTime = 0
 
-    let frameSkipInterval = 0
-
     function animationUpdateIntervalFunc(totalTime) {
       const dt = totalTime-lastTime
       lastTime = totalTime
 
-      if (!dt || dt > 400) {
+      if (!dt || dt > 80) {
         console.warn("Ignoring Frame Too large.", dt);
         if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)   
         return; // Ignore frame if spiked or not exist
@@ -310,16 +340,14 @@ var TETRIS = new function () { // namespacing
         mainCanvasContext = mainCanvas.getContext('2d')
       }
 
-      // if (frameSkipInterval > 0) {
+      // Update the main Container for camera shake
+      cameraMovement(dt)
+
         //Draw the background
         backgroundUpdate(dt)
 
         //Draw the queue system
         drawQueue(mainCanvasContext);
-      //   frameSkipInterval = 0
-      // } else {
-      //   frameSkipInterval += dt
-      // }
 
 
       // Redraw the board
@@ -524,6 +552,9 @@ var TETRIS = new function () { // namespacing
           curPiece = getNextTetrinome()
         }
 
+        //Camera velocity to the left for feedback
+        camera.xvel += -0.2
+
         //Draw The held piece in preview
         const PreviewCanvas = document.getElementById("PreviewCanvas")
         const context = PreviewCanvas.getContext('2d')
@@ -597,11 +628,11 @@ var TETRIS = new function () { // namespacing
     }
     moves = [
       // left
-      function () {if (freezeInteraction) return; pieceX -= 1; if (isPieceInside()) pieceX += 1; shiftright = 0; clearLockTimer();},
+      function () {if (freezeInteraction) return; pieceX -= levelsEachDrop; if (isPieceInside()) pieceX += levelsEachDrop; shiftright = 0; clearLockTimer();},
       // up direction movement is a cheat in standard tetris
-      function () {if (freezeInteraction) return; pieceY -= 1; if (isPieceInside()) pieceY += 1; clearLockTimer();},
+      function () {if (freezeInteraction) return; pieceY -= levelsEachDrop; if (isPieceInside()) pieceY += levelsEachDrop; clearLockTimer();},
       // right
-      function () {if (freezeInteraction) return; pieceX += 1; if (isPieceInside()) pieceX -= 1; shiftright = 1; clearLockTimer();},
+      function () {if (freezeInteraction) return; pieceX += levelsEachDrop; if (isPieceInside()) pieceX -= levelsEachDrop; shiftright = 1; clearLockTimer();},
       // down key calls this -- moves stuff down, if at bottom, locks it
       function () {
         if (freezeInteraction) return;
@@ -671,6 +702,7 @@ var TETRIS = new function () { // namespacing
       if (hardDropTimeout != "") return; 
       freezeInteraction = true;
       tempNewParticles += 200;
+      camera.yvel += 0.1
       hardDropTimeout = setTimeout(function () {freezeInteraction = false; fixPiece(); clearLockTimer(); hardDropTimeout = "";},100);
     }
     
@@ -900,7 +932,7 @@ var TETRIS = new function () { // namespacing
     };
     
     // HERE IS THE API
-    
+    this.hardMode = (difficulty) => {levelsEachDrop = difficulty}
     this.isPaused = function () { return isPaused(); }; 
     this.setPause = function () { setPause(false); };
     this.unPause = function () { unPause(); }; 
