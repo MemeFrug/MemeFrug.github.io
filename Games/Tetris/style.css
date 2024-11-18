@@ -9,8 +9,11 @@ body {
 
 canvas {
     height: 90%;
-    border-radius: 1.5vh;
+    border-radius: 1vh;
     /* border: 2.5px solid rgba(255, 255, 255, 0.628); */
+    -webkit-box-shadow:0px 0px 172px 23px rgba(255,255,255,0.26);
+    -moz-box-shadow: 0px 0px 172px 23px rgba(255,255,255,0.26);
+    box-shadow: 0px 0px 172px 23px rgba(255,255,255,0.26);
 }
 
 #pauseText {
@@ -25,6 +28,7 @@ canvas {
     align-items: flex-start;
     width: 100%;
     /* height: 100%; */
+    
 }
 
 .uiContainer {
@@ -34,6 +38,7 @@ canvas {
     justify-content: center;
     align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
 }
 
 .column {
@@ -65,7 +70,6 @@ canvas {
     z-index: 2;
     width: 20vh;
     height: 60vh;
-    border: 2px solid black;
 }
 
 .left {
@@ -80,7 +84,6 @@ canvas {
     z-index: 2;
     width: 20vh;
     height: 20vh;
-    border: 5px solid black;
 }
 
 .smaller {
@@ -109,6 +112,7 @@ canvas {
 .overlayUI {
     z-index: 2;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: absolute;
@@ -125,4 +129,35 @@ canvas {
     height: 100%;
     left: 0;
     top: 0;
+}
+
+.saveSystem {
+    display: none;
+    flex-direction: column;
+    margin: 1vh;
+}
+
+.saveSystem button {
+    background: black;
+    color: white;
+    border: 5px black;
+    border-radius: 10px;
+    transition: 0.2s;
+    width: 100%;
+    height: 90%;
+    padding: 2vh;
+}
+.saveSystem button:hover {
+    border: 2px black dotted;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    padding: 2.01vh;
+}
+.saveSystem button:active {
+    border: 5px black solid;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    padding: 1.2vh;
 }

@@ -11,9 +11,7 @@
 
 
 <body>
-	<canvas id="backgroundCanvas" class="backgroundCanvas">
-
-	</canvas>
+	<canvas id="backgroundCanvas" class="backgroundCanvas"></canvas>
 	<div id="mainContainer" class="canvasContainer">
 		<div class="column">
 			<div class="ui left">
@@ -51,9 +49,21 @@
 			</div>
 		</div>
 	</div>
+	
 
 	<div class="overlayUI">
 		<span id="pauseText"></span>
+		<div id="saveSystem" class="saveSystem">
+			<span>Saved to Slot 0</span>
+			<button id="clearSaveButton">Clear Save</button>
+			<script>
+				document.getElementById("clearSaveButton").addEventListener("mouseup", () => {
+					console.log("Clearing save 0");
+					saveSystem.clear()
+					window.location.reload()
+				})
+			</script>
+		</div>
 	</div>
 </body>
 

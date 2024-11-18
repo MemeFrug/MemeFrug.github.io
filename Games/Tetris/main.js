@@ -37,9 +37,29 @@
 // - Local storage TODO
 // - Queue System
 // - Improved Particle Based Background
+let TETRISsaves = []
+const saveSystem = {
+  save: (information, slot = 0) => {
+    TETRISsaves[slot] = information
+    window.localStorage.setItem("TETRIS_Saves", JSON.stringify(TETRISsaves))
+  },
+  load: (slot) => { // Slot to load 0, 1...
+    if (TETRISsaves.length - 1 >= slot) return TETRISsaves[slot]
+  },
+  loadAll: () => {
+    const saveFile = window.localStorage.getItem("TETRIS_Saves")
+    if (saveFile) TETRISsaves = JSON.parse(saveFile)
+  },
+  clear: (slot = -1) => { // Default is all
+    if (slot >= 0) TETRISsaves.splice(slot, 1)
+    else {
+      TETRISsaves = []
+      window.localStorage.clear()
+    }
+  }
+}
 
 var TETRIS = new function () { // namespacing
-	
     function random_det(seed) {
       return function() {
         // Robert Jenkins' 32 bit integer hash function.
@@ -251,7 +271,7 @@ var TETRIS = new function () { // namespacing
           newParticle.vo = randFloat(0.9, 0.99) // Rate of change of opacity
           //Particle's velocity
           newParticle.vx = randFloat(-1, 1)
-          newParticle.vy = randFloat(-0.4, -0.5)
+          newParticle.vy = randFloat(-0.1, -0.15)
           if (tempNewParticles > 0) tempNewParticles -= 1
           particles.push(newParticle)
         }
@@ -296,21 +316,18 @@ var TETRIS = new function () { // namespacing
     function cameraMovement(dt) {
       const mainContainer = document.getElementById("mainContainer");
 
-      cameraMovementTime += 1
+      cameraMovementTime += 0.05*dt
       
-      camera.xoffset += camera.xvel
-      camera.yoffset += camera.yvel
+      camera.xvel *= 0.99
+      camera.yvel *= 0.99
+      // console.log(0.2 * dt);
+      camera.xoffset = (camera.yoffset + camera.xvel)*0.99
+      camera.yoffset = (camera.yoffset + camera.xvel)*0.99
 
-      camera.xvel *= 0.9
-      camera.yvel *= 0.9
-
-      camera.xoffset *= 0.7
-      camera.yoffset *= 0.7
 
       // Camera shake plus any offset
-      camera.x = (0.2*Math.cos(1/50*cameraMovementTime) + camera.xoffset) *dt
-      camera.y = (0.1*Math.sin(1/50*cameraMovementTime) + camera.yoffset) *dt
-
+      camera.x = ((6*Math.cos(1/50*cameraMovementTime))) + camera.xvel *dt
+      camera.y = ((4*Math.sin(1/70*cameraMovementTime))) + camera.yvel *dt
       mainContainer.style.position = "absolute"
       mainContainer.style.top = `${camera.y+13}px`
       mainContainer.style.left = `${camera.x}px`
@@ -329,12 +346,11 @@ var TETRIS = new function () { // namespacing
       const dt = totalTime-lastTime
       lastTime = totalTime
 
-      if (!dt || dt > 80) {
+      if (!dt || dt > 30) {
         console.warn("Ignoring Frame Too large.", dt);
         if (animationUpdateInterval) requestAnimationFrame(animationUpdateIntervalFunc)   
-        return; // Ignore frame if spiked or not exist
+        return; // Ignore frame if spiked or not initialised
       }
-
       if (!mainCanvasContext) {
         const mainCanvas = document.getElementById('board_canvas')
         mainCanvasContext = mainCanvas.getContext('2d')
@@ -375,10 +391,15 @@ var TETRIS = new function () { // namespacing
       autoMoveDownInterval = "";
       animationUpdateInterval = false;
 
+      //TEST for now save to slot 0
+      TETRIS.saveState(0)
+
       paused = true;
       pausedBecauseLostFocus = false; // default this to false
       document.getElementById("pauseText").style.display = "block"
       document.getElementById("pauseText").textContent = customText
+
+      document.getElementById("saveSystem").style.display = "flex"
     }
     
     
@@ -396,15 +417,44 @@ var TETRIS = new function () { // namespacing
       //Clear pause text and hide it
       document.getElementById("pauseText").style.display = "none"
       document.getElementById("pauseText").textContent = ""
+
+      document.getElementById("saveSystem").style.display = "none"
     }
     
 
-    window.onload = function () { win_onload(); }; 
+    window.onload = function () { startTETRISGame(); }; 
     
-    function win_onload() {
-      generateQueue(); // Generate the queue of tetrinomes
-      next(); // Pick the next one in the queue
-      applyScore(0); // to init
+    this.saveState = (slot = 0) => {
+      saveSystem.save({world: board, score:score, level: level, heldPiece: heldPiece, tetrinomeQueue: tetrinomeQueue, curPiece: curPiece}, slot)
+    }
+
+    function startTETRISGame() {
+      saveSystem.loadAll()
+
+      const loadedSave = saveSystem.load(0)
+      console.log(loadedSave);
+      if (!loadedSave) {
+        generateQueue(); // Generate the queue of tetrinomes
+        next(); // Pick the next one in the queue
+      } else {
+        if (loadedSave.score) {
+          score = loadedSave.score
+          applyScore(0); // to init
+        }
+        else applyScore(score); // to init
+        if (loadedSave.world) board = loadedSave.world
+        if (loadedSave.level) level = loadedSave.level
+        if (loadedSave.heldPiece) {
+          heldPiece = loadedSave.heldPiece
+          drawHeldTetrinome()
+        }
+        if (loadedSave.tetrinomeQueue.length != 0) tetrinomeQueue = loadedSave.tetrinomeQueue
+        else {
+          generateQueue(); // Generate the queue of tetrinomes
+          next(); // Pick the next one in the queue
+          }
+        if (loadedSave.curPiece) curPiece = loadedSave.curPiece
+      }
       setPause(false);
       unPause();
       updateSizing();  
@@ -528,6 +578,33 @@ var TETRIS = new function () { // namespacing
     }
     
 
+    function drawHeldTetrinome() {
+      const PreviewCanvas = document.getElementById("PreviewCanvas")
+      const context = PreviewCanvas.getContext('2d')
+
+      PreviewCanvas.width = 100
+      PreviewCanvas.height = 100
+      console.log(heldPiece);
+      console.log(tetrominos[heldPiece]);
+      clearContext(context, PreviewCanvas.width, PreviewCanvas.height)
+      for (let i = 0; i < tetrominos[heldPiece][0].length; i++) {
+        const element = tetrominos[heldPiece][0][i];
+        for (let j = 0; j < element.length; j++) {
+          const color = element[j];
+
+          // Note 20px is the size of the grid in preview window
+
+          // To get the center of the preview canvas
+          const lengthOfLongestSide = tetrominos[heldPiece][0][tetrominos[heldPiece][0].length - 1].length * 20
+          const lengthOfHeight = tetrominos[heldPiece][0].length * 20
+
+          // Draw the tetrinome with correct colors and centered
+          context.fillStyle = colors[color]
+          context.fillRect(j * 20 + (PreviewCanvas.width - lengthOfLongestSide) / 2, i * 20 + (PreviewCanvas.height - lengthOfHeight) / 2, 20, 20)
+        }
+      }
+    }
+
     function holdFunc() {
       if (freezeInteraction) return; // Fix Spawning Tetrinomes inside one another
 
@@ -553,32 +630,10 @@ var TETRIS = new function () { // namespacing
         }
 
         //Camera velocity to the left for feedback
-        camera.xvel += -0.2
+        camera.xvel -= 0.35
 
         //Draw The held piece in preview
-        const PreviewCanvas = document.getElementById("PreviewCanvas")
-        const context = PreviewCanvas.getContext('2d')
-
-        PreviewCanvas.width = 100
-        PreviewCanvas.height = 100
-
-        clearContext(context, PreviewCanvas.width, PreviewCanvas.height)
-        for (let i = 0; i < tetrominos[heldPiece][0].length; i++) {
-          const element = tetrominos[heldPiece][0][i];
-          for (let j = 0; j < element.length; j++) {
-            const color = element[j];
-
-            // Note 20px is the size of the grid in preview window
-
-            // To get the center of the preview canvas
-            const lengthOfLongestSide = tetrominos[heldPiece][0][tetrominos[heldPiece][0].length - 1].length * 20
-            const lengthOfHeight = tetrominos[heldPiece][0].length * 20
-
-            // Draw the tetrinome with correct colors and centered
-            context.fillStyle = colors[color]
-            context.fillRect(j * 20 + (PreviewCanvas.width - lengthOfLongestSide) / 2, i * 20 + (PreviewCanvas.height - lengthOfHeight) / 2, 20, 20)
-          }
-        }
+        drawHeldTetrinome()
       }
     }
     
