@@ -4,16 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rendering Test</title>
+
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+        /* .CanvasContainer {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            
+        }
+        canvas {
+            width: 100%;
+            height: 100vw;
+        } */
+    </style>
 </head>
 <body>
     
-    <div class="AppContainer">
-        <div class="CanvasContainer" id="CanvasContainer">
+    <div class="CanvasContainer" id="CanvasContainer">
 
-        </div>
     </div>
 
     <!-- Javascript Insertion -->
-     <script src="./JavaScript/main.js"></script>
+     <script type="module" src="./JavaScript/main.js"></script>
 </body>
 </html>
