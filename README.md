@@ -1,6 +1,5 @@
 # MemeFrug.github.io
-A website repository that i made
+A website repository that i made many many years ago
 
-Here is my website that i made please if you wish to clone the repository please read the license
-
-Thanks (;
+## Current Plan
+I'm planning to rework this site into more of a blog and About Me.
