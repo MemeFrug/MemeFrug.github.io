@@ -1,5 +1,6 @@
-# MemeFrug.github.io
-A website repository that i made many many years ago
+# Hi!
+This page is all about Me!
 
-## Current Plan
-I'm planning to rework this site into more of a blog and About Me.
+## Contacts
+If you want to chat email me @ `knightmax22@gmail.com`
+Or just a casual conversation msg me on discord @ `memefrug`!

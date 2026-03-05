@@ -20,7 +20,7 @@
 // IN THE SOFTWARE.
 // ============================================================================
 
-// MODIFIED BY @MemeFrug
+// MODIFIED BY @memefrug
 // Issues,
 /*
   - Game freezes with an exception error seemingly when holding when about to lose (possibly spawns a block inside another...)

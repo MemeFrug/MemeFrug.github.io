@@ -5,43 +5,43 @@ let textShowing = ""
 let nameShowing = ""
 
 
-function sound(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
-    this.sound.controls = true;
-    document.body.appendChild(this.sound);
-    this.changeSource = function (src) {
-        this.sound.src = src;
-        console.log(this.sound);
-        console.log(this.sound.loop);
-    }
-    this.changeVolume = (volume) => {
-        this.sound.volume = volume;
-    }
-    this.play = function () {
-        this.sound.play();
-    }
-    this.stop = function () {
-        this.sound.pause();
-    }
-    this.loop = function () {
-        this.sound.loop = !this.sound.loop
-        console.log(this.sound.loop);
-    }
-    this.changePlaybackRate = function (rate) {
-        this.sound.playbackRate = rate
-    }
-}
+// function sound(src) {
+//     this.sound = document.createElement("audio");
+//     this.sound.src = src;
+//     this.sound.setAttribute("preload", "auto");
+//     this.sound.setAttribute("controls", "none");
+//     this.sound.style.display = "none";
+//     this.sound.controls = true;
+//     document.body.appendChild(this.sound);
+//     this.changeSource = function (src) {
+//         this.sound.src = src;
+//         console.log(this.sound);
+//         console.log(this.sound.loop);
+//     }
+//     this.changeVolume = (volume) => {
+//         this.sound.volume = volume;
+//     }
+//     this.play = function () {
+//         this.sound.play();
+//     }
+//     this.stop = function () {
+//         this.sound.pause();
+//     }
+//     this.loop = function () {
+//         this.sound.loop = !this.sound.loop
+//         console.log(this.sound.loop);
+//     }
+//     this.changePlaybackRate = function (rate) {
+//         this.sound.playbackRate = rate
+//     }
+// }
 
-const music = new sound("./assets/background1.mp3")
-music.changeVolume(0.5)
-music.loop()
+// const music = new sound("./assets/background1.mp3")
+// music.changeVolume(0.1)
+// music.loop()
 
 function setup() {
-    const player = new Player(false, 0, 50, 90, 190)
+    const player = new Player(false, 100, 50, 90, 190)
     const stopWatch = new Stopwatch()
     player.c = "red"
 
@@ -66,7 +66,7 @@ function setup() {
         getElementById("LoadingScreen").style.display = "none"
         createCanvas(true)
         setCanvasBackground("white")
-        music.play()
+        // music.play()
         stopWatch.start()
 
         await showText("???", "Woah, Where am i?")
@@ -116,7 +116,7 @@ function hideText() {
     textShowing = ""
 }
 
-//TODO Add event listeners uwu
+//TODO Add event listeners
 function update(deltaTime) {
     const player = ENGINE.GetLocalPlayer()
     if (ENGINE.InputHandler.keys_down.w) player.move('w'); // Move the player
@@ -134,7 +134,6 @@ function update(deltaTime) {
     // else player.stopMove("d")
 
     if (player.y > Levels[currentLevelIndex].length * WORLD.blockSize - 3000) {
-        console.log("u die");
         showingYouDieScreen = true
     }
 }
@@ -151,7 +150,7 @@ function drawUI(ctx) {
         fillRect(0, 0, ENGINE.Config.nativeWidth, ENGINE.Config.nativeHeight, "black")
         ctx.fillStyle = "red"
         ctx.font = "100px Arial";
-        fillText("Wrong Way Idiot.", ENGINE.Config.nativeHeight / 2, ENGINE.Config.nativeHeight / 2)
+        fillText("You have perished.", ENGINE.Config.nativeHeight / 2, ENGINE.Config.nativeHeight / 2)
     }
 
 
